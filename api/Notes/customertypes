@@ -1,0 +1,125 @@
+Schema : 
+-----------------------------------------------------------------------------------------------------
+
+{
+	_id			    : String,
+	customertype    : String,
+    createdAt	    : Date,
+    createdBy       : String,
+}
+
+APIs :
+-----------------------------------------------------------------------------------------------------
+1. Insert new customertype								- Done
+2. Details of customertype								- Done
+3. List details of all the customertypes				- Done
+4. Update customertype details                      	- Done
+5. Delete particular customertype						- Done
+6. Delete all the customertypes							- Done
+
+-----------------------------------------------------------------------------------------------------
+								1. Insert new customertype
+-----------------------------------------------------------------------------------------------------
+
+Method      : POST
+    
+URL         : /api/customertypes
+
+Input       : 
+				{
+					customertype     : String, // Mandatory Field
+					createdBy		: String, // Either empty or _id of users
+				}
+
+Output      : 
+				If successfully
+					{
+						message : "customertype Added",
+                        ID      : String
+					}
+
+-----------------------------------------------------------------------------------------------------
+								2. Details of customertype
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/customertypes/:customertype
+Input       : - NA-
+
+Output      : 
+				If successfully
+					{
+						customertype  : String,
+						createdAt	: Date,
+                        createdBy   : String,
+						_id         : String
+					} 
+					
+-----------------------------------------------------------------------------------------------------
+								3. List details of all the customertype
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/customertypes/list
+
+Input       : - NA-
+
+Output      : 
+				If successfully
+					[
+						{
+                            customertype         : String,
+                            createdAt	    : Date,
+                            createdBy       : String,
+                            _id             : String
+						}
+					]	 
+-----------------------------------------------------------------------------------------------------
+								4. Update customertype details
+-----------------------------------------------------------------------------------------------------
+
+Method      : PUT
+    
+URL         : /api/customertypes/
+
+Input       : 
+                {
+                    id        : String,
+                    customertype   : String,
+                }
+
+Output      : 
+				If successfully 
+					"control tag Updated"	 
+				If not 
+					"Something went wrong."
+
+-----------------------------------------------------------------------------------------------------
+							5. Delete particular customertype
+-----------------------------------------------------------------------------------------------------
+
+Method      : DELETE
+    
+URL         : /api/customertypes/:customertype_ID
+			
+Input       : - NA -
+				
+Output      : 
+				If successfully 
+					"control tag deleted"
+
+-----------------------------------------------------------------------------------------------------
+							6. Delete all the customertype
+-----------------------------------------------------------------------------------------------------
+
+Method      : DELETE
+    
+URL         : /api/customertypes
+
+Input       : - NA -			
+
+Output      : 
+				If successfully 
+					"All control tag Deleted"

@@ -1,0 +1,126 @@
+Schema : 
+-----------------------------------------------------------------------------------------------------
+
+{
+	_id			    : String,
+	frameworktype   : String,
+    createdAt	    : Date,
+    createdBy       : String,
+}
+
+APIs :
+-----------------------------------------------------------------------------------------------------
+1. Insert new frameworktype									- Done
+2. Details of frameworktype									- Done
+3. List details of all the frameworktypes					- Done
+4. Update frameworktype details                      		- Done
+5. Delete particular frameworktype							- Done
+6. Delete all the frameworktypes							- Done
+
+-----------------------------------------------------------------------------------------------------
+								1. Insert new frameworktype
+-----------------------------------------------------------------------------------------------------
+
+Method      : POST
+    
+URL         : /api/frameworktypes
+
+Input       : 
+				{
+					frameworktype	: String, // Mandatory Field
+					createdBy		: String, // Either empty or _id of users
+				}
+
+Output      : 
+				If successfully
+					{
+						message : "Framework type Added",
+                        ID      : String
+					}
+
+-----------------------------------------------------------------------------------------------------
+								2. Details of frameworktype
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/frameworktypes/:frameworktype
+
+Input       : - NA-
+
+Output      : 
+				If successfully
+					{
+						frameworktype	: String,
+						createdAt		: Date,
+                        createdBy   	: String,
+						_id         	: String
+					} 
+					
+-----------------------------------------------------------------------------------------------------
+								3. List details of all the frameworktypes
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/frameworktypes/list
+
+Input       : - NA-
+
+Output      : 
+				If successfully
+					[
+						{
+                            frameworktype   : String,
+                            createdAt	    : Date,
+                            createdBy       : String,
+                            _id             : String
+						}
+					]	 
+-----------------------------------------------------------------------------------------------------
+								4. Update frameworktype details
+-----------------------------------------------------------------------------------------------------
+
+Method      : PUT
+    
+URL         : /api/frameworktypes/
+
+Input       : 
+                {
+                    id               : String,
+                    frameworktype    : String,
+                }
+
+Output      : 
+				If successfully 
+					"Framework Updated"	 
+				If not 
+					"Something went wrong."
+
+-----------------------------------------------------------------------------------------------------
+							5. Delete particular frameworktype
+-----------------------------------------------------------------------------------------------------
+
+Method      : DELETE
+    
+URL         : /api/frameworktypes/:frameworktype_ID
+			
+Input       : - NA -
+				
+Output      : 
+				If successfully 
+					"Framework type deleted"
+
+-----------------------------------------------------------------------------------------------------
+							6. Delete all the frameworktypes
+-----------------------------------------------------------------------------------------------------
+
+Method      : DELETE
+    
+URL         : /api/frameworktypes
+
+Input       : - NA -			
+
+Output      : 
+				If successfully 
+					"All Roles Deleted"

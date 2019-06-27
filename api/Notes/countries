@@ -1,0 +1,125 @@
+Schema : 
+-----------------------------------------------------------------------------------------------------
+
+{
+	_id			    : String,
+	country          : String,
+    createdAt	    : Date,
+    createdBy       : String,
+}
+
+APIs :
+-----------------------------------------------------------------------------------------------------
+1. Insert new country									- Done
+2. Details of country									- Done
+3. List details of all the countries				    - Done
+4. Update country details                      		    - Done
+5. Delete particular country							- Done
+6. Delete all the countries							    - Done
+
+-----------------------------------------------------------------------------------------------------
+								1. Insert new country
+-----------------------------------------------------------------------------------------------------
+
+Method      : POST
+    
+URL         : /api/countries
+
+Input       : 
+				{
+					country        : String, // Mandatory Field
+					createdBy		: String, // Either empty or _id of users
+				}
+
+Output      : 
+				If successfully
+					{
+						message : "Country Added",
+                        ID      : String
+					}
+
+-----------------------------------------------------------------------------------------------------
+								2. Details of country
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/countries/:country
+Input       : - NA-
+
+Output      : 
+				If successfully
+					{
+						country     : String,
+						createdAt	: Date,
+                        createdBy   : String,
+						_id         : String
+					} 
+					
+-----------------------------------------------------------------------------------------------------
+								3. List details of all the country
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/countries/list
+
+Input       : - NA-
+
+Output      : 
+				If successfully
+					[
+						{
+                            country         : String,
+                            createdAt	    : Date,
+                            createdBy       : String,
+                            _id             : String
+						}
+					]	 
+-----------------------------------------------------------------------------------------------------
+								4. Update country details
+-----------------------------------------------------------------------------------------------------
+
+Method      : PUT
+    
+URL         : /api/countries/
+
+Input       : 
+                {
+                    id        : String,
+                    country   : String,
+                }
+
+Output      : 
+				If successfully 
+					"Country Updated"	 
+				If not 
+					"Something went wrong."
+
+-----------------------------------------------------------------------------------------------------
+							5. Delete particular country
+-----------------------------------------------------------------------------------------------------
+
+Method      : DELETE
+    
+URL         : /api/countries/:country_ID
+			
+Input       : - NA -
+				
+Output      : 
+				If successfully 
+					"Framework type deleted"
+
+-----------------------------------------------------------------------------------------------------
+							6. Delete all the country
+-----------------------------------------------------------------------------------------------------
+
+Method      : DELETE
+    
+URL         : /api/countries
+
+Input       : - NA -			
+
+Output      : 
+				If successfully 
+					"All country Deleted"

@@ -1,0 +1,228 @@
+Schema : 
+-----------------------------------------------------------------------------------------------------
+
+{
+	_id			: String,
+	createdAt	: {type:Date},
+	services	: {
+		password:{
+					bcrypt:String
+				  },
+		resume: {
+			loginTokens:[
+				{
+					when: Date,
+					hashedToken : String
+				}
+			]
+		}
+	},
+	username	: {type:String},
+	emails		: [
+						{
+							address:{type:String},
+							verified: Boolean
+						}
+				  ],
+	profile 	:
+					{
+						firstname 				: String,
+						lastname  				: String,
+						fullName  				: String,
+						emailId   				: String,
+						mobNumber 				: String,
+						profilepic				: String,
+						pwd 					: String,
+						status					: String,
+						spoc					: Boolean,
+						companyID				: Number,
+						company_ID				: { type: mongoose.Schema.Types.ObjectId, ref: 'companysettings' },
+					},
+	roles : [String],
+	heartbeat : Date
+}
+
+APIs :
+-----------------------------------------------------------------------------------------------------
+1. Insert new user									- Done
+2. Details of user									- Done
+3. List details of all the users					- Done
+4. Update Role of the user							- Done
+5. Update User information (only profile Data)		- Done
+6. Delete particular user							- Done
+7. Delete all the users								- Done
+
+-----------------------------------------------------------------------------------------------------
+								1. Insert new user (signup)
+-----------------------------------------------------------------------------------------------------
+
+Method      : POST
+    
+URL         : /api/users
+
+Input       : 
+				{
+					email			: String, // Mandatory Field
+					pwd				: String, // Mandatory Field
+					firstname		: String,
+					lastname		: String,
+					mobNumber		: String,
+					status			: String,
+					otpMobile		: String,
+					optEmail		: String,
+					spoc			: Boolean,
+					companyID		: Number,
+					company_ID		: String, //Either empty or _id of companysettings
+					role			: String, // Mandatory Field
+				}
+
+Output      : 
+				If successfully
+					{
+						message : "User Created",
+						ID 		: 'String' // _id of document
+					}
+
+-----------------------------------------------------------------------------------------------------
+								2. Details of user 
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/users/:userID
+
+Input       : - NA-
+
+Output      : 
+				If successfully
+					{
+						"profile": {
+							"firstname"		: String,
+							"lastname"		: String,
+							"fullName"		: String,
+							"emailId"		: String,
+							"mobNumber"		: String,
+							"userCode"		: String,
+							"status"		: String,
+							"spoc"			: Boolean,
+							"companyID"		: Number,
+							"company_ID"	: String, //_id of companysettings
+						},
+						"roles": [
+							String
+						],
+						"_id": String
+					} 
+					
+-----------------------------------------------------------------------------------------------------
+								3. List details of all the users
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/users/list
+
+Input       : - NA-
+
+Output      : 
+				If successfully
+					[
+						{
+							"profile": {
+								"firstname"		: String,
+								"lastname"		: String,
+								"fullName"		: String,
+								"emailId"		: String,
+								"mobNumber"		: String,
+								"userCode"		: String,
+								"status"		: String,
+								"spoc"			: Boolean,
+								"companyID"		: Number,
+								"company_ID"	: String, //_id of companysettings
+							},
+							"roles": [
+								String
+							],
+							"_id": String
+						}
+					]	 
+-----------------------------------------------------------------------------------------------------
+								4. Update Role of the user
+-----------------------------------------------------------------------------------------------------
+
+Method      : PATCH
+    
+URL         : /api/users/:rolestatus 
+			
+Description : rolestatus  can be either 'assign' or 'remove'
+
+Input       : - NA-
+
+Output      : 
+				If successfully assign
+					"Role Assigned"
+				If successfully remove
+					"Role Removed"	 
+				If not 
+					"Something went wrong."
+
+-----------------------------------------------------------------------------------------------------
+							5. Update User information (only profile Data)
+-----------------------------------------------------------------------------------------------------
+
+Method      : PUT
+    
+URL         : /api/users
+			
+Input       : 
+				{
+					firstname		: String,
+					lastname		: String,
+					mobNumber		: String,
+					status			: String,
+					otpMobile		: String,
+					optEmail		: String,
+					spoc			: Boolean,
+					companyID		: Number,
+					company_ID		: String, //Either empty or _id of companysettings
+				}
+
+Output      : 
+				If successfully 
+					"User Updated"	 
+				If not 
+					"Something went wrong."
+
+-----------------------------------------------------------------------------------------------------
+								6. Delete particular user
+-----------------------------------------------------------------------------------------------------
+
+Method      : DELETE
+    
+URL         : /api/users/delete/:userID 
+
+Note		: Only Status = 'Inactive' can be deleted
+
+Input       : - NA -			
+
+Output      : 
+				If successfully 
+					"User Deleted"
+				If not 
+					"Something went wrong."
+
+-----------------------------------------------------------------------------------------------------
+								7. Delete all the users
+-----------------------------------------------------------------------------------------------------
+
+Method      : DELETE
+    
+URL         : /api/users/delete/:userID 
+
+Input       : - NA -			
+
+Output      : 
+				If successfully 
+					"All Users Deleted"
+				If not 
+					"Something went wrong."

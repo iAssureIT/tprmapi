@@ -1,0 +1,125 @@
+Schema : 
+-----------------------------------------------------------------------------------------------------
+
+{
+	_id			: String,
+	role        : String,
+    createdAt	: Date,
+    createdBy   : String,
+}
+
+APIs :
+-----------------------------------------------------------------------------------------------------
+1. Insert new role									- Done
+2. Details of role									- Done
+3. List details of all the roles					- Done
+4. Update role details                      		- Done
+5. Delete particular role							- Done
+6. Delete all the roles								- Done
+
+-----------------------------------------------------------------------------------------------------
+								1. Insert new role
+-----------------------------------------------------------------------------------------------------
+
+Method      : POST
+    
+URL         : /api/roles
+
+Input       : 
+				{
+					role			: String, // Mandatory Field
+					createdBy		: String, // Either empty or _id of companysettings
+				}
+
+Output      : 
+				If successfully
+					{
+						message : "Role Added",
+					}
+
+-----------------------------------------------------------------------------------------------------
+								2. Details of role
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/roles/:role
+
+Input       : - NA-
+
+Output      : 
+				If successfully
+					{
+						role        : String,
+						createdAt	: Date,
+                        createdBy   : String,
+						_id         : String
+					} 
+					
+-----------------------------------------------------------------------------------------------------
+								3. List details of all the roles
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/roles/list
+
+Input       : - NA-
+
+Output      : 
+				If successfully
+					[
+						{
+                            role        : String,
+                            createdAt	: Date,
+                            createdBy   : String,
+                            _id         : String
+						}
+					]	 
+-----------------------------------------------------------------------------------------------------
+								4. Update role details
+-----------------------------------------------------------------------------------------------------
+
+Method      : PUT
+    
+URL         : /api/roles/
+
+Input       : 
+                {
+                    id      : String,
+                    role    : String,
+                }
+
+Output      : 
+				If successfully 
+					"Role Updated"	 
+				If not 
+					"Something went wrong."
+
+-----------------------------------------------------------------------------------------------------
+							5. Delete particular role
+-----------------------------------------------------------------------------------------------------
+
+Method      : DELETE
+    
+URL         : /api/roles/:roleID
+			
+Input       : - NA -
+				
+Output      : 
+				If successfully 
+					"Role deleted"
+
+-----------------------------------------------------------------------------------------------------
+							6. Delete all the roles
+-----------------------------------------------------------------------------------------------------
+
+Method      : DELETE
+    
+URL         : /api/roles
+
+Input       : - NA -			
+
+Output      : 
+				If successfully 
+					"All Roles Deleted"

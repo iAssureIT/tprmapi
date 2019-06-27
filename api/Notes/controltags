@@ -1,0 +1,125 @@
+Schema : 
+-----------------------------------------------------------------------------------------------------
+
+{
+	_id			    : String,
+	controltag     : String,
+    createdAt	    : Date,
+    createdBy       : String,
+}
+
+APIs :
+-----------------------------------------------------------------------------------------------------
+1. Insert new controltag								- Done
+2. Details of controltag								- Done
+3. List details of all the controltags				    - Done
+4. Update controltag details                      		- Done
+5. Delete particular controltag							- Done
+6. Delete all the controltags							- Done
+
+-----------------------------------------------------------------------------------------------------
+								1. Insert new controltag
+-----------------------------------------------------------------------------------------------------
+
+Method      : POST
+    
+URL         : /api/controltags
+
+Input       : 
+				{
+					controltag      : String, // Mandatory Field
+					createdBy		: String, // Either empty or _id of users
+				}
+
+Output      : 
+				If successfully
+					{
+						message : "controltag Added",
+                        ID      : String
+					}
+
+-----------------------------------------------------------------------------------------------------
+								2. Details of controltag
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/controltags/:controltag
+Input       : - NA-
+
+Output      : 
+				If successfully
+					{
+						controltag  : String,
+						createdAt	: Date,
+                        createdBy   : String,
+						_id         : String
+					} 
+					
+-----------------------------------------------------------------------------------------------------
+								3. List details of all the controltag
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/controltags/list
+
+Input       : - NA-
+
+Output      : 
+				If successfully
+					[
+						{
+                            controltag         : String,
+                            createdAt	    : Date,
+                            createdBy       : String,
+                            _id             : String
+						}
+					]	 
+-----------------------------------------------------------------------------------------------------
+								4. Update controltag details
+-----------------------------------------------------------------------------------------------------
+
+Method      : PUT
+    
+URL         : /api/controltags/
+
+Input       : 
+                {
+                    id        : String,
+                    controltag   : String,
+                }
+
+Output      : 
+				If successfully 
+					"control tag Updated"	 
+				If not 
+					"Something went wrong."
+
+-----------------------------------------------------------------------------------------------------
+							5. Delete particular controltag
+-----------------------------------------------------------------------------------------------------
+
+Method      : DELETE
+    
+URL         : /api/controltags/:controltag_ID
+			
+Input       : - NA -
+				
+Output      : 
+				If successfully 
+					"control tag deleted"
+
+-----------------------------------------------------------------------------------------------------
+							6. Delete all the controltag
+-----------------------------------------------------------------------------------------------------
+
+Method      : DELETE
+    
+URL         : /api/controltags
+
+Input       : - NA -			
+
+Output      : 
+				If successfully 
+					"All control tag Deleted"

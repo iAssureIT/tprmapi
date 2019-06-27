@@ -1,0 +1,125 @@
+Schema : 
+-----------------------------------------------------------------------------------------------------
+
+{
+	_id			    : String,
+	riskfactor      : String,
+    createdAt	    : Date,
+    createdBy       : String,
+}
+
+APIs :
+-----------------------------------------------------------------------------------------------------
+1. Insert new riskfactor								- Done
+2. Details of riskfactor								- Done
+3. List details of all the riskfactors				    - Done
+4. Update riskfactor details                      		- Done
+5. Delete particular riskfactor							- Done
+6. Delete all the riskfactors							- Done
+
+-----------------------------------------------------------------------------------------------------
+								1. Insert new riskfactor
+-----------------------------------------------------------------------------------------------------
+
+Method      : POST
+    
+URL         : /api/riskfactors
+
+Input       : 
+				{
+					riskfactor      : String, // Mandatory Field
+					createdBy		: String, // Either empty or _id of users
+				}
+
+Output      : 
+				If successfully
+					{
+						message : "riskfactor Added",
+                        ID      : String
+					}
+
+-----------------------------------------------------------------------------------------------------
+								2. Details of riskfactor
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/riskfactors/:riskfactor
+Input       : - NA-
+
+Output      : 
+				If successfully
+					{
+						riskfactor  : String,
+						createdAt	: Date,
+                        createdBy   : String,
+						_id         : String
+					} 
+					
+-----------------------------------------------------------------------------------------------------
+								3. List details of all the riskfactor
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/riskfactors/list
+
+Input       : - NA-
+
+Output      : 
+				If successfully
+					[
+						{
+                            riskfactor         : String,
+                            createdAt	    : Date,
+                            createdBy       : String,
+                            _id             : String
+						}
+					]	 
+-----------------------------------------------------------------------------------------------------
+								4. Update riskfactor details
+-----------------------------------------------------------------------------------------------------
+
+Method      : PUT
+    
+URL         : /api/riskfactors/
+
+Input       : 
+                {
+                    id        : String,
+                    riskfactor   : String,
+                }
+
+Output      : 
+				If successfully 
+					"riskfactor Updated"	 
+				If not 
+					"Something went wrong."
+
+-----------------------------------------------------------------------------------------------------
+							5. Delete particular riskfactor
+-----------------------------------------------------------------------------------------------------
+
+Method      : DELETE
+    
+URL         : /api/riskfactors/:riskfactor_ID
+			
+Input       : - NA -
+				
+Output      : 
+				If successfully 
+					"Framework type deleted"
+
+-----------------------------------------------------------------------------------------------------
+							6. Delete all the riskfactor
+-----------------------------------------------------------------------------------------------------
+
+Method      : DELETE
+    
+URL         : /api/riskfactors
+
+Input       : - NA -			
+
+Output      : 
+				If successfully 
+					"All riskfactor Deleted"

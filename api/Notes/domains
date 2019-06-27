@@ -1,0 +1,126 @@
+Schema : 
+-----------------------------------------------------------------------------------------------------
+
+{
+	_id			    : String,
+	domain          : String,
+    createdAt	    : Date,
+    createdBy       : String,
+}
+
+APIs :
+-----------------------------------------------------------------------------------------------------
+1. Insert new domains									- Done
+2. Details of domains									- Done
+3. List details of all the domainss					    - Done
+4. Update domains details                      		    - Done
+5. Delete particular domains							- Done
+6. Delete all the domainss							    - Done
+
+-----------------------------------------------------------------------------------------------------
+								1. Insert new domains
+-----------------------------------------------------------------------------------------------------
+
+Method      : POST
+    
+URL         : /api/domains
+
+Input       : 
+				{
+					domain	        : String, // Mandatory Field
+					createdBy		: String, // Either empty or _id of users
+				}
+
+Output      : 
+				If successfully
+					{
+						message : "Domain Added",
+                        ID      : String
+					}
+
+-----------------------------------------------------------------------------------------------------
+								2. Details of domains
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/domains/:domain
+
+Input       : - NA-
+
+Output      : 
+				If successfully
+					{
+						domain      : String,
+						createdAt	: Date,
+                        createdBy   : String,
+						_id         : String
+					} 
+					
+-----------------------------------------------------------------------------------------------------
+								3. List details of all the domains
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/domains/list
+
+Input       : - NA-
+
+Output      : 
+				If successfully
+					[
+						{
+                            domain          : String,
+                            createdAt	    : Date,
+                            createdBy       : String,
+                            _id             : String
+						}
+					]	 
+-----------------------------------------------------------------------------------------------------
+								4. Update domains details
+-----------------------------------------------------------------------------------------------------
+
+Method      : PUT
+    
+URL         : /api/domains/
+
+Input       : 
+                {
+                    id        : String,
+                    domain    : String,
+                }
+
+Output      : 
+				If successfully 
+					"Role Updated"	 
+				If not 
+					"Something went wrong."
+
+-----------------------------------------------------------------------------------------------------
+							5. Delete particular domain
+-----------------------------------------------------------------------------------------------------
+
+Method      : DELETE
+    
+URL         : /api/domains/:domain_ID
+			
+Input       : - NA -
+				
+Output      : 
+				If successfully 
+					"Framework type deleted"
+
+-----------------------------------------------------------------------------------------------------
+							6. Delete all the domains
+-----------------------------------------------------------------------------------------------------
+
+Method      : DELETE
+    
+URL         : /api/domains
+
+Input       : - NA -			
+
+Output      : 
+				If successfully 
+					"All Domains Deleted"
