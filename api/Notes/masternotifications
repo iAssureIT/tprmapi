@@ -1,0 +1,141 @@
+Schema : 
+-----------------------------------------------------------------------------------------------------
+
+{
+	_id			    : String,
+	templateType    : String,	
+	templateName    : String,
+	subject         : String,
+	content         : String,	
+    createdAt       : Date,
+}
+
+APIs :
+-----------------------------------------------------------------------------------------------------
+1. Insert new masternotification								- Done
+2. Details of masternotification								- 
+3. List details of all the masternotifications					- 
+4. Update masternotification details                      		- 
+5. Delete particular masternotification							- 
+6. Delete all the masternotifications							- 
+
+-----------------------------------------------------------------------------------------------------
+								1. Insert new masternotification
+-----------------------------------------------------------------------------------------------------
+
+Method      : POST
+    
+URL         : /api/masternotifications
+
+Note        : templateName and templateType combination should be unique
+Input       : 
+				{
+                    templateType    : String,	
+                    templateName    : String,
+                    subject         : String,
+                    content         : String,	
+					createdBy		: String, // Either empty or _id of companysettings
+				}
+
+Output      : 
+				If successfully
+					{
+						message : "Notification Details Added",
+                        ID      : String
+					}
+
+-----------------------------------------------------------------------------------------------------
+								2. Details of masternotification
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/masternotifications/:notificationmaster_ID
+
+Input       : - NA-
+
+Output      : 
+				If successfully
+					{
+						templateType : String,	
+                        templateName : String,
+                        subject      : String,
+                        content      : String,	
+                        createdAt    : Date,
+                        createdBy	 : String,
+						_id          : String
+					} 
+					
+-----------------------------------------------------------------------------------------------------
+								3. List details of all the masternotifications
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/masternotifications/list
+
+Input       : - NA-
+
+Output      : 
+				If successfully
+					[
+						{
+                            templateType : String,	
+                            templateName : String,
+                            subject      : String,
+                            content      : String,	
+                            createdAt    : Date,
+                            createdBy	 : String,
+                            _id         : String
+						}
+					]	 
+-----------------------------------------------------------------------------------------------------
+								4. Update masternotification details
+-----------------------------------------------------------------------------------------------------
+
+Method      : PUT
+    
+URL         : /api/masternotifications/
+
+Input       : 
+                {
+                    id           : String,
+                    templateType : String,	
+                    templateName : String,
+                    subject      : String,
+                    content      : String,
+                }
+
+Output      : 
+				If successfully 
+					"RoMaster notifications Updated"	 
+				If not 
+					"Master notifications Found"
+
+-----------------------------------------------------------------------------------------------------
+							5. Delete particular masternotification
+-----------------------------------------------------------------------------------------------------
+
+Method      : DELETE
+    
+URL         : /api/masternotifications/:notificationmaster_ID
+			
+Input       : - NA -
+				
+Output      : 
+				If successfully 
+					"Master notification deleted"
+
+-----------------------------------------------------------------------------------------------------
+							6. Delete all the masternotification
+-----------------------------------------------------------------------------------------------------
+
+Method      : DELETE
+    
+URL         : /api/masternotifications
+
+Input       : - NA -			
+
+Output      : 
+				If successfully 
+					"All Master notification deleted"

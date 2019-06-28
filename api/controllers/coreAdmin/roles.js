@@ -4,6 +4,7 @@ const Role = require('../../models/coreAdmin/roles');
 
 exports.create_role = (req,res,next)=>{
     var roleData = req.body.role;
+    console.log('input data ',req.body);
 	Role.findOne({role:roleData.toLowerCase()})
 		.exec()
 		.then(data =>{

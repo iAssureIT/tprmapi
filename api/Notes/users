@@ -67,7 +67,7 @@ Input       :
 					firstname		: String,
 					lastname		: String,
 					mobNumber		: String,
-					status			: String,
+					status			: String, // Either Active or Inactive
 					otpMobile		: String,
 					optEmail		: String,
 					spoc			: Boolean,
@@ -217,7 +217,7 @@ Output      :
 
 Method      : DELETE
     
-URL         : /api/users/delete/:userID 
+URL         : /api/users/delete
 
 Input       : - NA -			
 

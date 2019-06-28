@@ -1,0 +1,192 @@
+Schema : 
+-----------------------------------------------------------------------------------------------------
+
+{
+	_id			    : String,
+	companyId              : Number,
+    companyName            : String,
+    companyContactNumber   : String,
+    companyMobileNumber    : String,
+    companyEmail           : String,
+    companyAltEmail        : String,
+    logoFilename           : String,
+    companyUniqueID        : String,
+    companyLogo            : String,
+    companyLocationsInfo   : [
+                                {
+                                    location        : String,
+                                    officeID        : Number,
+                                    companyAddress  : String,
+                                    companyPincode  : String,
+                                    companyCity     : String,
+                                    companyState    : String,
+                                    companyCountry  : String,
+                                }
+                            ],
+    bankDetails             : [
+                                {
+                                    accHolderName : String,
+                                    bankName      : String,
+                                    branchName    : String,
+                                    accNumber     : String,
+                                    ifscCode      : String,
+                                }
+                            ],
+    taxSettings             : [
+                                {
+                                    taxType         : String,
+                                    applicableTax   : String,
+                                    effectiveFrom   : String,
+                                    effectiveTo     : String,
+                                    createdAt       : Date,
+                                }
+                            ],
+    listofVendors          : [
+                                {
+                                    companyID       : String,
+                                    company_ID      : String,
+                                }
+                                ],
+    preferences            : [
+                                {
+                                    defaultpwdfornewuser   : String,
+                                }
+                             ],
+    riskprofile            : String, 
+    createdBy              : String,
+    createdAt              : Date
+}
+
+APIs :
+-----------------------------------------------------------------------------------------------------
+1. Insert new notification								- Done
+2. Details of notification								- Done
+3. List details of all the notifications				- Done
+4. Update notification details                      	- Done
+5. Delete particular notification						- Done
+6. Delete all the notifications							- Done
+
+-----------------------------------------------------------------------------------------------------
+								1. Insert new notification
+-----------------------------------------------------------------------------------------------------
+
+Method      : POST
+    
+URL         : /api/notifications
+
+Note        : templateName and templateType combination should be unique
+Input       : 
+				{
+                    masternotificationId  : String,
+					event                 : String,
+					toMailId              : String,
+					toUserId              : String,
+					notifBody             : String,	
+					createdBy			  : String, // Either empty or _id of companysettings
+				}
+
+Output      : 
+				If successfully
+					{
+						message : "Notification Details Added",
+                        ID      : String
+					}
+
+-----------------------------------------------------------------------------------------------------
+								2. Details of notification
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/notifications/:notification_ID
+
+Input       : - NA-
+
+Output      : 
+				If successfully
+					{
+						_id          		  : String,
+						masternotificationId  : String,
+						event                 : String,
+						toMailId              : String,
+						toUserId              : String,
+						notifBody             : String,	
+						createdBy			  : String,
+						status				  : String,
+						date				  : Date,
+						createdAt			  : Date
+					} 
+					
+-----------------------------------------------------------------------------------------------------
+								3. List details of all the notifications
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/notifications/list
+
+Input       : - NA-
+
+Output      : 
+				If successfully
+					[
+						{
+                            _id          		  : String,
+							masternotificationId  : String,
+							event                 : String,
+							toMailId              : String,
+							toUserId              : String,
+							notifBody             : String,	
+							createdBy			  : String,
+							status				  : String,
+							date				  : Date,
+							createdAt			  : Date
+						}
+					]	 
+-----------------------------------------------------------------------------------------------------
+								4. Update notification details
+-----------------------------------------------------------------------------------------------------
+
+Method      : PUT
+    
+URL         : /api/notifications/
+
+Input       : 
+                {
+                    notification_ID	: String,
+                    status 			: String,	
+                }
+
+Output      : 
+				If successfully 
+					"Ro notifications Updated"	 
+				If not 
+					" notifications Found"
+
+-----------------------------------------------------------------------------------------------------
+							5. Delete particular notification
+-----------------------------------------------------------------------------------------------------
+
+Method      : DELETE
+    
+URL         : /api/notifications/:notification_ID
+			
+Input       : - NA -
+				
+Output      : 
+				If successfully 
+					"Notification deleted"
+
+-----------------------------------------------------------------------------------------------------
+							6. Delete all the masternotification
+-----------------------------------------------------------------------------------------------------
+
+Method      : DELETE
+    
+URL         : /api/notifications
+
+Input       : - NA -			
+
+Output      : 
+				If successfully 
+					"All Notification deleted"

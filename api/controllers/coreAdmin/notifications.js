@@ -11,11 +11,13 @@ exports.create_notification = (req,res,next)=>{
         toUserId              : req.body.toUserId,
         notifBody             : req.body.notifBody,
         status                : 'unread',
+        createdAt             : new Date(),
         date                  : new Date(),
+        createdBy             : req.body.createdBy,
     });
     notifications.save()
         .then(data=>{
-            res.status(200).json("Notification Details Added");
+            res.status(200).json({message:"Notification Details Added",ID:data._id});
         })
         .catch(err =>{
             console.log(err);
@@ -26,7 +28,8 @@ exports.create_notification = (req,res,next)=>{
 };
 
 exports.list_notification = (req,res,next)=>{
-    Notifications.find({toUserId:req.params.userID})
+    // Notifications.find({toUserId:req.params.userID})
+    Notifications.find({})
         .exec()
         .then(data=>{
             res.status(200).json(data);
@@ -40,7 +43,7 @@ exports.list_notification = (req,res,next)=>{
 }
 
 exports.detail_notification = (req,res,next)=>{
-    Notifications.findOne({_id:req.params.notificationID})
+    Notifications.findOne({_id:req.params.notification_ID})
         .exec()
         .then(data=>{
             if(data){
@@ -59,7 +62,7 @@ exports.detail_notification = (req,res,next)=>{
 
 exports.update_notification = (req,res,next)=>{
     Notifications.updateOne(
-            { _id:req.body.notificationID},  
+            { _id:req.body.notification_ID},  
             {
                 $set:{
                     status    : req.body.status	
@@ -84,10 +87,28 @@ exports.update_notification = (req,res,next)=>{
 }
 
 exports.delete_notification = (req,res,next)=>{
-    Notifications.deleteOne({_id:req.params.notificationID})
+    Notifications.deleteOne({_id:req.params.notification_ID})
         .exec()
         .then(data=>{
-            res.status(200).json("Notification deleted");
+            if(data.deletedCount == 1){
+                res.status(200).json("Notification deleted");
+            }
+        })
+        .catch(err =>{
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+}
+
+exports.delete_all_notification = (req,res,next)=>{
+    Notifications.deleteMany({})
+        .exec()
+        .then(data=>{
+            if(data.deletedCount > 0){
+                res.status(200).json("All Notification deleted");
+            }
         })
         .catch(err =>{
             console.log(err);

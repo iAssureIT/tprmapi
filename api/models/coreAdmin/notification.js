@@ -9,6 +9,8 @@ const notificationSchema = mongoose.Schema({
     notifBody            : String,
     status               : String,
     date                 : Date,
+    createdAt            : Date,
+    createdBy            : { type: mongoose.Schema.Types.ObjectId, ref: 'users'},
 });
 
 module.exports = mongoose.model('notifications',notificationSchema);

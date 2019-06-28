@@ -7,6 +7,8 @@ const mongoose = require ('mongoose');
 // Routes which should handle requests - Core Admin
 const userRoutes 					= require('./api/routes/coreAdmin/users');
 const rolesRoutes					= require('./api/routes/coreAdmin/roles');
+const masternotificationRoutes		= require('./api/routes/coreAdmin/masternotification');
+const notificationRoutes			= require('./api/routes/coreAdmin/notification');
 
 //TPRM Modules
 const frameworktypeRoutes				= require('./api/routes/tprm/frameworktypes');
@@ -29,10 +31,10 @@ app.use(bodyParser.json());// it show json data in good manner
 
 app.use((req, res, next) =>{
 	res.header("Access-Control-Allow-origin","*"); // use API from anywhere insted of * we use domain
-	res.header("Access-Control-Allow-Headers","Origin, X-requested-With, Content-Type, Accept, Authorization");
+	res.header("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept, Authorization");
 
 	if (req.method === 'OPTIONS') {
-		req.header('Access-Control-Allow_Methods','PUT, POST, PATCH, DELETE, GET');
+		req.header('Access-Control-Allow-Methods','PUT, POST, PATCH, DELETE, GET');
 		return res.status(200).json({});
 	}
 	next();
@@ -41,6 +43,9 @@ app.use((req, res, next) =>{
 //URL's collection wise
 app.use("/api/users", userRoutes);
 app.use("/api/roles", rolesRoutes);
+app.use("/api/masternotifications",masternotificationRoutes);
+app.use('/api/notifications',notificationRoutes);
+
 app.use('/api/frameworktypes',frameworktypeRoutes);
 app.use('/api/domains',domainRoutes);
 app.use('/api/countries',countryRoutes);

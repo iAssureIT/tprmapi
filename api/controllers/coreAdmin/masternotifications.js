@@ -17,11 +17,12 @@ exports.create_masternotification = (req,res,next)=>{
                     templateName    : req.body.templateName,
                     subject         : req.body.subject,
                     content         : req.body.content,	
-                    createdAt       : new Date()
+                    createdAt       : new Date(),
+                    createdBy       : req.body.createdBy,
                 });
                 masternotifications.save()
                     .then(data=>{
-                        res.status(200).json("Notification Details Added");
+                        res.status(200).json({message: "Notification Details Added",ID:data._id});
                     })
                     .catch(err =>{
                         console.log(err);
@@ -54,7 +55,7 @@ exports.list_masternotification = (req,res,next)=>{
 }
 
 exports.detail_masternotification = (req,res,next)=>{
-    Masternotifications.findOne({_id:req.params.notificationmasterID})
+    Masternotifications.findOne({_id:req.params.notificationmaster_ID})
         .exec()
         .then(data=>{
             if(data){
@@ -72,24 +73,60 @@ exports.detail_masternotification = (req,res,next)=>{
 }
 
 exports.update_masternotification = (req,res,next)=>{
-    Masternotifications.updateOne(
-            { _id:req.body.notificationmasterID},  
-            {
-                $set:{
-                    templateType    : req.body.templateType,	
-                    templateName    : req.body.templateName,
-                    subject         : req.body.subject,
-                    content         : req.body.content
-                }
-            }
-        )
+    Masternotifications.findOne({templateType:req.body.templateType,templateName:req.body.templateName})
+		.exec()
+		.then(data =>{
+			if(data){
+				return res.status(200).json({
+					message: 'Notification Details already exists'
+				});
+			}else{
+				Masternotifications.updateOne(
+                                        { _id:req.body.id},  
+                                        {
+                                            $set:{
+                                                templateType    : req.body.templateType,	
+                                                templateName    : req.body.templateName,
+                                                subject         : req.body.subject,
+                                                content         : req.body.content
+                                            }
+                                        }
+                                    )
+                                    .exec()
+                                    .then(data=>{
+                                        console.log('data ',data);
+                                        if(data.nModified == 1){
+                                            res.status(200).json("Master notifications Updated");
+                                        }else{
+                                            res.status(401).json("Master notifications Found");
+                                        }
+                                    })
+                                    .catch(err =>{
+                                        console.log(err);
+                                        res.status(500).json({
+                                            error: err
+                                        });
+                                    });
+			}
+		})
+		.catch(err =>{
+			console.log(err);
+			res.status(500).json({
+				error: err
+			});
+		});
+    
+}
+
+exports.delete_masternotification = (req,res,next)=>{
+    Masternotifications.deleteOne({_id:req.params.notificationmaster_ID})
         .exec()
         .then(data=>{
             console.log('data ',data);
-            if(data){
-                res.status(200).json("Master notifications Updated");
+            if(data.deletedCount == 1){
+                res.status(200).json("Master notification deleted");
             }else{
-                res.status(401).json("Master notifications Found");
+                res.status(401).json("Master notification not found");
             }
         })
         .catch(err =>{
@@ -100,12 +137,13 @@ exports.update_masternotification = (req,res,next)=>{
         });
 }
 
-exports.delete_masternotification = (req,res,next)=>{
-    Masternotifications.deleteOne({_id:req.params.notificationmasterID})
+exports.deleteall_masternotification = (req,res,next)=>{
+    Masternotifications.deleteMany({})
         .exec()
         .then(data=>{
-            if(data.nModified == 1){
-                res.status(200).json("Master notification deleted");
+            console.log('data ',data);
+            if(data.deletedCount > 0){
+                res.status(200).json("All Master notification deleted");
             }else{
                 res.status(401).json("Master notification not found");
             }

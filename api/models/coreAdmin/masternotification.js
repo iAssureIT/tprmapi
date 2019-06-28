@@ -6,7 +6,8 @@ const masternotificationSchema = mongoose.Schema({
 	templateName : String,
 	subject      : String,
 	content      : String,	
-    createdAt    : Date,
+	createdAt    : Date,
+	createdBy	 : { type: mongoose.Schema.Types.ObjectId, ref: 'users' }
 });
 
 module.exports = mongoose.model('masternotifications',masternotificationSchema);

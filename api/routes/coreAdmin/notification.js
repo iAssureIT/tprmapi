@@ -5,13 +5,14 @@ const NotificationController = require('../../controllers/coreAdmin/notification
 
 router.post('/', NotificationController.create_notification);
 
-router.get('/list/:userID', NotificationController.list_notification);
+router.get('/list', NotificationController.list_notification);
 
-router.get('/:notificationID', NotificationController.detail_notification);
+router.get('/:notification_ID', NotificationController.detail_notification);
 
 router.put('/', NotificationController.update_notification);
 
-router.delete('/:notificationID',NotificationController.delete_notification);
+router.delete('/:notification_ID',NotificationController.delete_notification);
 
+router.delete('/',NotificationController.delete_all_notification);
 
 module.exports = router;
