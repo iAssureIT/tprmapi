@@ -59,12 +59,15 @@ Schema :
 
 APIs :
 -----------------------------------------------------------------------------------------------------
-1. Insert new notification								- Done
-2. Details of notification								- Done
-3. List details of all the notifications				- Done
-4. Update notification details                      	- Done
-5. Delete particular notification						- Done
-6. Delete all the notifications							- Done
+1. Insert Basic Information                             -
+2. Update Basic Information                             -
+3. Insert / Update / Remove 
+    taxSettings, companyLocationsInfo, bankDetails      -
+4. Insert / Update / Remove listofVendors               -
+5. Details of companysettings                           -
+6. List all companysettings                             -
+7. Delete specify company details                       -
+8. Delete all the companys 
 
 -----------------------------------------------------------------------------------------------------
 								1. Insert new notification
@@ -72,17 +75,26 @@ APIs :
 
 Method      : POST
     
-URL         : /api/notifications
+URL         : /api/companysettings
 
-Note        : templateName and templateType combination should be unique
 Input       : 
 				{
-                    masternotificationId  : String,
-					event                 : String,
-					toMailId              : String,
-					toUserId              : String,
-					notifBody             : String,	
-					createdBy			  : String, // Either empty or _id of companysettings
+                    companyName            : String,
+                    companyContactNumber   : String,
+                    companyMobileNumber    : String,
+                    companyEmail           : String,
+                    companyAltEmail        : String,
+                    logoFilename           : String,
+                    companyUniqueID        : String,
+                    companyLogo            : String,
+                    Location               : String,
+                    companyAddress         : String,
+                    companyPincode         : String,
+                    companyCity            : String,
+                    companyState           : String,
+                    companyCountry         : String,
+                    riskprofile            : String, 
+					createdBy			   : String, // Either empty or _id of companysettings
 				}
 
 Output      : 
@@ -98,7 +110,7 @@ Output      :
 
 Method      : GET
     
-URL         : /api/notifications/:notification_ID
+URL         : /api/companysettings/:notification_ID
 
 Input       : - NA-
 
@@ -123,7 +135,7 @@ Output      :
 
 Method      : GET
     
-URL         : /api/notifications/list
+URL         : /api/companysettings/list
 
 Input       : - NA-
 
@@ -149,7 +161,7 @@ Output      :
 
 Method      : PUT
     
-URL         : /api/notifications/
+URL         : /api/companysettings/
 
 Input       : 
                 {
@@ -169,7 +181,7 @@ Output      :
 
 Method      : DELETE
     
-URL         : /api/notifications/:notification_ID
+URL         : /api/companysettings/:notification_ID
 			
 Input       : - NA -
 				
@@ -183,7 +195,7 @@ Output      :
 
 Method      : DELETE
     
-URL         : /api/notifications
+URL         : /api/companysettings
 
 Input       : - NA -			
 

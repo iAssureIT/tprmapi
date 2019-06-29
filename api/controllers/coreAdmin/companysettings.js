@@ -20,6 +20,7 @@ exports.create_companysettings = (req,res,next)=>{
                                 companyLogo            : req.body.companyLogo,
                                 companyLocationsInfo   : [
                                                             {
+                                                                officeID        : 1,
                                                                 Location        : req.body.Location,
                                                                 companyAddress  : req.body.companyAddress,
                                                                 companyPincode  : req.body.companyPincode,
@@ -28,24 +29,9 @@ exports.create_companysettings = (req,res,next)=>{
                                                                 companyCountry  : req.body.companyCountry,
                                                             }
                                                         ],
-                                bankDetails             : [
-                                                            {
-                                                                accHolderName : req.body.accHolderName,
-                                                                bankName      : req.body.bankName,
-                                                                branchName    : req.body.branchName,
-                                                                accNumber     : req.body.accNumber,
-                                                                ifscCode      : req.body.ifscCode,
-                                                            }
-                                                        ],
-                                taxSettings             : [
-                                                            {
-                                                                taxType         : req.body.taxType,
-                                                                applicableTax   : req.body.applicableTax,
-                                                                effectiveFrom   : req.body.effectiveFrom,
-                                                                effectiveTo     : req.body.effectiveTo,
-                                                                createdAt       : new Date(),
-                                                            }
-                                                        ]
+                                riskprofile            : req.body.riskprofile, 
+                                createdBy              : req.body.createdBy,
+                                createdAt              : new Date()
                         });
                         companysettings.save()
                                         .then(data=>{
@@ -67,7 +53,7 @@ exports.create_companysettings = (req,res,next)=>{
 };
 
 exports.detail_companysettings = (req,res,next)=>{
-    Companysettings.findOne({companyId:req.params.companysettingsID})
+    Companysettings.findOne({companyId:req.params.companysettings_ID})
         .exec()
         .then(data=>{
             if(data){

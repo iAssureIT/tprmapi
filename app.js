@@ -9,6 +9,7 @@ const userRoutes 					= require('./api/routes/coreAdmin/users');
 const rolesRoutes					= require('./api/routes/coreAdmin/roles');
 const masternotificationRoutes		= require('./api/routes/coreAdmin/masternotification');
 const notificationRoutes			= require('./api/routes/coreAdmin/notification');
+const companysettingsRoutes			= require('./api/routes/coreAdmin/companysettings')
 
 //TPRM Modules
 const frameworktypeRoutes				= require('./api/routes/tprm/frameworktypes');
@@ -45,6 +46,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/roles", rolesRoutes);
 app.use("/api/masternotifications",masternotificationRoutes);
 app.use('/api/notifications',notificationRoutes);
+app.use('/api/companysettings',companysettingsRoutes);
 
 app.use('/api/frameworktypes',frameworktypeRoutes);
 app.use('/api/domains',domainRoutes);
