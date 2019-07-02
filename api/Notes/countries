@@ -6,6 +6,8 @@ Schema :
 	country          : String,
     createdAt	    : Date,
     createdBy       : String,
+	creatorRole     : String,
+    corporate_ID    : String,
 }
 
 APIs :
@@ -16,6 +18,7 @@ APIs :
 4. Update country details                      		    - Done
 5. Delete particular country							- Done
 6. Delete all the countries							    - Done
+7. List all countries for specify corporate				- Done
 
 -----------------------------------------------------------------------------------------------------
 								1. Insert new country
@@ -28,6 +31,8 @@ URL         : /api/countries
 Input       : 
 				{
 					country        : String, // Mandatory Field
+					creatorRole     : String,
+					corporate_ID    : String, 
 					createdBy		: String, // Either empty or _id of users
 				}
 
@@ -53,7 +58,9 @@ Output      :
 						country     : String,
 						createdAt	: Date,
                         createdBy   : String,
-						_id         : String
+						_id         : String,
+						creatorRole     : String,
+						corporate_ID    : String, 
 					} 
 					
 -----------------------------------------------------------------------------------------------------
@@ -73,7 +80,9 @@ Output      :
                             country         : String,
                             createdAt	    : Date,
                             createdBy       : String,
-                            _id             : String
+                            _id             : String,
+							creatorRole     : String,
+							corporate_ID    : String, 
 						}
 					]	 
 -----------------------------------------------------------------------------------------------------
@@ -123,3 +132,26 @@ Input       : - NA -
 Output      : 
 				If successfully 
 					"All country Deleted"
+
+-----------------------------------------------------------------------------------------------------
+							7. List all countries for specify corporate
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/countries/list/:corporate_ID
+
+Input       : - NA-
+
+Output      : 
+				If successfully
+					[
+						{
+                            country		    : String,
+                            createdAt	    : Date,
+                            createdBy       : String,
+                            _id             : String,
+							creatorRole     : String,
+							corporate_ID    : String,
+						}
+					]

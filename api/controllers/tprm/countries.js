@@ -16,6 +16,8 @@ exports.create_country = (req,res,next)=>{
                     _id             : new mongoose.Types.ObjectId(),
                     country          : countryData.toLowerCase(),
                     createdBy       : req.body.createdBy,
+                    creatorRole     : req.body.creatorRole,
+                    corporate_ID    : req.body.corporate_ID,
                     createdAt       : new Date(),
 
                 });
@@ -53,6 +55,19 @@ exports.list_country = (req,res,next)=>{
         });
 }
 
+exports.list_country_corporate = (req,res,next)=>{
+    Country.find({corporate_ID:req.params.corporate_ID})
+        .exec()
+        .then(data=>{
+            res.status(200).json(data);
+        })
+        .catch(err =>{
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+}
 exports.detail_country = (req,res,next)=>{
     var countryData = req.params.country;
     Country.findOne({country:countryData.toLowerCase()})

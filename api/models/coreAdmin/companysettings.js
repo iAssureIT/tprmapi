@@ -11,15 +11,20 @@ const companysettingsSchema = mongoose.Schema({
     logoFilename           : String,
     companyUniqueID        : String,
     companyLogo            : String,
+    companywebsite         : String,
     companyLocationsInfo   : [
                                 {
-                                    location        : String,
-                                    officeID      : Number,
-                                    companyAddress  : String,
-                                    companyPincode  : String,
-                                    companyCity     : String,
-                                    companyState    : String,
-                                    companyCountry  : String,
+                                    location            : String,
+                                    companyContactNum   : String,
+                                    companybuilding     : String,
+                                    companylandmark     : String,                                 
+                                    companyAddress      : String,
+                                    companyPincode      : String,
+                                    companyCity         : String,
+                                    companydistrict     : String,
+                                    companytaluka       : String,
+                                    companyState        : String,
+                                    companyCountry      : String,
                                 }
                             ],
     bankDetails             : [
@@ -40,20 +45,29 @@ const companysettingsSchema = mongoose.Schema({
                                     createdAt       : Date,
                                 }
                             ],
-    listofVendors          : [
+    listofClient            : [
                                 {
                                     companyID       : String,
                                     company_ID      : String,
                                 }
-                                ],
+                             ],
     preferences            : [
                                 {
                                     defaultpwdfornewuser   : String,
                                 }
                              ],
+    spocDetails            : {
+                                    fullname        : String,
+                                    emailId         : String,
+                                    mobNumber       : String,
+                                    designation     : String,
+                                    user_ID         : { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
+                             },
+    type                   : String, //Admin , Corporate or Vendor
     riskprofile            : String, //High , Meidum or Low 
     createdBy              : { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
-    createdAt              : Date
+    createdAt              : Date,
+    creatorRole            : String,
 });
 
 module.exports = mongoose.model('companysettings',companysettingsSchema);

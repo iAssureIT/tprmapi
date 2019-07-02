@@ -59,146 +59,200 @@ Schema :
 
 APIs :
 -----------------------------------------------------------------------------------------------------
-1. Insert Basic Information                             -
-2. Update Basic Information                             -
+1. Insert Basic Information                             - Done
+2. Update Basic Information                             - Done
 3. Insert / Update / Remove 
     taxSettings, companyLocationsInfo, bankDetails      -
-4. Insert / Update / Remove listofVendors               -
-5. Details of companysettings                           -
+4. Insert / Update / Remove listofclients               -
+5. Details of particular company                        -
 6. List all companysettings                             -
 7. Delete specify company details                       -
-8. Delete all the companys 
+8. Delete all the companys                              - 
+9. Insert Corporate / Vendor                            - Done
+    - Insert Data into companysettings
+    - Create user
+    - Update SPOC User_ID into companyseetings
+    - update Corporate details into companysettings
 
 -----------------------------------------------------------------------------------------------------
-								1. Insert new notification
+								9. Insert Corporate / Vendor
 -----------------------------------------------------------------------------------------------------
 
+Method      : POST
+    
+URL         : /api/companysettings/createclient
+
+Input       : 
+                {
+                    companyName             : String,
+                    spocfullname            : String,
+                    spocemailId             : String,
+                    spocmobNumber           : String,
+                    spocdesignation         : String,
+                    createdBy               : String, //Logged in user's ID
+                    creatorRole             : String, //Logged in user's role
+                    creatorCompany_ID       : String, //_id of company
+                    spocrole                : String, //Madatory Field make sure it should be small case 
+                    spocstatus              : String, //Active or Inactive
+                    pwd                     : String,
+                    type                    : String, //Corporate or Vendor
+                }
+
+Output      :
+                {
+                    message : "Client Created"
+                    ID      : String,
+                }
+
+
+-----------------------------------------------------------------------------------------------------
+								1. Insert Basic Information
+-----------------------------------------------------------------------------------------------------
+ 
 Method      : POST
     
 URL         : /api/companysettings
 
 Input       : 
-				{
-                    companyName            : String,
-                    companyContactNumber   : String,
-                    companyMobileNumber    : String,
-                    companyEmail           : String,
-                    companyAltEmail        : String,
-                    logoFilename           : String,
-                    companyUniqueID        : String,
-                    companyLogo            : String,
-                    Location               : String,
-                    companyAddress         : String,
-                    companyPincode         : String,
-                    companyCity            : String,
-                    companyState           : String,
-                    companyCountry         : String,
-                    riskprofile            : String, 
-					createdBy			   : String, // Either empty or _id of companysettings
-				}
+                {
+                    "companyName"            : String,
+                    "companyContactNumber"   : String,
+                    "companyMobileNumber"    : String,
+                    "companyEmail"           : String,
+                    "companyAltEmail"        : String,
+                    "logoFilename"           : String,
+                    "companyUniqueID"        : String,
+                    "companyLogo"            : String,
+                    "companywebsite"         : String,
+                    "location"               : String,
+                    "companyAddress"         : String,
+                    "companyPincode"         : String,
+                    "companyCity"            : String,
+                    "companyState"           : String,
+                    "companyCountry"         : String,
+                    "riskprofile"            : String 
+                    "createdBy"              : String,
+                    "creatorRole"            : String 
+                }
 
-Output      : 
-				If successfully
-					{
-						message : "Notification Details Added",
+Output      :
+                 if successfully
+                    {
+                        message : "Company Added",
                         ID      : String
-					}
+                    }
+                else
+                    {
+                        message : "Something went wrong"
+                    }
 
 -----------------------------------------------------------------------------------------------------
-								2. Details of notification
+								2. Update Basic Information
 -----------------------------------------------------------------------------------------------------
 
-Method      : GET
+Method      : PATCH
     
-URL         : /api/companysettings/:notification_ID
-
-Input       : - NA-
-
-Output      : 
-				If successfully
-					{
-						_id          		  : String,
-						masternotificationId  : String,
-						event                 : String,
-						toMailId              : String,
-						toUserId              : String,
-						notifBody             : String,	
-						createdBy			  : String,
-						status				  : String,
-						date				  : Date,
-						createdAt			  : Date
-					} 
-					
------------------------------------------------------------------------------------------------------
-								3. List details of all the notifications
------------------------------------------------------------------------------------------------------
-
-Method      : GET
-    
-URL         : /api/companysettings/list
-
-Input       : - NA-
-
-Output      : 
-				If successfully
-					[
-						{
-                            _id          		  : String,
-							masternotificationId  : String,
-							event                 : String,
-							toMailId              : String,
-							toUserId              : String,
-							notifBody             : String,	
-							createdBy			  : String,
-							status				  : String,
-							date				  : Date,
-							createdAt			  : Date
-						}
-					]	 
------------------------------------------------------------------------------------------------------
-								4. Update notification details
------------------------------------------------------------------------------------------------------
-
-Method      : PUT
-    
-URL         : /api/companysettings/
+URL         : /api/companysettings/updatebasicadmin/:companysettings_ID
 
 Input       : 
                 {
-                    notification_ID	: String,
-                    status 			: String,	
+                    "companyName"            : String,
+                    "companyContactNumber"   : String,
+                    "companyMobileNumber"    : String,
+                    "companyEmail"           : String,
+                    "companyAltEmail"        : String,
+                    "logoFilename"           : String,
+                    "companyUniqueID"        : String,
+                    "companyLogo"            : String,
+                    "companywebsite"         : String,
+                    "location"               : String,
+                    "companyAddress"         : String,
+                    "companyPincode"         : String,
+                    "companyCity"            : String,
+                    "companyState"           : String,
+                    "companyCountry"         : String,
+                    "riskprofile"            : String 
                 }
 
-Output      : 
-				If successfully 
-					"Ro notifications Updated"	 
-				If not 
-					" notifications Found"
+Output      :
+                if successfully
+                    {
+                        message : "Company details updated"
+                    }
+                else
+                    {
+                        message : "Something went wrong"
+                    }
 
 -----------------------------------------------------------------------------------------------------
-							5. Delete particular notification
+		3. Insert / Update / Remove taxSettings, companyLocationsInfo, bankDetails
 -----------------------------------------------------------------------------------------------------
 
-Method      : DELETE
+Method      : 
     
-URL         : /api/companysettings/:notification_ID
-			
-Input       : - NA -
-				
-Output      : 
-				If successfully 
-					"Notification deleted"
+URL         : 
+
+Input       : 
+
+Output      :
 
 -----------------------------------------------------------------------------------------------------
-							6. Delete all the masternotification
+                            4. Insert / Update / Remove listofclients
 -----------------------------------------------------------------------------------------------------
 
-Method      : DELETE
+Method      : 
     
-URL         : /api/companysettings
+URL         : 
 
-Input       : - NA -			
+Input       : 
 
-Output      : 
-				If successfully 
-					"All Notification deleted"
+Output      :
+
+-----------------------------------------------------------------------------------------------------
+								5. Details of particular company
+-----------------------------------------------------------------------------------------------------
+
+Method      : 
+    
+URL         : 
+
+Input       : 
+
+Output      :
+
+-----------------------------------------------------------------------------------------------------
+								6. List all companysettings
+-----------------------------------------------------------------------------------------------------
+
+Method      : 
+    
+URL         : 
+
+Input       : 
+
+Output      :
+
+-----------------------------------------------------------------------------------------------------
+								7. Delete specify company details
+-----------------------------------------------------------------------------------------------------
+
+Method      : 
+    
+URL         : 
+
+Input       : 
+
+Output      :
+
+-----------------------------------------------------------------------------------------------------
+								8. Delete all the companys
+-----------------------------------------------------------------------------------------------------
+
+Method      : 
+    
+URL         : 
+
+Input       : 
+
+Output      :
+

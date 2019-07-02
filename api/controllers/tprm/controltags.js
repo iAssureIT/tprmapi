@@ -3,7 +3,6 @@ const mongoose	= require("mongoose");
 const Controltags = require('../../models/tprm/controltags');
 
 exports.create_controltag = (req,res,next)=>{
-    console.log('create controltag');
     var controltagData = req.body.controltag;
 	Controltags.findOne({controltag:controltagData.toLowerCase()})
 		.exec()
@@ -17,8 +16,9 @@ exports.create_controltag = (req,res,next)=>{
                     _id             : new mongoose.Types.ObjectId(),
                     controltag      : controltagData.toLowerCase(),
                     createdBy       : req.body.createdBy,
+                    creatorRole     : req.body.creatorRole,
+                    corporate_ID    : req.body.corporate_ID,
                     createdAt       : new Date(),
-
                 });
                 controltags.save()
                     .then(data=>{
@@ -42,6 +42,20 @@ exports.create_controltag = (req,res,next)=>{
 
 exports.list_controltag = (req,res,next)=>{
     Controltags.find()
+        .exec()
+        .then(data=>{
+            res.status(200).json(data);
+        })
+        .catch(err =>{
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+}
+
+exports.list_controltag_corporate = (req,res,next)=>{
+    Controltags.find({corporate_ID:req.params.corporate_ID})
         .exec()
         .then(data=>{
             res.status(200).json(data);

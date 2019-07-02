@@ -60,7 +60,10 @@ exports.user_signup = (req,res,next)=>{
 													company_ID	  : req.body.company_ID, //Reference
 												},
 										roles 		: [(req.body.role).toLowerCase()]
-			            });	
+						});	
+						if(!req.body.firstname){
+							user.profile.fullName = req.body.fullName;
+						}
 						user.save()
 							.then(result =>{
 								console.log('result ',result);
@@ -402,3 +405,4 @@ exports.user_signup_login = (req,res,next)=>{
 			});
 		});
 }
+

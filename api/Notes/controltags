@@ -3,9 +3,11 @@ Schema :
 
 {
 	_id			    : String,
-	controltag     : String,
+	controltag     	: String,
     createdAt	    : Date,
     createdBy       : String,
+	creatorRole     : String,
+    corporate_ID    : String,
 }
 
 APIs :
@@ -16,6 +18,7 @@ APIs :
 4. Update controltag details                      		- Done
 5. Delete particular controltag							- Done
 6. Delete all the controltags							- Done
+7. List all controltag for specify corporate			- Done
 
 -----------------------------------------------------------------------------------------------------
 								1. Insert new controltag
@@ -27,7 +30,9 @@ URL         : /api/controltags
 
 Input       : 
 				{
-					controltag      : String, // Mandatory Field
+					controltag      : String, // Mandatory Field,
+					creatorRole     : String,
+					corporate_ID    : String,
 					createdBy		: String, // Either empty or _id of users
 				}
 
@@ -53,7 +58,9 @@ Output      :
 						controltag  : String,
 						createdAt	: Date,
                         createdBy   : String,
-						_id         : String
+						_id         : String,
+						creatorRole : String,
+						corporate_ID: String,
 					} 
 					
 -----------------------------------------------------------------------------------------------------
@@ -70,10 +77,12 @@ Output      :
 				If successfully
 					[
 						{
-                            controltag         : String,
+                            controltag      : String,
                             createdAt	    : Date,
                             createdBy       : String,
-                            _id             : String
+                            _id             : String,
+							creatorRole     : String,
+							corporate_ID    : String,
 						}
 					]	 
 -----------------------------------------------------------------------------------------------------
@@ -86,8 +95,10 @@ URL         : /api/controltags/
 
 Input       : 
                 {
-                    id        : String,
+                    id        	 : String,
                     controltag   : String,
+					creatorRole  : String,
+					corporate_ID : String,
                 }
 
 Output      : 
@@ -123,3 +134,26 @@ Input       : - NA -
 Output      : 
 				If successfully 
 					"All control tag Deleted"
+
+-----------------------------------------------------------------------------------------------------
+							7. List all controltag for specify corporate
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/controltags/list/:controltag_ID
+
+Input       : - NA-
+
+Output      : 
+				If successfully
+					[
+						{
+                            controltag      : String,
+                            createdAt	    : Date,
+                            createdBy       : String,
+                            _id             : String,
+							creatorRole     : String,
+							corporate_ID    : String,
+						}
+					]

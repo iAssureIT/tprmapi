@@ -37,6 +37,7 @@ const userSchema = mongoose.Schema({
 						otpMobile	  			: String,
 						optEmail	  			: String,
 						spoc					: Boolean,
+						designation				: String,
 						companyID				: Number,
 						company_ID				: { type: mongoose.Schema.Types.ObjectId, ref: 'companysettings' },
 					},

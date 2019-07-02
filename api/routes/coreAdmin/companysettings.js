@@ -7,7 +7,13 @@ router.post('/', CompanySettingController.create_companysettings);
 
 router.get('/list',CompanySettingController.list_companysettings);
 
+router.post('/createclient',CompanySettingController.create_client);
+
 router.get('/:companysettings_ID', CompanySettingController.detail_companysettings);
+
+router.patch('/updatebasicadmin/:companysettings_ID',CompanySettingController.update_basicinfo_companysettings);
+
+router.patch('/updatespocID/:company_ID/:user_ID',CompanySettingController.update_spoc_userID);
 
 router.patch('/:info/:action', CompanySettingController.update_companysettings);
 
