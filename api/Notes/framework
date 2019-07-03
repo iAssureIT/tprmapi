@@ -1,0 +1,197 @@
+Schema : 
+-----------------------------------------------------------------------------------------------------
+
+{
+	_id			        : String,
+	frameworktype_ID    : String,
+    frameworkname       : String,
+    purpose             : String,
+    domain              : String,
+    company_ID          : String,
+    createdBy           : String,
+    ref_framework_ID    : String,
+    controlBlocks       : [
+                                {
+                                   controlBlocks_ID :  String
+                                }
+                          ]
+}
+
+APIs :
+-----------------------------------------------------------------------------------------------------
+1. Insert new framework								    - Done
+2. Details of framework								    - Done
+3. List details of all the frameworks				    - Done
+4. Update framework details                      		- Done
+5. Delete particular framework							- Done
+6. Delete all the frameworks							- Done
+7. List all framework for specify company			    - Done
+8. Add / Remove the Control Block 						- Done
+
+-----------------------------------------------------------------------------------------------------
+								1. Insert new framework
+-----------------------------------------------------------------------------------------------------
+
+Method      : POST
+    
+URL         : /api/frameworks
+
+Input       : 
+				{
+					frameworktype       : String,
+                    frameworkname       : String,
+                    purpose             : String,
+                    domain_ID           : String,
+                    company_ID          : String,
+                    createdBy           : String,
+                    ref_framework_ID    : String,
+				}
+
+Output      : 
+				If successfully
+					{
+						message : "Framework Added",
+                        ID      : String
+					}
+
+-----------------------------------------------------------------------------------------------------
+								2. Details of framework
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/frameworks/:framework_ID
+
+Input       : - NA-
+
+Output      : 
+				If successfully
+					{
+						"_id"			: String,
+						"frameworkname"	: String,
+						"purpose"		: String,
+						"domain_ID"		: String,
+						"company_ID"	: String
+						"controlBlocks"	: [],
+					}
+					
+-----------------------------------------------------------------------------------------------------
+								3. List details of all the framework
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/frameworks/list
+
+Input       : - NA-
+
+Output      : 
+				If successfully
+					[
+						{
+							"_id"			: String,
+							"frameworkname"	: String,
+							"purpose"		: String,
+							"domain_ID"		: String,
+							"company_ID"	: String
+							"controlBlocks"	: [],
+						}
+					]	 
+-----------------------------------------------------------------------------------------------------
+								4. Update framework details
+-----------------------------------------------------------------------------------------------------
+
+Method      : PUT
+    
+URL         : /api/frameworks/
+
+Input       : 
+                {
+					id 					: String
+                    frameworktype       : String,
+                    frameworkname       : String,
+                    purpose             : String,
+                    domain_ID           : String,
+                    company_ID          : String,
+                    ref_framework_ID    : String,
+                }
+
+Output      : 
+				If successfully 
+					"Framework Updated"	 
+				If not 
+					"Something went wrong."
+
+-----------------------------------------------------------------------------------------------------
+							5. Delete particular controltag
+-----------------------------------------------------------------------------------------------------
+
+Method      : DELETE
+    
+URL         : /api/frameworks/:framework_ID
+			
+Input       : - NA -
+				
+Output      : 
+				If successfully 
+					"Framework deleted"
+
+-----------------------------------------------------------------------------------------------------
+							6. Delete all the controltag
+-----------------------------------------------------------------------------------------------------
+
+Method      : DELETE
+    
+URL         : /api/frameworks
+
+Input       : - NA -			
+
+Output      : 
+				If successfully 
+					"All frameworks Deleted"
+
+-----------------------------------------------------------------------------------------------------
+							7. List all framework for specify company
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/api/frameworks/list/:company_ID
+
+Input       : - NA-
+
+Output      : 
+				If successfully
+					[
+						{
+                            "_id"			: String,
+							"frameworkname"	: String,
+							"purpose"		: String,
+							"domain_ID"		: String,
+							"company_ID"	: String
+							"controlBlocks"	: [],
+						}
+					]
+
+-----------------------------------------------------------------------------------------------------
+							8. Add / Remove the Control Block
+-----------------------------------------------------------------------------------------------------
+
+Method      : PUT
+    
+URL         : /api/frameworks/controlblock/:action/:framework_ID
+
+Note 		: action can be add or remove 
+
+Input       : 
+                {
+					controlBlocks_ID	: String
+                }
+
+Output      : 
+				If added successfully 
+					"Control Block added"	 
+				If remove successfully
+					"Control Block removed"
+				If not 
+					"Something went wrong."

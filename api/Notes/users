@@ -51,6 +51,7 @@ APIs :
 5. Update User information (only profile Data)		- Done
 6. Delete particular user							- Done
 7. Delete all the users								- Done
+8. Login 											- 
 
 -----------------------------------------------------------------------------------------------------
 								1. Insert new user (signup)
@@ -224,5 +225,27 @@ Input       : - NA -
 Output      : 
 				If successfully 
 					"All Users Deleted"
+				If not 
+					"Something went wrong."
+
+-----------------------------------------------------------------------------------------------------
+								8. Login
+-----------------------------------------------------------------------------------------------------
+
+Method      : POST
+    
+URL         : /api/users/details
+
+Input       : 
+				{
+					email	: String,
+					pwd		: String
+				}
+
+Output      : 
+				If successfully 
+					{
+						token : token
+					}
 				If not 
 					"Something went wrong."

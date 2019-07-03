@@ -470,8 +470,8 @@ exports.update_spoc_userID = (req,res,next)=>{
 exports.create_client = (req,res,next)=>{
     Companysettings.findOne({companyName:req.body.companyName})
                     .exec()
-                    .then(data=>{
-                        if(data){
+                    .then(company=>{
+                        if(company){
                             res.status(200).json({message:"Company Already Exits"});
                         }else{
                             Users.find({emails:{$elemMatch:{address:req.body.spocemailId}}})
@@ -528,8 +528,8 @@ exports.create_client = (req,res,next)=>{
                                                         Companysettings.find()
                                                                         .count()
                                                                         .exec()
-                                                                        .then(data =>{
-                                                                            var companyId = data + 1;
+                                                                        .then(companyLength =>{
+                                                                            var companyId = companyLength + 1;
                                                                             const companysettings = new Companysettings({
                                                                                     _id                    : new mongoose.Types.ObjectId(),
                                                                                     companyId              : companyId,
