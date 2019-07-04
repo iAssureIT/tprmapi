@@ -1,0 +1,223 @@
+Schema : 
+-----------------------------------------------------------------------------------------------------
+
+{
+	_id			            : String,
+	controlShort            : String,
+    controlDesc             : String,
+    controltag_ID           : String,
+    ref1                    : String,
+    ref2                    : String,
+    ref3                    : String,
+    risk                    : String,
+    multiplier              : Number,
+    mandatory               : Boolean,
+    scored                  : Boolean,
+    company_ID              : String,
+    createdBy               : String,
+    createdAt               : Date,
+}
+
+APIs :
+-----------------------------------------------------------------------------------------------------
+1. Insert new control 								    - Done
+    - Insert New Control 
+    - Update Control Block
+2. Details of control 								    - Done
+3. List details of all the controls				        - Done
+4. Update control basic details                      	- Done
+5. Delete particular control 							- Done
+6. Delete all the controls							    - Done
+7. List all control  for specify company			    - Done
+
+-----------------------------------------------------------------------------------------------------
+								1. Insert new framework
+-----------------------------------------------------------------------------------------------------
+
+Method      : POST
+    
+URL         : /api/controls
+
+Input       : 
+				{
+					"controlShort"            : String,
+                    "controlDesc"             : String,
+                    "controltag_ID"           : String,
+                    "ref1"                    : String,
+                    "ref2"                    : String,
+                    "ref3"                    : String,
+                    "risk"                    : String,
+                    "multiplier"              : Number,
+                    "mandatory"               : Boolean,
+                    "scored"                  : Boolean,
+                    "controlBlocks_ID"        : String, // mandatory
+                    "company_ID"              : String,
+                    "createdBy"               : String,
+				}
+
+Output      : 
+				If successfully
+					{
+						message : "Control Added and Control Block Updated",
+                        ID      : String //_id of control
+					}
+                else
+                    {
+                        message : Control Added and then something went wrong. 
+                    }
+
+-----------------------------------------------------------------------------------------------------
+								2. Details of control
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/controls/:control_ID
+
+Input       : - NA-
+
+Output      : 
+				If successfully
+					{
+						"_id"                   : String,
+                        controlShort            : String,
+                        controlDesc             : String,
+                        controltag_ID           : String,
+                        ref1                    : String,
+                        ref2                    : String,
+                        ref3                    : String,
+                        risk                    : String,
+                        multiplier              : Number,
+                        mandatory               : Boolean,
+                        scored                  : Boolean,
+                        company_ID              : String,
+                        createdBy               : String,
+                        createdAt               : Date,
+					}
+                else
+                    {
+                        message:'Control not found'
+                    }
+					
+-----------------------------------------------------------------------------------------------------
+								3. List details of all the controls
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/controls/list
+
+Input       : - NA-
+
+Output      : 
+				If successfully
+					[
+						{
+							"_id"                   : String,
+                            controlShort            : String,
+                            controlDesc             : String,
+                            controltag_ID           : String,
+                            ref1                    : String,
+                            ref2                    : String,
+                            ref3                    : String,
+                            risk                    : String,
+                            multiplier              : Number,
+                            mandatory               : Boolean,
+                            scored                  : Boolean,
+                            company_ID              : String,
+                            createdBy               : String,
+                            createdAt               : Date,
+						}
+					]	 
+-----------------------------------------------------------------------------------------------------
+						    4. Update controls Basic details
+-----------------------------------------------------------------------------------------------------
+
+Method      : PUT
+    
+URL         : /api/controls
+
+Input       : 
+                {
+					id 					    : String
+                    controlShort            : String,
+                    controlDesc             : String,
+                    controltag_ID           : String,
+                    ref1                    : String,
+                    ref2                    : String,
+                    ref3                    : String,
+                    risk                    : String,
+                    multiplier              : Number,
+                    mandatory               : Boolean,
+                    scored                  : Boolean,
+                    company_ID              : String,
+                }
+
+Output      : 
+				If successfully 
+					"Control Updated"	 
+				If not 
+					"Something went wrong."
+
+-----------------------------------------------------------------------------------------------------
+							5. Delete particular control
+-----------------------------------------------------------------------------------------------------
+
+Method      : DELETE
+    
+URL         : /api/controls/:control_ID
+			
+Input       : - NA -
+				
+Output      : 
+				If successfully 
+					"Control block deleted"
+                else    
+                    "Control block not found"
+
+-----------------------------------------------------------------------------------------------------
+							6. Delete all the control
+-----------------------------------------------------------------------------------------------------
+
+Method      : DELETE
+    
+URL         : /api/controls
+
+Input       : - NA -			
+
+Output      : 
+				If successfully 
+					"All control block Deleted"
+                else
+                    "Something went wrong"
+
+-----------------------------------------------------------------------------------------------------
+							7. List all control for specify company
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/controls/list/:company_ID
+
+Input       : - NA-
+
+Output      : 
+				If successfully
+					[
+						{
+                            "_id"                   : String,
+                            controlShort            : String,
+                            controlDesc             : String,
+                            controltag_ID           : String,
+                            ref1                    : String,
+                            ref2                    : String,
+                            ref3                    : String,
+                            risk                    : String,
+                            multiplier              : Number,
+                            mandatory               : Boolean,
+                            scored                  : Boolean,
+                            company_ID              : String,
+                            createdBy               : String,
+                            createdAt               : Date,
+						}
+					]

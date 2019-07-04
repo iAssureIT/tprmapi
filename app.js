@@ -20,6 +20,8 @@ const controltagRoutes					= require('./api/routes/tprm/controltags');
 const industrytagRoutes					= require('./api/routes/tprm/industrytags')
 const customertyprRoutes 				= require('./api/routes/tprm/customertypes');
 const frameworkRoutes 					= require('./api/routes/tprm/frameworks');
+const controlblockRoutes				= require('./api/routes/tprm/controlblocks');
+const controlRoutes 					= require('./api/routes/tprm/controls');
 
 mongoose.connect('mongodb://localhost/qatprm',{
 	useNewUrlParser: true
@@ -60,6 +62,8 @@ app.use('/api/controltags',controltagRoutes);
 app.use('/api/industrytags',industrytagRoutes);
 app.use('/api/customertypes',customertyprRoutes);
 app.use('/api/frameworks',frameworkRoutes);
+app.use('/api/controlblocks',controlblockRoutes);
+app.use('/api/controls',controlRoutes);
 
 // handle all other request which not found 
 app.use((req, res, next) => {

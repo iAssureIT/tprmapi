@@ -1,0 +1,269 @@
+Schema : 
+-----------------------------------------------------------------------------------------------------
+
+{
+	_id			        : String,
+	controlBlocksCode       : String,
+    controlBlockRef         : Number,
+    controlBlockName        : String,
+    controlBlockDesc        : String,
+    parentBlock             : Number,
+    domain_ID               : String,
+    sequence                : Number,
+    weightage               : Number,
+    company_ID              : String,
+    createdBy               : String,
+    createdAt               : Date,
+    subControlBlocks        : [
+                                {
+                                   controlBlocks_ID :  String
+                                }
+                            ],
+    controls                : [
+                                {
+                                    control_ID      : String
+                                }
+                            ]
+}
+
+APIs :
+-----------------------------------------------------------------------------------------------------
+1. Insert new control Block								    - Done
+    - Insert New Control Block
+    - Update Framework
+2. Details of control Block								    - Done
+3. List details of all the control Blocks				    - Done
+4. Update control Block basic details                      	- Done 
+5. Delete particular control Block							- Done
+6. Delete all the control Blocks							- Done
+7. List all control Block for specify company			    - Done
+8. Add / Remove the Sub Control Block   				    - Done
+9. Add / Remove the Controls     						    - Done
+
+-----------------------------------------------------------------------------------------------------
+								1. Insert new control Block
+-----------------------------------------------------------------------------------------------------
+
+Method      : POST
+    
+URL         : /api/controlblocks
+
+Input       : 
+				{
+					controlBlocksCode       : String,
+                    controlBlockRef         : Number,
+                    controlBlockName        : String,
+                    controlBlockDesc        : String,
+                    parentBlock             : Number,
+                    domain_ID               : String,
+                    sequence                : Number,
+                    weightage               : Number,
+                    framework_ID            : String, // Mandatory
+                    company_ID              : String,
+                    createdBy               : String,
+				}
+
+Output      : 
+				If successfully
+					{
+						message : "Control Block Added",
+                        ID      : String
+					}
+
+-----------------------------------------------------------------------------------------------------
+								2. Details of control Block
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/controlblocks/:controlBlock_ID
+
+Input       : - NA-
+
+Output      : 
+				If successfully
+					{
+						"_id"               : String,
+                        "controlBlockRef"   : Number,
+                        "controlBlockName"  : Number,
+                        "controlBlockDesc"  : String,
+                        "parentBlock"       : Number,
+                        "domain_ID"         : String,
+                        "sequence"          : Number,
+                        "weightage"         : Number,
+                        "company_ID"        : String,
+                        "createdBy"         : String,
+                        "createdAt"         : Date,
+                        "subControlBlocks"     : [],
+                        "controls"          : [],
+					}
+                else
+                    {
+                        message:'Control block not found'
+                    }
+					
+-----------------------------------------------------------------------------------------------------
+								3. List details of all the framework
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/controlblocks/list
+
+Input       : - NA-
+
+Output      : 
+				If successfully
+					[
+						{
+							"_id"               : String,
+                            "controlBlockRef"   : Number,
+                            "controlBlockName"  : Number,
+                            "controlBlockDesc"  : String,
+                            "parentBlock"       : Number,
+                            "domain_ID"         : String,
+                            "sequence"          : Number,
+                            "weightage"         : Number,
+                            "company_ID"        : String,
+                            "createdBy"         : String,
+                            "createdAt"         : Date,
+                            "subControlBlocks"     : [],
+                            "controls"          : [],
+						}
+					]	 
+-----------------------------------------------------------------------------------------------------
+						    4. Update control Block Basic details
+-----------------------------------------------------------------------------------------------------
+
+Method      : PUT
+    
+URL         : /api/controlblocks/
+
+Input       : 
+                {
+					id 					    : String
+                    controlBlocksCode       : String,
+                    controlBlockRef         : Number,
+                    controlBlockName        : String,
+                    controlBlockDesc        : String,
+                    parentBlock             : Number,
+                    domain_ID               : String,
+                    sequence                : Number,
+                    weightage               : Number,
+                    company_ID              : String,
+                }
+
+Output      : 
+				If successfully 
+					"Control Block Updated"	 
+				If not 
+					"Something went wrong."
+
+-----------------------------------------------------------------------------------------------------
+							5. Delete particular controltag
+-----------------------------------------------------------------------------------------------------
+
+Method      : DELETE
+    
+URL         : /api/controlblocks/:controlBlock_ID
+			
+Input       : - NA -
+				
+Output      : 
+				If successfully 
+					"Control block deleted"
+                else    
+                    "Control block not found"
+
+-----------------------------------------------------------------------------------------------------
+							6. Delete all the controltag
+-----------------------------------------------------------------------------------------------------
+
+Method      : DELETE
+    
+URL         : /api/controlblocks
+
+Input       : - NA -			
+
+Output      : 
+				If successfully 
+					"All control block Deleted"
+                else
+                    "Something went wrong"
+
+-----------------------------------------------------------------------------------------------------
+							7. List all control block for specify company
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/controlblocks/list/:company_ID
+
+Input       : - NA-
+
+Output      : 
+				If successfully
+					[
+						{
+                            "_id"               : String,
+                            "controlBlockRef"   : Number,
+                            "controlBlockName"  : Number,
+                            "controlBlockDesc"  : String,
+                            "parentBlock"       : Number,
+                            "domain_ID"         : String,
+                            "sequence"          : Number,
+                            "weightage"         : Number,
+                            "company_ID"        : String,
+                            "createdBy"         : String,
+                            "createdAt"         : Date,
+                            "subControlBlocks"     : [],
+                            "controls"          : [],
+						}
+					]
+
+-----------------------------------------------------------------------------------------------------
+							8. Add / Remove the Sub Control Block
+-----------------------------------------------------------------------------------------------------
+
+Method      : PUT
+    
+URL         : /api/controlblocks/subcontrolblock/:action/:controlBlocks_ID
+
+Note 		: action can be add or remove 
+
+Input       : 
+                {
+					subcontrolBlocks_ID	: String
+                }
+
+Output      : 
+				If added successfully 
+					"Control Block added"	 
+				If remove successfully
+					"Control Block removed"
+				If not 
+					"Something went wrong."
+
+-----------------------------------------------------------------------------------------------------
+							9. Add / Remove the Controls 
+-----------------------------------------------------------------------------------------------------
+
+Method      : PUT
+    
+URL         : /api/controlblocks/control/:action/:controlBlocks_ID
+
+Note 		: action can be add or remove 
+
+Input       : 
+                {
+					control_ID	: String
+                }
+
+Output      : 
+				If added successfully 
+					"Control added"	 
+				If remove successfully
+					"Control removed"
+				If not 
+					"Something went wrong."
+
