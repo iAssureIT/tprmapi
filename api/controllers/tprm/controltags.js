@@ -17,7 +17,7 @@ exports.create_controltag = (req,res,next)=>{
                     controltag      : controltagData.toLowerCase(),
                     createdBy       : req.body.createdBy,
                     creatorRole     : req.body.creatorRole,
-                    corporate_ID    : req.body.corporate_ID,
+                    company_ID      : req.body.company_ID,
                     createdAt       : new Date(),
                 });
                 controltags.save()
@@ -54,8 +54,8 @@ exports.list_controltag = (req,res,next)=>{
         });
 }
 
-exports.list_controltag_corporate = (req,res,next)=>{
-    Controltags.find({corporate_ID:req.params.corporate_ID})
+exports.list_controltag_company = (req,res,next)=>{
+    Controltags.find({company_ID:req.params.company_ID})
         .exec()
         .then(data=>{
             res.status(200).json(data);
@@ -92,7 +92,7 @@ exports.update_controltag = (req,res,next)=>{
     Controltags.findOne({controltag:controltagData.toLowerCase()})
 		.exec()
 		.then(data =>{
-			if(data){
+			if(data && data._id !== req.body.id){
 				return res.status(200).json({
 					message: 'Control Tag already exists'
 				});
@@ -101,7 +101,8 @@ exports.update_controltag = (req,res,next)=>{
                     { _id:req.body.id},  
                     {
                         $set:{
-                            "controltag" : controltagData.toLowerCase()
+                            "controltag" : controltagData.toLowerCase(),
+                            // 'company_ID' : req.body.company_ID,
                         }
                     }
                 )

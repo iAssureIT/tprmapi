@@ -4,6 +4,7 @@ Schema :
 {
 	_id			    : String,
 	frameworktype   : String,
+	company_ID      : String,
     createdAt	    : Date,
     createdBy       : String,
 }
@@ -16,6 +17,7 @@ APIs :
 4. Update frameworktype details                      		- Done
 5. Delete particular frameworktype							- Done
 6. Delete all the frameworktypes							- Done
+7. List all frameworktype for specify company				- Done
 
 -----------------------------------------------------------------------------------------------------
 								1. Insert new frameworktype
@@ -28,6 +30,7 @@ URL         : /api/frameworktypes
 Input       : 
 				{
 					frameworktype	: String, // Mandatory Field
+					company_ID      : String,
 					createdBy		: String, // Either empty or _id of users
 				}
 
@@ -124,3 +127,25 @@ Input       : - NA -
 Output      : 
 				If successfully 
 					"All Roles Deleted"
+
+-----------------------------------------------------------------------------------------------------
+							7. List all frameworktypes for specify company
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/frameworktypes/list/:company_ID
+
+Input       : - NA-
+
+Output      : 
+				If successfully
+					[
+						{
+                            frameworktypes  : String,
+                            createdAt	    : Date,
+                            createdBy       : String,
+                            _id             : String,
+							corporate_ID    : String,
+						}
+					]

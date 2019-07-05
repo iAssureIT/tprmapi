@@ -15,6 +15,7 @@ exports.create_domain = (req,res,next)=>{
 				const domain = new Domain({
                     _id             : new mongoose.Types.ObjectId(),
                     domain          : domainData.toLowerCase(),
+                    company_ID      : req.body.company_ID,
                     createdBy       : req.body.createdBy,
                     createdAt       : new Date(),
 
@@ -54,6 +55,20 @@ exports.list_domain = (req,res,next)=>{
         });
 }
 
+exports.list_domain_company_ID = (req,res,next)=>{
+    Domain.find({company_ID:req.params.company_ID})
+        .exec()
+        .then(data=>{
+            res.status(200).json(data);
+        })
+        .catch(err =>{
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+}
+
 exports.detail_domain = (req,res,next)=>{
     var domainData = req.params.domain;
     Domain.findOne({domain:domainData.toLowerCase()})
@@ -78,7 +93,7 @@ exports.update_domain = (req,res,next)=>{
     Domain.findOne({domain:domainData.toLowerCase()})
 		.exec()
 		.then(data =>{
-			if(data){
+			if(data && data._id !== req.body.id){
 				return res.status(200).json({
 					message: 'Domain already exists'
 				});

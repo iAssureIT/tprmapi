@@ -90,7 +90,7 @@ exports.list_control = (req,res,next)=>{
         });
 }
 
-exports.list_control_corporate = (req,res,next)=>{
+exports.list_control_company = (req,res,next)=>{
     Control.find({company_ID:req.params.company_ID})
         .exec()
         .then(data=>{
@@ -145,7 +145,7 @@ exports.update_basic_control = (req,res,next)=>{
                             'multiplier'              : req.body.multiplier,
                             'mandatory'               : req.body.mandatory,
                             'scored'                  : req.body.scored,
-                            'company_ID'              : req.body.company_ID,
+                            // 'company_ID'              : req.body.company_ID,
                         }
                     }
                 )

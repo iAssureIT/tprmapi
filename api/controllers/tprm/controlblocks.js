@@ -84,8 +84,10 @@ exports.list_controlblocks = (req,res,next)=>{
         });
 }
 
-exports.list_controlblocks_corporate = (req,res,next)=>{
-    Controlblocks.find({company_ID:req.params.company_ID})
+exports.list_controlblocks_company = (req,res,next)=>{
+    var company_ID = req.params.company_ID;
+
+    Controlblocks.find({company_ID : company_ID})
         .exec()
         .then(data=>{
             res.status(200).json(data);
@@ -137,7 +139,7 @@ exports.update_basic_controlblocks = (req,res,next)=>{
                             'domain_ID'               : req.body.domain_ID,
                             'sequence'                : req.body.sequence,
                             'weightage'               : req.body.weightage,
-                            'company_ID'              : req.body.company_ID,
+                            // 'company_ID'              : req.body.company_ID,
                         }
                     }
                 )

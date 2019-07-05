@@ -7,7 +7,7 @@ Schema :
     createdAt	    : Date,
     createdBy       : String,
 	creatorRole     : String,
-    corporate_ID    : String,
+    company_ID      : String,
 }
 
 APIs :
@@ -18,7 +18,7 @@ APIs :
 4. Update controltag details                      		- Done
 5. Delete particular controltag							- Done
 6. Delete all the controltags							- Done
-7. List all controltag for specify corporate			- Done
+7. List all controltag for specify company 				- Done
 
 -----------------------------------------------------------------------------------------------------
 								1. Insert new controltag
@@ -32,7 +32,7 @@ Input       :
 				{
 					controltag      : String, // Mandatory Field,
 					creatorRole     : String,
-					corporate_ID    : String,
+					company_ID      : String,
 					createdBy		: String, // Either empty or _id of users
 				}
 
@@ -141,7 +141,7 @@ Output      :
 
 Method      : GET
     
-URL         : /api/controltags/list/:controltag_ID
+URL         : /api/controltags/list/:company_ID
 
 Input       : - NA-
 
@@ -154,6 +154,6 @@ Output      :
                             createdBy       : String,
                             _id             : String,
 							creatorRole     : String,
-							corporate_ID    : String,
+							company_ID     : String,
 						}
 					]

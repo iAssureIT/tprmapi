@@ -20,6 +20,8 @@ exports.create_framework = (req,res,next)=>{
                     company_ID          : req.body.company_ID,
                     createdBy           : req.body.createdBy,
                     ref_framework_ID    : req.body.ref_framework_ID,
+                    state               : req.body.state,
+                    stage               : req.body.stage,
                     createdAt           : new Date(),
                 });
                 framework.save()
@@ -56,7 +58,7 @@ exports.list_framework = (req,res,next)=>{
         });
 }
 
-exports.list_framework_corporate = (req,res,next)=>{
+exports.list_framework_company = (req,res,next)=>{
     Framework.find({company_ID:req.params.company_ID})
         .exec()
         .then(data=>{
@@ -95,7 +97,7 @@ exports.update_framework = (req,res,next)=>{
 		.exec()
 		.then(data =>{
             console.log('data ',data);
-			if(data){
+			if(data && data._id !== req.body.id){
 				return res.status(200).json({
 					message: 'Framework already exists'
 				});
@@ -109,8 +111,9 @@ exports.update_framework = (req,res,next)=>{
                             'frameworkname'       : frameworknameData.toLowerCase(),
                             'purpose'             : req.body.purpose,
                             'domain_ID'           : req.body.domain_ID,
-                            'company_ID'          : req.body.company_ID,
                             'ref_framework_ID'    : req.body.ref_framework_ID,
+                            'state'               : req.body.state,
+                            'stage'               : req.body.stage,
                         }
                     }
                 )

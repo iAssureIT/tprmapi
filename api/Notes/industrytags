@@ -4,6 +4,7 @@ Schema :
 {
 	_id			    : String,
 	industrytag     : String,
+	company_ID      : String,
     createdAt	    : Date,
     createdBy       : String,
 }
@@ -16,6 +17,7 @@ APIs :
 4. Update industrytag details                      		- Done
 5. Delete particular industrytag						- Done
 6. Delete all the industrytags							- Done
+7. List all industrytags for specify company			- Done
 
 -----------------------------------------------------------------------------------------------------
 								1. Insert new industrytag
@@ -28,6 +30,7 @@ URL         : /api/industrytags
 Input       : 
 				{
 					industrytag     : String, // Mandatory Field
+					company_ID      : String,
 					createdBy		: String, // Either empty or _id of users
 				}
 
@@ -123,3 +126,25 @@ Input       : - NA -
 Output      : 
 				If successfully 
 					"All control tag Deleted"
+
+-----------------------------------------------------------------------------------------------------
+							7. List all industrytags for specify company
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/industrytags/list/:company_ID
+
+Input       : - NA-
+
+Output      : 
+				If successfully
+					[
+						{
+                            industrytags  : String,
+                            createdAt	    : Date,
+                            createdBy       : String,
+                            _id             : String,
+							corporate_ID    : String,
+						}
+					]

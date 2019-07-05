@@ -7,7 +7,7 @@ router.post('/', ControlBlockController.create_controlblocks);
 
 router.get('/list', ControlBlockController.list_controlblocks);
 
-router.get('/list/:company_ID',ControlBlockController.list_controlblocks_corporate);
+router.get('/list/:company_ID',ControlBlockController.list_controlblocks_company);
 
 router.get('/:controlBlock_ID', ControlBlockController.detail_controlblocks);
 

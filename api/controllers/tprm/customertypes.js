@@ -15,6 +15,7 @@ exports.create_customertype = (req,res,next)=>{
 				const customertype = new Customertype({
                     _id             : new mongoose.Types.ObjectId(),
                     customertype    : customertypeData.toLowerCase(),
+                    company_ID      : req.body.company_ID,
                     createdBy       : req.body.createdBy,
                     createdAt       : new Date(),
 
@@ -53,6 +54,20 @@ exports.list_customertype = (req,res,next)=>{
         });
 }
 
+exports.list_customertype_company = (req,res,next)=>{
+    Customertype.find({company_ID:req.params.company_ID})
+        .exec()
+        .then(data=>{
+            res.status(200).json(data);
+        })
+        .catch(err =>{
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+}
+
 exports.detail_customertype = (req,res,next)=>{
     var customertypeData = req.params.customertype;
     Customertype.findOne({customertype:customertypeData.toLowerCase()})
@@ -75,22 +90,14 @@ exports.detail_customertype = (req,res,next)=>{
 exports.update_customertype = (req,res,next)=>{
     var customertypeData = req.body.customertype;
     Customertype.findOne({customertype:customertypeData.toLowerCase()})
-		.exec()
-		.then(data =>{
-			if(data){
-				return res.status(200).json({
-					message: 'Customer type already exists'
-				});
-			}else{
-				Customertype.findOne({customertype:customertypeData.toLowerCase()})
-		.exec()
-		.then(data =>{
-			if(data){
-				return res.status(200).json({
-					message: 'Customer type already exists'
-				});
-			}else{
-				Customertype.updateOne(
+                .exec()
+                .then(data =>{
+                    if(data && data._id !== req.body.id){
+                        return res.status(200).json({
+                            message: 'Customer type already exists'
+                        });
+                    }else{
+                        Customertype.updateOne(
                                         { _id:req.body.id},  
                                         {
                                             $set:{
@@ -112,24 +119,16 @@ exports.update_customertype = (req,res,next)=>{
                                         res.status(500).json({
                                             error: err
                                         });
-                                    });
-                                }
-                            })
-                            .catch(err =>{
-                                console.log(err);
-                                res.status(500).json({
-                                    error: err
-                                });
-                            });
-			}
-		})
-		.catch(err =>{
-			console.log(err);
-			res.status(500).json({
-				error: err
-			});
-		});
-    
+                                    });                   
+                    }
+                })
+                .catch(err =>{
+                    console.log(err);
+                    res.status(500).json({
+                        error: err
+                    });
+                });
+        
     
 }
 

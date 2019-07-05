@@ -5,7 +5,7 @@ const controltagsSchema = mongoose.Schema({
     controltag      : String,
     createdAt       : Date,
     creatorRole     : String,
-    corporate_ID    : { type: mongoose.Schema.Types.ObjectId, ref: 'companysettings' },
+    company_ID      : { type: mongoose.Schema.Types.ObjectId, ref: 'companysettings' },
     createdBy       : { type: mongoose.Schema.Types.ObjectId, ref: 'users' }
 });
 

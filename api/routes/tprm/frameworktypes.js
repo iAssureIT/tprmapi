@@ -7,6 +7,8 @@ router.post('/', FrameworktypeController.create_frameworktype);
 
 router.get('/list', FrameworktypeController.list_frameworktype);
 
+router.get('/list/:company_ID', FrameworktypeController.list_frameworktype_company);
+
 router.get('/:frameworktype', FrameworktypeController.detail_frameworktype);
 
 router.put('/',FrameworktypeController.update_frameworktype);

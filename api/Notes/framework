@@ -10,6 +10,8 @@ Schema :
     company_ID          : String,
     createdBy           : String,
     ref_framework_ID    : String,
+	state               : Boolean,
+    stage               : Boolean,
     controlBlocks       : [
                                 {
                                    controlBlocks_ID :  String
@@ -45,6 +47,8 @@ Input       :
                     company_ID          : String,
                     createdBy           : String,
                     ref_framework_ID    : String,
+					state               : Boolean,
+					stage               : Boolean,
 				}
 
 Output      : 

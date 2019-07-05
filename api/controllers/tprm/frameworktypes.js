@@ -15,6 +15,7 @@ exports.create_frameworktype = (req,res,next)=>{
 				const frameworktype = new Frameworktype({
                     _id             : new mongoose.Types.ObjectId(),
                     frameworktype   : frameworktypesData.toLowerCase(),
+                    company_ID      : req.body.company_ID,
                     createdBy       : req.body.createdBy,
                     createdAt       : new Date(),
 
@@ -53,6 +54,20 @@ exports.list_frameworktype = (req,res,next)=>{
         });
 }
 
+exports.list_frameworktype_company = (req,res,next)=>{
+    Frameworktype.find({company_ID:req.params.company_ID})
+        .exec()
+        .then(data=>{
+            res.status(200).json(data);
+        })
+        .catch(err =>{
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+}
+
 exports.detail_frameworktype = (req,res,next)=>{
     var frameworktypeData = req.params.frameworktype;
     Frameworktype.findOne({frameworktype:frameworktypeData.toLowerCase()})
@@ -77,7 +92,7 @@ exports.update_frameworktype = (req,res,next)=>{
     Frameworktype.findOne({frameworktype:frameworktypesData.toLowerCase()})
 		.exec()
 		.then(data =>{
-			if(data){
+			if(data && data._id !== req.body.id){
 				return res.status(200).json({
 					message: ' Framework types already exists'
 				});

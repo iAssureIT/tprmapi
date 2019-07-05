@@ -7,7 +7,7 @@ router.post('/', CountryController.create_country);
 
 router.get('/list', CountryController.list_country);
 
-router.get('/list/:country_ID', CountryController.list_country_corporate);
+router.get('/list/:company_ID', CountryController.list_country_company);
 
 router.get('/:country', CountryController.detail_country);
 

@@ -7,7 +7,7 @@ router.post('/', ControlController.create_control);
 
 router.get('/list', ControlController.list_control);
 
-router.get('/list/:company_ID',ControlController.list_control_corporate);
+router.get('/list/:company_ID',ControlController.list_control_company);
 
 router.get('/:control_ID', ControlController.detail_control);
 

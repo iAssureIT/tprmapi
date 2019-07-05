@@ -9,6 +9,8 @@ const frameworksSchema = mongoose.Schema({
     company_ID          : { type: mongoose.Schema.Types.ObjectId, ref: 'companysettings' },
     createdBy           : { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
     ref_framework_ID    : { type: mongoose.Schema.Types.ObjectId, ref: 'frameworks' },
+    state               : Boolean,
+    stage               : Boolean,
     controlBlocks       : [
                                 {
                                    controlBlocks_ID :  { type: mongoose.Schema.Types.ObjectId, ref: 'frameworks' }

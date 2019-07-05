@@ -7,7 +7,7 @@ router.post('/', FrameworkController.create_framework);
 
 router.get('/list', FrameworkController.list_framework);
 
-router.get('/list/:company_ID',FrameworkController.list_framework_corporate);
+router.get('/list/:company_ID',FrameworkController.list_framework_company);
 
 router.get('/:framework_ID', FrameworkController.detail_framework);
 

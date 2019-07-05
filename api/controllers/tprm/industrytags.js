@@ -15,6 +15,7 @@ exports.create_industrytag = (req,res,next)=>{
 				const industrytags = new Industrytag({
                     _id             : new mongoose.Types.ObjectId(),
                     industrytag     : industrytagData.toLowerCase(),
+                    company_ID      : req.body.company_ID,
                     createdBy       : req.body.user_ID,
                     createdAt       : new Date(),
 
@@ -53,6 +54,20 @@ exports.list_industrytag = (req,res,next)=>{
         });
 }
 
+exports.list_industrytag_company = (req,res,next)=>{
+    Industrytag.find({company_ID:req.params.company_ID})
+        .exec()
+        .then(data=>{
+            res.status(200).json(data);
+        })
+        .catch(err =>{
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+}
+
 exports.detail_industrytag = (req,res,next)=>{
     var industrytagData = req.params.industrytag;
     Industrytag.findOne({industrytag:industrytagData.toLowerCase()})
@@ -77,7 +92,7 @@ exports.update_industrytag = (req,res,next)=>{
     Industrytag.findOne({industrytag:industrytagData.toLowerCase()})
 		.exec()
 		.then(data =>{
-			if(data){
+			if(data && data._id !== req.body.id){
 				return res.status(200).json({
 					message: 'Industry Tag already exists'
 				});

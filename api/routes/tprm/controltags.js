@@ -7,7 +7,7 @@ router.post('/', ControltagController.create_controltag);
 
 router.get('/list', ControltagController.list_controltag);
 
-router.get('/list/:corporate_ID',ControltagController.list_controltag_corporate);
+router.get('/list/:company_ID',ControltagController.list_controltag_company);
 
 router.get('/:controltag', ControltagController.detail_controltag);
 

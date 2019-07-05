@@ -7,6 +7,8 @@ router.post('/', DomainsController.create_domain);
 
 router.get('/list', DomainsController.list_domain);
 
+router.get('/list/:company_ID', DomainsController.list_domain_company_ID);
+
 router.get('/:domain', DomainsController.detail_domain);
 
 router.put('/',DomainsController.update_domain);

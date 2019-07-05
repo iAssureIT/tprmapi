@@ -4,6 +4,7 @@ Schema :
 {
 	_id			    : String,
 	domain          : String,
+	company_ID      : String,
     createdAt	    : Date,
     createdBy       : String,
 }
@@ -15,7 +16,9 @@ APIs :
 3. List details of all the domainss					    - Done
 4. Update domains details                      		    - Done
 5. Delete particular domains							- Done
-6. Delete all the domainss							    - Done
+6. Delete all the domains							    - Done
+7. List all domains for specify company					- Done
+
 
 -----------------------------------------------------------------------------------------------------
 								1. Insert new domains
@@ -28,6 +31,7 @@ URL         : /api/domains
 Input       : 
 				{
 					domain	        : String, // Mandatory Field
+					company_ID      : String,
 					createdBy		: String, // Either empty or _id of users
 				}
 
@@ -124,3 +128,25 @@ Input       : - NA -
 Output      : 
 				If successfully 
 					"All Domains Deleted"
+
+-----------------------------------------------------------------------------------------------------
+							7. List all domains for specify company
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/domains/list/:company_ID
+
+Input       : - NA-
+
+Output      : 
+				If successfully
+					[
+						{
+                            domains		    : String,
+                            createdAt	    : Date,
+                            createdBy       : String,
+                            _id             : String,
+							corporate_ID    : String,
+						}
+					]

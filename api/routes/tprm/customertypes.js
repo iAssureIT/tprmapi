@@ -7,6 +7,8 @@ router.post('/', CustomertypeController.create_customertype);
 
 router.get('/list', CustomertypeController.list_customertype);
 
+router.get('/list/:company_ID', CustomertypeController.list_customertype_company);
+
 router.get('/:customertype', CustomertypeController.detail_customertype);
 
 router.put('/',CustomertypeController.update_customertype);

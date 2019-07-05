@@ -150,7 +150,7 @@ Input       :
                     domain_ID               : String,
                     sequence                : Number,
                     weightage               : Number,
-                    company_ID              : String,
+                    company_ID              : String
                 }
 
 Output      : 

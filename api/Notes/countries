@@ -7,7 +7,7 @@ Schema :
     createdAt	    : Date,
     createdBy       : String,
 	creatorRole     : String,
-    corporate_ID    : String,
+    company_ID      : String,
 }
 
 APIs :
@@ -18,7 +18,7 @@ APIs :
 4. Update country details                      		    - Done
 5. Delete particular country							- Done
 6. Delete all the countries							    - Done
-7. List all countries for specify corporate				- Done
+7. List all countries for specify company 				- Done
 
 -----------------------------------------------------------------------------------------------------
 								1. Insert new country
@@ -32,7 +32,7 @@ Input       :
 				{
 					country        : String, // Mandatory Field
 					creatorRole     : String,
-					corporate_ID    : String, 
+					company_ID      : String, 
 					createdBy		: String, // Either empty or _id of users
 				}
 
@@ -134,12 +134,12 @@ Output      :
 					"All country Deleted"
 
 -----------------------------------------------------------------------------------------------------
-							7. List all countries for specify corporate
+							7. List all countries for specify company
 -----------------------------------------------------------------------------------------------------
 
 Method      : GET
     
-URL         : /api/countries/list/:corporate_ID
+URL         : /api/countries/list/:company_ID
 
 Input       : - NA-
 

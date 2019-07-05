@@ -15,6 +15,7 @@ exports.create_riskfactor = (req,res,next)=>{
 				const riskfactor = new Riskfactors({
                     _id             : new mongoose.Types.ObjectId(),
                     riskfactor      : riskfactorData.toLowerCase(),
+                    company_ID      : req.body.company_ID,
                     createdBy       : req.body.createdBy,
                     createdAt       : new Date(),
 
@@ -53,6 +54,21 @@ exports.list_riskfactor = (req,res,next)=>{
         });
 }
 
+exports.list_riskfactor_company = (req,res,next)=>{
+    var company_ID = req.params.company_ID;
+    Riskfactors.find({company_ID : company_ID})
+        .exec()
+        .then(data=>{
+            res.status(200).json(data);
+        })
+        .catch(err =>{
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+}
+
 exports.detail_riskfactor = (req,res,next)=>{
     var riskfactorData = req.params.riskfactor;
     Riskfactors.findOne({riskfactor:riskfactorData.toLowerCase()})
@@ -77,7 +93,7 @@ exports.update_riskfactor = (req,res,next)=>{
     Riskfactors.findOne({riskfactor:riskfactorData.toLowerCase()})
 		.exec()
 		.then(data =>{
-			if(data){
+			if(data && data._id !== req.body.id){
 				return res.status(200).json({
 					message: 'risk factor already exists'
 				});

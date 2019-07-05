@@ -7,6 +7,8 @@ router.post('/', IndustrytagsController.create_industrytag);
 
 router.get('/list', IndustrytagsController.list_industrytag);
 
+router.get('/list/:company_ID', IndustrytagsController.list_industrytag_company);
+
 router.get('/:industrytag', IndustrytagsController.detail_industrytag);
 
 router.put('/',IndustrytagsController.update_industrytag);

@@ -17,7 +17,7 @@ exports.create_country = (req,res,next)=>{
                     country          : countryData.toLowerCase(),
                     createdBy       : req.body.createdBy,
                     creatorRole     : req.body.creatorRole,
-                    corporate_ID    : req.body.corporate_ID,
+                    company_ID      : req.body.company_ID,
                     createdAt       : new Date(),
 
                 });
@@ -55,8 +55,8 @@ exports.list_country = (req,res,next)=>{
         });
 }
 
-exports.list_country_corporate = (req,res,next)=>{
-    Country.find({corporate_ID:req.params.corporate_ID})
+exports.list_country_company = (req,res,next)=>{
+    Country.find({company_ID:req.params.company_ID})
         .exec()
         .then(data=>{
             res.status(200).json(data);
@@ -92,7 +92,7 @@ exports.update_country = (req,res,next)=>{
     Country.findOne({country:countryData.toLowerCase()})
 		.exec()
 		.then(data =>{
-			if(data){
+			if(data && data._id !== req.body.id){
 				return res.status(200).json({
 					message: 'country already exists'
 				});

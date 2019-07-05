@@ -6,6 +6,7 @@ Schema :
 	customertype    : String,
     createdAt	    : Date,
     createdBy       : String,
+	company_ID      : String,
 }
 
 APIs :
@@ -16,6 +17,7 @@ APIs :
 4. Update customertype details                      	- Done
 5. Delete particular customertype						- Done
 6. Delete all the customertypes							- Done
+7. List all customertype for specify company			- Done
 
 -----------------------------------------------------------------------------------------------------
 								1. Insert new customertype
@@ -28,6 +30,7 @@ URL         : /api/customertypes
 Input       : 
 				{
 					customertype     : String, // Mandatory Field
+					company_ID		: String,
 					createdBy		: String, // Either empty or _id of users
 				}
 
@@ -123,3 +126,25 @@ Input       : - NA -
 Output      : 
 				If successfully 
 					"All control tag Deleted"
+
+-----------------------------------------------------------------------------------------------------
+							7. List all customertype for specify company
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/customertypes/list/:company_ID
+
+Input       : - NA-
+
+Output      : 
+				If successfully
+					[
+						{
+                            customertypes   : String,
+                            createdAt	    : Date,
+                            createdBy       : String,
+                            _id             : String,
+							corporate_ID    : String,
+						}
+					]
