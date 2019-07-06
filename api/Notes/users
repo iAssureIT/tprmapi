@@ -52,6 +52,7 @@ APIs :
 6. Delete particular user							- Done
 7. Delete all the users								- Done
 8. Login 											- 
+9. List users of specific company and specific role - Done
 
 -----------------------------------------------------------------------------------------------------
 								1. Insert new user (signup)
@@ -249,3 +250,35 @@ Output      :
 					}
 				If not 
 					"Something went wrong."
+
+-----------------------------------------------------------------------------------------------------
+					9. List users of specific company and specific role
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/list/:company_ID/:role
+
+Input       : - NA -
+				
+Output      : 
+				[
+						{
+							"profile": {
+								"firstname"		: String,
+								"lastname"		: String,
+								"fullName"		: String,
+								"emailId"		: String,
+								"mobNumber"		: String,
+								"userCode"		: String,
+								"status"		: String,
+								"spoc"			: Boolean,
+								"companyID"		: Number,
+								"company_ID"	: String, //_id of companysettings
+							},
+							"roles": [
+								String
+							],
+							"_id": String
+						}
+					]

@@ -7,6 +7,8 @@ const UserController = require('../../controllers/coreAdmin/users');
 
 router.get('/list', UserController.users_list); //Working
 
+router.get('/list/:company_ID/:role',UserController.users_list_company_role);
+
 router.post('/', UserController.user_signup); //Working
 
 router.post('/details',UserController.user_login); //Working

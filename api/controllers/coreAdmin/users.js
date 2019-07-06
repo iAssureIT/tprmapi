@@ -150,6 +150,22 @@ exports.users_list = (req,res,next)=>{
 	
 }
 
+exports.users_list_company_role = (req,res,next)=>{
+	User.find({"profile.company_ID" : req.params.company_ID,roles : req.params.role})
+		.select("profile roles")
+		.exec()
+		.then(users =>{
+			res.status(200).json(users);
+		})
+		.catch(err =>{
+			console.log(err);
+			res.status(500).json({
+				error: err
+			});
+		});
+	
+}
+
 exports.user_details = (req, res, next)=>{
 	var id = req.params.userID;
 	User.findOne({_id:id})

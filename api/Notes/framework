@@ -12,6 +12,7 @@ Schema :
     ref_framework_ID    : String,
 	state               : Boolean,
     stage               : Boolean,
+	version				: Number,
     controlBlocks       : [
                                 {
                                    controlBlocks_ID :  String
@@ -25,7 +26,7 @@ APIs :
 2. Details of framework								    - Done
 3. List details of all the frameworks				    - Done
 4. Update framework details                      		- Done
-5. Delete particular framework							- Done
+5. Delete particular framework 							- Done
 6. Delete all the frameworks							- Done
 7. List all framework for specify company			    - Done
 8. Add / Remove the Control Block 						- Done
@@ -40,7 +41,7 @@ URL         : /api/frameworks
 
 Input       : 
 				{
-					frameworktype       : String,
+					frameworktype_ID    : String,
                     frameworkname       : String,
                     purpose             : String,
                     domain_ID           : String,
@@ -49,6 +50,7 @@ Input       :
                     ref_framework_ID    : String,
 					state               : Boolean,
 					stage               : Boolean,
+					version				: Number
 				}
 
 Output      : 
@@ -71,12 +73,17 @@ Input       : - NA-
 Output      : 
 				If successfully
 					{
-						"_id"			: String,
-						"frameworkname"	: String,
-						"purpose"		: String,
-						"domain_ID"		: String,
-						"company_ID"	: String
-						"controlBlocks"	: [],
+						frameworktype_ID    : String,
+						frameworkname       : String,
+						purpose             : String,
+						domain_ID           : String,
+						company_ID          : String,
+						createdBy           : String,
+						ref_framework_ID    : String,
+						state               : Boolean,
+						stage               : Boolean,
+						version				: Number
+						"controlBlocks"		: [],
 					}
 					
 -----------------------------------------------------------------------------------------------------
@@ -93,12 +100,18 @@ Output      :
 				If successfully
 					[
 						{
-							"_id"			: String,
-							"frameworkname"	: String,
-							"purpose"		: String,
-							"domain_ID"		: String,
-							"company_ID"	: String
-							"controlBlocks"	: [],
+							"_id"				: String,
+							frameworktype_ID    : String,
+							frameworkname       : String,
+							purpose             : String,
+							domain_ID           : String,
+							company_ID          : String,
+							createdBy           : String,
+							ref_framework_ID    : String,
+							state               : Boolean,
+							stage               : Boolean,
+							version				: Number
+							"controlBlocks"		: [],
 						}
 					]	 
 -----------------------------------------------------------------------------------------------------
@@ -111,13 +124,15 @@ URL         : /api/frameworks/
 
 Input       : 
                 {
-					id 					: String
-                    frameworktype       : String,
-                    frameworkname       : String,
-                    purpose             : String,
-                    domain_ID           : String,
-                    company_ID          : String,
-                    ref_framework_ID    : String,
+					id 					  : String
+                    'frameworktype_ID'    : String,
+					'frameworkname'       : String,
+					'purpose'             : String,
+					'domain_ID'           : String,
+					'ref_framework_ID'    : String,
+					'state'               : String,
+					'stage'               : String,
+					'version'             : Number,
                 }
 
 Output      : 
@@ -169,10 +184,16 @@ Output      :
 					[
 						{
                             "_id"			: String,
-							"frameworkname"	: String,
-							"purpose"		: String,
-							"domain_ID"		: String,
-							"company_ID"	: String
+							frameworktype_ID    : String,
+							frameworkname       : String,
+							purpose             : String,
+							domain_ID           : String,
+							company_ID          : String,
+							createdBy           : String,
+							ref_framework_ID    : String,
+							state               : Boolean,
+							stage               : Boolean,
+							version				: Number
 							"controlBlocks"	: [],
 						}
 					]

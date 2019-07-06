@@ -3,7 +3,7 @@ Schema :
 
 {
 	_id			    : String,
-	riskfactor      : String,
+	industrytype    : String,
 	company_ID      : String,
     createdAt	    : Date,
     createdBy       : String,
@@ -11,25 +11,25 @@ Schema :
 
 APIs :
 -----------------------------------------------------------------------------------------------------
-1. Insert new riskfactor								- Done
-2. Details of riskfactor								- Done
-3. List details of all the riskfactors				    - Done
-4. Update riskfactor details                      		- Done
-5. Delete particular riskfactor							- Done
-6. Delete all the riskfactors							- Done
-7. List all riskfactors for specify company			- Done
+1. Insert new industrytype								- Done
+2. Details of industrytype								- Done
+3. List details of all the industrytypes				- Done
+4. Update industrytype details                      	- Done
+5. Delete particular industrytype						- Done
+6. Delete all the industrytypes							- Done
+7. List all industrytypes for specify company			- Done
 
 -----------------------------------------------------------------------------------------------------
-								1. Insert new riskfactor
+								1. Insert new industrytype
 -----------------------------------------------------------------------------------------------------
 
 Method      : POST
     
-URL         : /api/riskfactors
+URL         : /api/industrytypes
 
 Input       : 
 				{
-					riskfactor      : String, // Mandatory Field
+					industrytype     : String, // Mandatory Field
 					company_ID      : String,
 					createdBy		: String, // Either empty or _id of users
 				}
@@ -37,35 +37,35 @@ Input       :
 Output      : 
 				If successfully
 					{
-						message : "riskfactor Added",
+						message : "industrytype Added",
                         ID      : String
 					}
 
 -----------------------------------------------------------------------------------------------------
-								2. Details of riskfactor
+								2. Details of industrytype
 -----------------------------------------------------------------------------------------------------
 
 Method      : GET
     
-URL         : /api/riskfactors/:riskfactor
+URL         : /api/industrytypes/:industrytype
 Input       : - NA-
 
 Output      : 
 				If successfully
 					{
-						riskfactor  : String,
+						industrytype  : String,
 						createdAt	: Date,
                         createdBy   : String,
 						_id         : String
 					} 
 					
 -----------------------------------------------------------------------------------------------------
-								3. List details of all the riskfactor
+								3. List details of all the industrytype
 -----------------------------------------------------------------------------------------------------
 
 Method      : GET
     
-URL         : /api/riskfactors/list
+URL         : /api/industrytypes/list
 
 Input       : - NA-
 
@@ -73,67 +73,67 @@ Output      :
 				If successfully
 					[
 						{
-                            riskfactor         : String,
+                            industrytype         : String,
                             createdAt	    : Date,
                             createdBy       : String,
                             _id             : String
 						}
 					]	 
 -----------------------------------------------------------------------------------------------------
-								4. Update riskfactor details
+								4. Update industrytype details
 -----------------------------------------------------------------------------------------------------
 
 Method      : PUT
     
-URL         : /api/riskfactors/
+URL         : /api/industrytypes/
 
 Input       : 
                 {
                     id        : String,
-                    riskfactor   : String,
+                    industrytype   : String,
                 }
 
 Output      : 
 				If successfully 
-					"riskfactor Updated"	 
+					"control type Updated"	 
 				If not 
 					"Something went wrong."
 
 -----------------------------------------------------------------------------------------------------
-							5. Delete particular riskfactor
+							5. Delete particular industrytype
 -----------------------------------------------------------------------------------------------------
 
 Method      : DELETE
     
-URL         : /api/riskfactors/:riskfactor_ID
+URL         : /api/industrytypes/:industrytype_ID
 			
 Input       : - NA -
 				
 Output      : 
 				If successfully 
-					"Framework type deleted"
+					"control type deleted"
 
 -----------------------------------------------------------------------------------------------------
-							6. Delete all the riskfactor
+							6. Delete all the industrytype
 -----------------------------------------------------------------------------------------------------
 
 Method      : DELETE
     
-URL         : /api/riskfactors
+URL         : /api/industrytypes
 
 Input       : - NA -			
 
 Output      : 
 				If successfully 
-					"All riskfactor Deleted"
+					"All control type Deleted"
 
 -----------------------------------------------------------------------------------------------------
-							7. List all riskfactors for specify company
+							7. List all industrytypes for specify company
 -----------------------------------------------------------------------------------------------------
 
 Method      : GET
     
-URL         : /api/riskfactors/list/:company_ID
+URL         : /api/industrytypes/list/:company_ID
 
 Input       : - NA-
 
@@ -141,10 +141,10 @@ Output      :
 				If successfully
 					[
 						{
-                            riskfactors  	: String,
+                            industrytypes  : String,
                             createdAt	    : Date,
                             createdBy       : String,
                             _id             : String,
-							company_ID    : String,
+							corporate_ID    : String,
 						}
 					]

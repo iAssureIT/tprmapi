@@ -11,6 +11,7 @@ const frameworksSchema = mongoose.Schema({
     ref_framework_ID    : { type: mongoose.Schema.Types.ObjectId, ref: 'frameworks' },
     state               : Boolean,
     stage               : Boolean,
+    version             : Number,
     controlBlocks       : [
                                 {
                                    controlBlocks_ID :  { type: mongoose.Schema.Types.ObjectId, ref: 'frameworks' }

@@ -22,6 +22,7 @@ const customertyprRoutes 				= require('./api/routes/tprm/customertypes');
 const frameworkRoutes 					= require('./api/routes/tprm/frameworks');
 const controlblockRoutes				= require('./api/routes/tprm/controlblocks');
 const controlRoutes 					= require('./api/routes/tprm/controls');
+const frequencyRoutes					= require('./api/routes/tprm/frequencys');
 
 mongoose.connect('mongodb://localhost/qatprm',{
 	useNewUrlParser: true
@@ -59,11 +60,14 @@ app.use('/api/domains',domainRoutes);
 app.use('/api/countries',countryRoutes);
 app.use('/api/riskfactors',riskfactorRoutes);
 app.use('/api/controltags',controltagRoutes);
+app.use('/api/controltags',controltagRoutes);
 app.use('/api/industrytags',industrytagRoutes);
+app.use('/api/industrytypes',industrytagRoutes);
 app.use('/api/customertypes',customertyprRoutes);
 app.use('/api/frameworks',frameworkRoutes);
 app.use('/api/controlblocks',controlblockRoutes);
 app.use('/api/controls',controlRoutes);
+app.use('/api/frequency',frequencyRoutes);
 
 // handle all other request which not found 
 app.use((req, res, next) => {

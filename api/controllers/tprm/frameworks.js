@@ -3,7 +3,7 @@ const mongoose	= require("mongoose");
 const Framework = require('../../models/tprm/frameworks');
 
 exports.create_framework = (req,res,next)=>{
-	Framework.findOne({frameworkname:req.body.frameworkname})
+	Framework.findOne({frameworkname:req.body.frameworkname,version:req.body.version})
 		.exec()
 		.then(data =>{
 			if(data){
@@ -22,6 +22,7 @@ exports.create_framework = (req,res,next)=>{
                     ref_framework_ID    : req.body.ref_framework_ID,
                     state               : req.body.state,
                     stage               : req.body.stage,
+                    version             : req.body.version,
                     createdAt           : new Date(),
                 });
                 framework.save()
@@ -92,8 +93,7 @@ exports.detail_framework = (req,res,next)=>{
 
 exports.update_framework = (req,res,next)=>{
     var frameworknameData = req.body.frameworkname;
-    console.log('frameworknameData ',frameworknameData.toLowerCase());
-    Framework.findOne({frameworkname:frameworknameData.toLowerCase()})
+    Framework.findOne({frameworkname:frameworknameData.toLowerCase(),version:req.body.version})
 		.exec()
 		.then(data =>{
             console.log('data ',data);
@@ -114,6 +114,7 @@ exports.update_framework = (req,res,next)=>{
                             'ref_framework_ID'    : req.body.ref_framework_ID,
                             'state'               : req.body.state,
                             'stage'               : req.body.stage,
+                            'version'             : req.body.version,
                         }
                     }
                 )

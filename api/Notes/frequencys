@@ -3,7 +3,7 @@ Schema :
 
 {
 	_id			    : String,
-	riskfactor      : String,
+	frequency       : String,
 	company_ID      : String,
     createdAt	    : Date,
     createdBy       : String,
@@ -11,25 +11,26 @@ Schema :
 
 APIs :
 -----------------------------------------------------------------------------------------------------
-1. Insert new riskfactor								- Done
-2. Details of riskfactor								- Done
-3. List details of all the riskfactors				    - Done
-4. Update riskfactor details                      		- Done
-5. Delete particular riskfactor							- Done
-6. Delete all the riskfactors							- Done
-7. List all riskfactors for specify company			- Done
+1. Insert new frequency									- 
+2. Details of frequency									- 
+3. List details of all the frequencys				    - 
+4. Update frequency details                    		    - 
+5. Delete particular frequency							- 
+6. Delete all the frequency							    - 
+7. List all frequency for specify company				- 
+
 
 -----------------------------------------------------------------------------------------------------
-								1. Insert new riskfactor
+								1. Insert new frequency
 -----------------------------------------------------------------------------------------------------
 
 Method      : POST
     
-URL         : /api/riskfactors
+URL         : /api/frequency
 
 Input       : 
 				{
-					riskfactor      : String, // Mandatory Field
+					frequency	    : String, // Mandatory Field
 					company_ID      : String,
 					createdBy		: String, // Either empty or _id of users
 				}
@@ -37,35 +38,36 @@ Input       :
 Output      : 
 				If successfully
 					{
-						message : "riskfactor Added",
+						message : "frequency Added",
                         ID      : String
 					}
 
 -----------------------------------------------------------------------------------------------------
-								2. Details of riskfactor
+								2. Details of frequency
 -----------------------------------------------------------------------------------------------------
 
 Method      : GET
     
-URL         : /api/riskfactors/:riskfactor
+URL         : /api/frequency/:frequency
+
 Input       : - NA-
 
 Output      : 
 				If successfully
 					{
-						riskfactor  : String,
+						frequency   : String,
 						createdAt	: Date,
                         createdBy   : String,
 						_id         : String
 					} 
 					
 -----------------------------------------------------------------------------------------------------
-								3. List details of all the riskfactor
+								3. List details of all the frequency
 -----------------------------------------------------------------------------------------------------
 
 Method      : GET
     
-URL         : /api/riskfactors/list
+URL         : /api/frequency/list
 
 Input       : - NA-
 
@@ -73,67 +75,67 @@ Output      :
 				If successfully
 					[
 						{
-                            riskfactor         : String,
+                            frequency       : String,
                             createdAt	    : Date,
                             createdBy       : String,
                             _id             : String
 						}
 					]	 
 -----------------------------------------------------------------------------------------------------
-								4. Update riskfactor details
+								4. Update frequency details
 -----------------------------------------------------------------------------------------------------
 
 Method      : PUT
     
-URL         : /api/riskfactors/
+URL         : /api/frequency/
 
 Input       : 
                 {
-                    id        : String,
-                    riskfactor   : String,
+                    id           : String,
+                    frequency    : String,
                 }
 
 Output      : 
 				If successfully 
-					"riskfactor Updated"	 
+					"Frequency Updated"	 
 				If not 
 					"Something went wrong."
 
 -----------------------------------------------------------------------------------------------------
-							5. Delete particular riskfactor
+							5. Delete particular frequency
 -----------------------------------------------------------------------------------------------------
 
 Method      : DELETE
     
-URL         : /api/riskfactors/:riskfactor_ID
+URL         : /api/frequency/:frequency
 			
 Input       : - NA -
 				
 Output      : 
 				If successfully 
-					"Framework type deleted"
+					"Frequency type deleted"
 
 -----------------------------------------------------------------------------------------------------
-							6. Delete all the riskfactor
+							6. Delete all the frequency
 -----------------------------------------------------------------------------------------------------
 
 Method      : DELETE
     
-URL         : /api/riskfactors
+URL         : /api/frequency
 
 Input       : - NA -			
 
 Output      : 
 				If successfully 
-					"All riskfactor Deleted"
+					"All frequency Deleted"
 
 -----------------------------------------------------------------------------------------------------
-							7. List all riskfactors for specify company
+							7. List all frequency for specify company
 -----------------------------------------------------------------------------------------------------
 
 Method      : GET
     
-URL         : /api/riskfactors/list/:company_ID
+URL         : /api/frequency/list/:company_ID
 
 Input       : - NA-
 
@@ -141,10 +143,10 @@ Output      :
 				If successfully
 					[
 						{
-                            riskfactors  	: String,
+                            frequency		: String,
                             createdAt	    : Date,
                             createdBy       : String,
                             _id             : String,
-							company_ID    : String,
+							corporate_ID    : String,
 						}
 					]
