@@ -23,6 +23,9 @@ const frameworkRoutes 					= require('./api/routes/tprm/frameworks');
 const controlblockRoutes				= require('./api/routes/tprm/controlblocks');
 const controlRoutes 					= require('./api/routes/tprm/controls');
 const frequencyRoutes					= require('./api/routes/tprm/frequencys');
+const assessmentModeRoutes				= require('./api/routes/tprm/assessmentMode');
+const nccriticalityRoutes				= require('./api/routes/tprm/nccriticality');
+const actionpriorityRoutes				= require('./api/routes/tprm/actionpriorities');
 
 mongoose.connect('mongodb://localhost/qatprm',{
 	useNewUrlParser: true
@@ -68,7 +71,9 @@ app.use('/api/frameworks',frameworkRoutes);
 app.use('/api/controlblocks',controlblockRoutes);
 app.use('/api/controls',controlRoutes);
 app.use('/api/frequency',frequencyRoutes);
-
+app.use('/api/assessmentmodes',assessmentModeRoutes);
+app.use('/api/nccriticality',nccriticalityRoutes);
+app.use('/api/actionpriority',actionpriorityRoutes);
 // handle all other request which not found 
 app.use((req, res, next) => {
 	const error = new Error('Not Found Manual ERROR');

@@ -1,29 +1,29 @@
 const mongoose	= require("mongoose");
 
-const  Frequency = require('../../models/tprm/frequencys');
+const  Nccriticality = require('../../models/tprm/nccriticality');
 
-exports.create_frequency = (req,res,next)=>{
-    var frequencyData = req.body.frequency;
-	Frequency.findOne({frequency:frequencyData.toLowerCase()})
+exports.create_nccriticality = (req,res,next)=>{
+    var nccriticalityData = req.body.nccriticality;
+	Nccriticality.findOne({nccriticality:nccriticalityData.toLowerCase()})
 		.exec()
 		.then(data =>{
-			if(data){
+			if(data ){
 				return res.status(200).json({
-					message: 'frequency already exists'
+					message: 'nccriticality already exists'
 				});
 			}else{
-				const frequency = new Frequency({
+				const nccriticality = new Nccriticality({
                     _id             : new mongoose.Types.ObjectId(),
-                    frequency       : frequencyData.toLowerCase(),
+                    nccriticality  : nccriticalityData.toLowerCase(),
                     company_ID      : req.body.company_ID,
                     createdBy       : req.body.createdBy,
                     createdAt       : new Date(),
 
                 });
-                frequency.save()
+                nccriticality.save()
                     .then(data=>{
                         console.log('data ',data);
-                        res.status(200).json({message:"frequency Added",ID:data._id});
+                        res.status(200).json({message:"nccriticality Added",ID:data._id});
                     })
                     .catch(err =>{
                         console.log(err);
@@ -41,8 +41,8 @@ exports.create_frequency = (req,res,next)=>{
 		});
 };
 
-exports.list_frequency = (req,res,next)=>{
-    Frequency.find()
+exports.list_nccriticality = (req,res,next)=>{
+    Nccriticality.find()
         .exec()
         .then(data=>{
             res.status(200).json(data);
@@ -55,8 +55,8 @@ exports.list_frequency = (req,res,next)=>{
         });
 }
 
-exports.list_frequency_company_ID = (req,res,next)=>{
-    Frequency.find({company_ID:req.params.company_ID})
+exports.list_nccriticality_company_ID = (req,res,next)=>{
+    Nccriticality.find({company_ID:req.params.company_ID})
         .exec()
         .then(data=>{
             res.status(200).json(data);
@@ -69,15 +69,15 @@ exports.list_frequency_company_ID = (req,res,next)=>{
         });
 }
 
-exports.detail_frequency = (req,res,next)=>{
-    var frequencyData = req.params.frequency;
-    Frequency.findOne({frequency:frequencyData.toLowerCase()})
+exports.detail_nccriticality = (req,res,next)=>{
+    var nccriticalityData = req.params.nccriticality;
+    Nccriticality.findOne({nccriticality:nccriticalityData.toLowerCase()})
         .exec()
         .then(data=>{
             if(data){
                 res.status(200).json(data);
             }else{
-                res.status(404).json('frequency not found');
+                res.status(404).json('nccriticality not found');
             }
         })
         .catch(err =>{
@@ -88,21 +88,21 @@ exports.detail_frequency = (req,res,next)=>{
         });
 }
 
-exports.update_frequency = (req,res,next)=>{
-    var frequencyData = req.body.frequency;
-    Frequency.findOne({frequency:frequencyData.toLowerCase()})
+exports.update_nccriticality = (req,res,next)=>{
+    var nccriticalitysData = req.body.nccriticalitys;
+    Nccriticality.findOne({nccriticality:nccriticalitysData.toLowerCase()})
 		.exec()
 		.then(data =>{
 			if(data && data._id != req.body.id){
 				return res.status(200).json({
-					message: 'frequency already exists'
+					message: 'nccriticalitys already exists'
 				});
 			}else{
-				Frequency.updateOne(
+				Nccriticality.updateOne(
                                 { _id:req.body.id},  
                                 {
                                     $set:{
-                                        "frequency" : frequencyData.toLowerCase()
+                                        "nccriticality" : nccriticalitysData.toLowerCase()
                                     }
                                 }
                             )
@@ -110,9 +110,9 @@ exports.update_frequency = (req,res,next)=>{
                             .then(data=>{
                                 console.log('data ',data);
                                 if(data){
-                                    res.status(200).json("frequency Updated");
+                                    res.status(200).json("nccriticalitys Updated");
                                 }else{
-                                    res.status(401).json("frequency Not Found");
+                                    res.status(401).json("nccriticality Not Found");
                                 }
                             })
                             .catch(err =>{
@@ -132,13 +132,13 @@ exports.update_frequency = (req,res,next)=>{
     
 }
 
-exports.delete_frequency = (req,res,next)=>{
-    Frequency.deleteOne({_id:req.params.frequency_ID})
+exports.delete_nccriticality = (req,res,next)=>{
+    Nccriticality.deleteOne({_id:req.params.nccriticality_ID})
         .exec()
         .then(data=>{
             console.log('data ',data);
             if(data.deletedCount == 1){
-                res.status(200).json("frequency deleted");
+                res.status(200).json("nccriticality deleted");
             }else{
                 res.status(200).json("Something went wrong");
             }
@@ -151,11 +151,11 @@ exports.delete_frequency = (req,res,next)=>{
         });
 }
 
-exports.delete_all_frequency = (req,res,next)=>{
-    Frequency.deleteMany({})
+exports.delete_all_nccriticality = (req,res,next)=>{
+    Nccriticality.deleteMany({})
         .exec()
         .then(data=>{
-            res.status(200).json("All frequencys deleted");
+            res.status(200).json("All nccriticality deleted");
         })
         .catch(err =>{
             console.log(err);

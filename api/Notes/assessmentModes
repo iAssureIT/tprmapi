@@ -3,7 +3,7 @@ Schema :
 
 {
 	_id			    : String,
-	frequency       : String,
+	assessmentMode  : String,
 	company_ID      : String,
     createdAt	    : Date,
     createdBy       : String,
@@ -11,26 +11,26 @@ Schema :
 
 APIs :
 -----------------------------------------------------------------------------------------------------
-1. Insert new frequency									- Done
-2. Details of frequency									- Done
-3. List details of all the frequencys				    - Done
-4. Update frequency details                    		    - Done
-5. Delete particular frequency							- Done
-6. Delete all the frequency							    - Done
-7. List all frequency for specify company				- Done
+1. Insert new assessmentMode								- Done
+2. Details of assessmentMode								- Done
+3. List details of all the assessmentModes				    - Done
+4. Update assessmentMode details                   		    - Done
+5. Delete particular assessmentMode							- Done
+6. Delete all the assessmentMode						    - Done
+7. List all assessmentMode for specify company				- Done
 
 
 -----------------------------------------------------------------------------------------------------
-								1. Insert new frequency
+								1. Insert new assessmentMode
 -----------------------------------------------------------------------------------------------------
 
 Method      : POST
     
-URL         : /api/frequency
+URL         : /api/assessmentmodes
 
 Input       : 
 				{
-					frequency	    : String, // Mandatory Field
+					assessmentMode  : String, // Mandatory Field
 					company_ID      : String,
 					createdBy		: String, // Either empty or _id of users
 				}
@@ -38,36 +38,36 @@ Input       :
 Output      : 
 				If successfully
 					{
-						message : "frequency Added",
+						message : "assessmentMode Added",
                         ID      : String
 					}
 
 -----------------------------------------------------------------------------------------------------
-								2. Details of frequency
+								2. Details of assessmentMode
 -----------------------------------------------------------------------------------------------------
 
 Method      : GET
     
-URL         : /api/frequency/:frequency
+URL         : /api/assessmentmodes/:assessmentMode
 
 Input       : - NA-
 
 Output      : 
 				If successfully
 					{
-						frequency   : String,
+						assessmentMode   : String,
 						createdAt	: Date,
                         createdBy   : String,
 						_id         : String
 					} 
 					
 -----------------------------------------------------------------------------------------------------
-								3. List details of all the frequency
+								3. List details of all the assessmentMode
 -----------------------------------------------------------------------------------------------------
 
 Method      : GET
     
-URL         : /api/frequency/list
+URL         : /api/assessmentmodes/list
 
 Input       : - NA-
 
@@ -75,67 +75,67 @@ Output      :
 				If successfully
 					[
 						{
-                            frequency       : String,
+                            assessmentMode       : String,
                             createdAt	    : Date,
                             createdBy       : String,
                             _id             : String
 						}
 					]	 
 -----------------------------------------------------------------------------------------------------
-								4. Update frequency details
+								4. Update assessmentMode details
 -----------------------------------------------------------------------------------------------------
 
 Method      : PUT
     
-URL         : /api/frequency/
+URL         : /api/assessmentmodes/
 
 Input       : 
                 {
                     id           : String,
-                    frequency    : String,
+                    assessmentMode    : String,
                 }
 
 Output      : 
 				If successfully 
-					"Frequency Updated"	 
+					"assessmentMode Updated"	 
 				If not 
 					"Something went wrong."
 
 -----------------------------------------------------------------------------------------------------
-							5. Delete particular frequency
+							5. Delete particular assessmentMode
 -----------------------------------------------------------------------------------------------------
 
 Method      : DELETE
     
-URL         : /api/frequency/:frequency
+URL         : /api/assessmentmodes/:assessmentMode
 			
 Input       : - NA -
 				
 Output      : 
 				If successfully 
-					"Frequency type deleted"
+					"assessmentMode type deleted"
 
 -----------------------------------------------------------------------------------------------------
-							6. Delete all the frequency
+							6. Delete all the assessmentMode
 -----------------------------------------------------------------------------------------------------
 
 Method      : DELETE
     
-URL         : /api/frequency
+URL         : /api/assessmentmodes
 
 Input       : - NA -			
 
 Output      : 
 				If successfully 
-					"All frequency Deleted"
+					"All assessmentMode Deleted"
 
 -----------------------------------------------------------------------------------------------------
-							7. List all frequency for specify company
+							7. List all assessmentMode for specify company
 -----------------------------------------------------------------------------------------------------
 
 Method      : GET
     
-URL         : /api/frequency/list/:company_ID
+URL         : /api/assessmentmodes/list/:company_ID
 
 Input       : - NA-
 
@@ -143,7 +143,7 @@ Output      :
 				If successfully
 					[
 						{
-                            frequency		: String,
+                            assessmentMode		: String,
                             createdAt	    : Date,
                             createdBy       : String,
                             _id             : String,

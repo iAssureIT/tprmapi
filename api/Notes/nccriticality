@@ -3,7 +3,7 @@ Schema :
 
 {
 	_id			    : String,
-	frequency       : String,
+	nccriticality  : String,
 	company_ID      : String,
     createdAt	    : Date,
     createdBy       : String,
@@ -11,26 +11,26 @@ Schema :
 
 APIs :
 -----------------------------------------------------------------------------------------------------
-1. Insert new frequency									- Done
-2. Details of frequency									- Done
-3. List details of all the frequencys				    - Done
-4. Update frequency details                    		    - Done
-5. Delete particular frequency							- Done
-6. Delete all the frequency							    - Done
-7. List all frequency for specify company				- Done
+1. Insert new nccriticality								- Done
+2. Details of nccriticality								- Done
+3. List details of all the nccriticalitys				- Done
+4. Update nccriticality details                   		- Done
+5. Delete particular nccriticality						- Done
+6. Delete all the nccriticality						    - Done
+7. List all nccriticality for specify company			- Done
 
 
 -----------------------------------------------------------------------------------------------------
-								1. Insert new frequency
+								1. Insert new nccriticality
 -----------------------------------------------------------------------------------------------------
 
 Method      : POST
     
-URL         : /api/frequency
+URL         : /api/nccriticality
 
 Input       : 
 				{
-					frequency	    : String, // Mandatory Field
+					nccriticality  : String, // Mandatory Field
 					company_ID      : String,
 					createdBy		: String, // Either empty or _id of users
 				}
@@ -38,36 +38,36 @@ Input       :
 Output      : 
 				If successfully
 					{
-						message : "frequency Added",
+						message : "nccriticality Added",
                         ID      : String
 					}
 
 -----------------------------------------------------------------------------------------------------
-								2. Details of frequency
+								2. Details of nccriticality
 -----------------------------------------------------------------------------------------------------
 
 Method      : GET
     
-URL         : /api/frequency/:frequency
+URL         : /api/nccriticality/:nccriticality
 
 Input       : - NA-
 
 Output      : 
 				If successfully
 					{
-						frequency   : String,
+						nccriticality   : String,
 						createdAt	: Date,
                         createdBy   : String,
 						_id         : String
 					} 
 					
 -----------------------------------------------------------------------------------------------------
-								3. List details of all the frequency
+								3. List details of all the nccriticality
 -----------------------------------------------------------------------------------------------------
 
 Method      : GET
     
-URL         : /api/frequency/list
+URL         : /api/nccriticality/list
 
 Input       : - NA-
 
@@ -75,67 +75,67 @@ Output      :
 				If successfully
 					[
 						{
-                            frequency       : String,
+                            nccriticality       : String,
                             createdAt	    : Date,
                             createdBy       : String,
                             _id             : String
 						}
 					]	 
 -----------------------------------------------------------------------------------------------------
-								4. Update frequency details
+								4. Update nccriticality details
 -----------------------------------------------------------------------------------------------------
 
 Method      : PUT
     
-URL         : /api/frequency/
+URL         : /api/nccriticality/
 
 Input       : 
                 {
                     id           : String,
-                    frequency    : String,
+                    nccriticality    : String,
                 }
 
 Output      : 
 				If successfully 
-					"Frequency Updated"	 
+					"nccriticality Updated"	 
 				If not 
 					"Something went wrong."
 
 -----------------------------------------------------------------------------------------------------
-							5. Delete particular frequency
+							5. Delete particular nccriticality
 -----------------------------------------------------------------------------------------------------
 
 Method      : DELETE
     
-URL         : /api/frequency/:frequency
+URL         : /api/nccriticality/:nccriticality
 			
 Input       : - NA -
 				
 Output      : 
 				If successfully 
-					"Frequency type deleted"
+					"nccriticality type deleted"
 
 -----------------------------------------------------------------------------------------------------
-							6. Delete all the frequency
+							6. Delete all the nccriticality
 -----------------------------------------------------------------------------------------------------
 
 Method      : DELETE
     
-URL         : /api/frequency
+URL         : /api/nccriticality
 
 Input       : - NA -			
 
 Output      : 
 				If successfully 
-					"All frequency Deleted"
+					"All nccriticality Deleted"
 
 -----------------------------------------------------------------------------------------------------
-							7. List all frequency for specify company
+							7. List all nccriticality for specify company
 -----------------------------------------------------------------------------------------------------
 
 Method      : GET
     
-URL         : /api/frequency/list/:company_ID
+URL         : /api/nccriticality/list/:company_ID
 
 Input       : - NA-
 
@@ -143,7 +143,7 @@ Output      :
 				If successfully
 					[
 						{
-                            frequency		: String,
+                            nccriticality		: String,
                             createdAt	    : Date,
                             createdBy       : String,
                             _id             : String,

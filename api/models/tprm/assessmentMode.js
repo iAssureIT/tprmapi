@@ -8,4 +8,4 @@ const assessmentModeSchema = mongoose.Schema({
     createdAt               : Date,
 });
 
-module.exports = mongoose.model('assessmentMode',assessmentModeSchema);
+module.exports = mongoose.model('assessmentModes',assessmentModeSchema);

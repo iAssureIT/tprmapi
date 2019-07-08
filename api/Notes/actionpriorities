@@ -3,7 +3,7 @@ Schema :
 
 {
 	_id			    : String,
-	frequency       : String,
+	actionpriority  : String,
 	company_ID      : String,
     createdAt	    : Date,
     createdBy       : String,
@@ -11,26 +11,26 @@ Schema :
 
 APIs :
 -----------------------------------------------------------------------------------------------------
-1. Insert new frequency									- Done
-2. Details of frequency									- Done
-3. List details of all the frequencys				    - Done
-4. Update frequency details                    		    - Done
-5. Delete particular frequency							- Done
-6. Delete all the frequency							    - Done
-7. List all frequency for specify company				- Done
+1. Insert new actionpriority							- Done
+2. Details of actionpriority							- Done
+3. List details of all the actionprioritys				- Done
+4. Update actionpriority details                   		- Done
+5. Delete particular actionpriority						- Done
+6. Delete all the actionpriority						- Done
+7. List all actionpriority for specify company			- Done
 
 
 -----------------------------------------------------------------------------------------------------
-								1. Insert new frequency
+								1. Insert new actionpriority
 -----------------------------------------------------------------------------------------------------
 
 Method      : POST
     
-URL         : /api/frequency
+URL         : /api/actionpriority
 
 Input       : 
 				{
-					frequency	    : String, // Mandatory Field
+					actionpriority  : String, // Mandatory Field
 					company_ID      : String,
 					createdBy		: String, // Either empty or _id of users
 				}
@@ -38,36 +38,36 @@ Input       :
 Output      : 
 				If successfully
 					{
-						message : "frequency Added",
+						message : "actionpriority Added",
                         ID      : String
 					}
 
 -----------------------------------------------------------------------------------------------------
-								2. Details of frequency
+								2. Details of actionpriority
 -----------------------------------------------------------------------------------------------------
 
 Method      : GET
     
-URL         : /api/frequency/:frequency
+URL         : /api/actionpriority/:actionpriority
 
 Input       : - NA-
 
 Output      : 
 				If successfully
 					{
-						frequency   : String,
+						actionpriority   : String,
 						createdAt	: Date,
                         createdBy   : String,
 						_id         : String
 					} 
 					
 -----------------------------------------------------------------------------------------------------
-								3. List details of all the frequency
+								3. List details of all the actionpriority
 -----------------------------------------------------------------------------------------------------
 
 Method      : GET
     
-URL         : /api/frequency/list
+URL         : /api/actionpriority/list
 
 Input       : - NA-
 
@@ -75,67 +75,67 @@ Output      :
 				If successfully
 					[
 						{
-                            frequency       : String,
+                            actionpriority       : String,
                             createdAt	    : Date,
                             createdBy       : String,
                             _id             : String
 						}
 					]	 
 -----------------------------------------------------------------------------------------------------
-								4. Update frequency details
+								4. Update actionpriority details
 -----------------------------------------------------------------------------------------------------
 
 Method      : PUT
     
-URL         : /api/frequency/
+URL         : /api/actionpriority/
 
 Input       : 
                 {
                     id           : String,
-                    frequency    : String,
+                    actionpriority    : String,
                 }
 
 Output      : 
 				If successfully 
-					"Frequency Updated"	 
+					"actionpriority Updated"	 
 				If not 
 					"Something went wrong."
 
 -----------------------------------------------------------------------------------------------------
-							5. Delete particular frequency
+							5. Delete particular actionpriority
 -----------------------------------------------------------------------------------------------------
 
 Method      : DELETE
     
-URL         : /api/frequency/:frequency
+URL         : /api/actionpriority/:actionpriority
 			
 Input       : - NA -
 				
 Output      : 
 				If successfully 
-					"Frequency type deleted"
+					"actionpriority type deleted"
 
 -----------------------------------------------------------------------------------------------------
-							6. Delete all the frequency
+							6. Delete all the actionpriority
 -----------------------------------------------------------------------------------------------------
 
 Method      : DELETE
     
-URL         : /api/frequency
+URL         : /api/actionpriority
 
 Input       : - NA -			
 
 Output      : 
 				If successfully 
-					"All frequency Deleted"
+					"All actionpriority Deleted"
 
 -----------------------------------------------------------------------------------------------------
-							7. List all frequency for specify company
+							7. List all actionpriority for specify company
 -----------------------------------------------------------------------------------------------------
 
 Method      : GET
     
-URL         : /api/frequency/list/:company_ID
+URL         : /api/actionpriority/list/:company_ID
 
 Input       : - NA-
 
@@ -143,7 +143,7 @@ Output      :
 				If successfully
 					[
 						{
-                            frequency		: String,
+                            actionpriority		: String,
                             createdAt	    : Date,
                             createdBy       : String,
                             _id             : String,

@@ -8,4 +8,4 @@ const actionprioritySchema = mongoose.Schema({
     createdAt               : Date,
 });
 
-module.exports = mongoose.model('actionpriority',actionprioritySchema);
+module.exports = mongoose.model('actionpriorities',actionprioritySchema);

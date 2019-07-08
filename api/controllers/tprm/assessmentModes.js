@@ -1,29 +1,29 @@
 const mongoose	= require("mongoose");
 
-const  Frequency = require('../../models/tprm/frequencys');
+const  AssessmentModes = require('../../models/tprm/assessmentMode');
 
-exports.create_frequency = (req,res,next)=>{
-    var frequencyData = req.body.frequency;
-	Frequency.findOne({frequency:frequencyData.toLowerCase()})
+exports.create_assessmentModes = (req,res,next)=>{
+    var assessmentModesData = req.body.assessmentMode;
+	AssessmentModes.findOne({assessmentMode:assessmentModesData.toLowerCase()})
 		.exec()
 		.then(data =>{
 			if(data){
 				return res.status(200).json({
-					message: 'frequency already exists'
+					message: 'assessmentModes already exists'
 				});
 			}else{
-				const frequency = new Frequency({
+				const assessmentModes = new AssessmentModes({
                     _id             : new mongoose.Types.ObjectId(),
-                    frequency       : frequencyData.toLowerCase(),
+                    assessmentMode  : assessmentModesData.toLowerCase(),
                     company_ID      : req.body.company_ID,
                     createdBy       : req.body.createdBy,
                     createdAt       : new Date(),
 
                 });
-                frequency.save()
+                assessmentModes.save()
                     .then(data=>{
                         console.log('data ',data);
-                        res.status(200).json({message:"frequency Added",ID:data._id});
+                        res.status(200).json({message:"assessmentModes Added",ID:data._id});
                     })
                     .catch(err =>{
                         console.log(err);
@@ -41,8 +41,8 @@ exports.create_frequency = (req,res,next)=>{
 		});
 };
 
-exports.list_frequency = (req,res,next)=>{
-    Frequency.find()
+exports.list_assessmentModes = (req,res,next)=>{
+    AssessmentModes.find()
         .exec()
         .then(data=>{
             res.status(200).json(data);
@@ -55,8 +55,8 @@ exports.list_frequency = (req,res,next)=>{
         });
 }
 
-exports.list_frequency_company_ID = (req,res,next)=>{
-    Frequency.find({company_ID:req.params.company_ID})
+exports.list_assessmentModes_company_ID = (req,res,next)=>{
+    AssessmentModes.find({company_ID:req.params.company_ID})
         .exec()
         .then(data=>{
             res.status(200).json(data);
@@ -69,15 +69,15 @@ exports.list_frequency_company_ID = (req,res,next)=>{
         });
 }
 
-exports.detail_frequency = (req,res,next)=>{
-    var frequencyData = req.params.frequency;
-    Frequency.findOne({frequency:frequencyData.toLowerCase()})
+exports.detail_assessmentModes = (req,res,next)=>{
+    var assessmentModesData = req.params.assessmentModes;
+    AssessmentModes.findOne({assessmentModes:assessmentModesData.toLowerCase()})
         .exec()
         .then(data=>{
             if(data){
                 res.status(200).json(data);
             }else{
-                res.status(404).json('frequency not found');
+                res.status(404).json('assessmentModes not found');
             }
         })
         .catch(err =>{
@@ -88,21 +88,21 @@ exports.detail_frequency = (req,res,next)=>{
         });
 }
 
-exports.update_frequency = (req,res,next)=>{
-    var frequencyData = req.body.frequency;
-    Frequency.findOne({frequency:frequencyData.toLowerCase()})
+exports.update_assessmentModes = (req,res,next)=>{
+    var assessmentModesData = req.body.assessmentModes;
+    AssessmentModes.findOne({assessmentMode:assessmentModesData.toLowerCase()})
 		.exec()
 		.then(data =>{
 			if(data && data._id != req.body.id){
 				return res.status(200).json({
-					message: 'frequency already exists'
+					message: 'assessmentModes already exists'
 				});
 			}else{
-				Frequency.updateOne(
+				AssessmentModes.updateOne(
                                 { _id:req.body.id},  
                                 {
                                     $set:{
-                                        "frequency" : frequencyData.toLowerCase()
+                                        "assessmentMode" : assessmentModesData.toLowerCase()
                                     }
                                 }
                             )
@@ -110,9 +110,9 @@ exports.update_frequency = (req,res,next)=>{
                             .then(data=>{
                                 console.log('data ',data);
                                 if(data){
-                                    res.status(200).json("frequency Updated");
+                                    res.status(200).json("assessmentModes Updated");
                                 }else{
-                                    res.status(401).json("frequency Not Found");
+                                    res.status(401).json("assessmentModes Not Found");
                                 }
                             })
                             .catch(err =>{
@@ -132,13 +132,13 @@ exports.update_frequency = (req,res,next)=>{
     
 }
 
-exports.delete_frequency = (req,res,next)=>{
-    Frequency.deleteOne({_id:req.params.frequency_ID})
+exports.delete_assessmentModes = (req,res,next)=>{
+    AssessmentModes.deleteOne({_id:req.params.assessmentModes_ID})
         .exec()
         .then(data=>{
             console.log('data ',data);
             if(data.deletedCount == 1){
-                res.status(200).json("frequency deleted");
+                res.status(200).json("assessmentModes deleted");
             }else{
                 res.status(200).json("Something went wrong");
             }
@@ -151,11 +151,11 @@ exports.delete_frequency = (req,res,next)=>{
         });
 }
 
-exports.delete_all_frequency = (req,res,next)=>{
-    Frequency.deleteMany({})
+exports.delete_all_assessmentModes = (req,res,next)=>{
+    AssessmentModes.deleteMany({})
         .exec()
         .then(data=>{
-            res.status(200).json("All frequencys deleted");
+            res.status(200).json("All assessmentModes deleted");
         })
         .catch(err =>{
             console.log(err);
