@@ -3,8 +3,11 @@ const mongoose	= require("mongoose");
 const Industrytype = require('../../models/tprm/industrytypes');
 
 exports.create_industrytype = (req,res,next)=>{
+    console.log('industrytype');
     var industrytypeData = req.body.industrytype;
-	Industrytype.findOne({industrytype:industrytypeData.toLowerCase()})
+    console.log('industrytypeData',industrytypeData);
+    if(industrytypeData){
+        Industrytype.findOne({industrytype:industrytypeData.toLowerCase()})
 		.exec()
 		.then(data =>{
 			if(data){
@@ -38,6 +41,7 @@ exports.create_industrytype = (req,res,next)=>{
 				error: err
 			});
 		});
+    }
 };
 
 exports.list_industrytype = (req,res,next)=>{

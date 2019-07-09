@@ -43,7 +43,7 @@ app.use((req, res, next) =>{
 
 	if (req.method === 'OPTIONS') {
 		console.log('in options');
-		req.header('Access-Control-Allow-Methods','PUT, POST, PATCH, DELETE, GET');
+		req.header('Access-Control-Allow-Methods','PUT, POST, PATCH, DELETE, GET, OPTIONS');
 		return res.status(200).json({});
 	}else{
 		console.log('no options');
@@ -74,6 +74,7 @@ app.use('/api/frequency',frequencyRoutes);
 app.use('/api/assessmentmodes',assessmentModeRoutes);
 app.use('/api/nccriticality',nccriticalityRoutes);
 app.use('/api/actionpriority',actionpriorityRoutes);
+
 // handle all other request which not found 
 app.use((req, res, next) => {
 	const error = new Error('Not Found Manual ERROR');
