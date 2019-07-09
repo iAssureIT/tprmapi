@@ -106,11 +106,12 @@ exports.user_login = (req,res,next)=>{
 						const token = jwt.sign({
 							email 	: req.body.email,
 							userId	:  mongoose.Types.ObjectId(user._id) ,
-						},process.env.JWT_KEY,
+						},global.JWT_KEY,
 						{
 							expiresIn: "1h"
 						}
 						);
+						res.header("Access-Control-Allow-Origin","*");
 						return res.status(200).json({
 							message	: 'Auth successful',
 							token	: token,

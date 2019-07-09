@@ -31,7 +31,7 @@ mongoose.connect('mongodb://localhost/qatprm',{
 	useNewUrlParser: true
 })
 mongoose.promise =global.Promise;
-
+global.JWT_KEY = "secret";
 // process.env.MANGO_ATLAS_PW envirnmaent variable name
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended: false}));// urlencode true and false simple-body url data
