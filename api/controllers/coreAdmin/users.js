@@ -26,7 +26,8 @@ exports.user_signup = (req,res,next)=>{
 										services	: {
 											password:{
 														bcrypt:hash
-														},
+														
+													},
 											resume: {
 												loginTokens:[
 													{
@@ -105,7 +106,7 @@ exports.user_login = (req,res,next)=>{
 					if(result){
 						const token = jwt.sign({
 							email 	: req.body.email,
-							userId	:  mongoose.Types.ObjectId(user._id) ,
+							userId	:  user._id ,
 						},global.JWT_KEY,
 						{
 							expiresIn: "1h"

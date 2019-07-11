@@ -18,6 +18,7 @@ const countryRoutes						= require('./api/routes/tprm/countries');
 const riskfactorRoutes					= require('./api/routes/tprm/riskfactors');
 const controltagRoutes					= require('./api/routes/tprm/controltags');
 const industrytagRoutes					= require('./api/routes/tprm/industrytags')
+const industrytypeRoutes				= require('./api/routes/tprm/industrytypes');
 const customertyprRoutes 				= require('./api/routes/tprm/customertypes');
 const frameworkRoutes 					= require('./api/routes/tprm/frameworks');
 const controlblockRoutes				= require('./api/routes/tprm/controlblocks');
@@ -65,7 +66,7 @@ app.use('/api/riskfactors',riskfactorRoutes);
 app.use('/api/controltags',controltagRoutes);
 app.use('/api/controltags',controltagRoutes);
 app.use('/api/industrytags',industrytagRoutes);
-app.use('/api/industrytypes',industrytagRoutes);
+app.use('/api/industrytypes',industrytypeRoutes);
 app.use('/api/customertypes',customertyprRoutes);
 app.use('/api/frameworks',frameworkRoutes);
 app.use('/api/controlblocks',controlblockRoutes);

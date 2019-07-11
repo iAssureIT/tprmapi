@@ -3,7 +3,7 @@ const mongoose	= require("mongoose");
 const Industrytype = require('../../models/tprm/industrytypes');
 
 exports.create_industrytype = (req,res,next)=>{
-    console.log('industrytype');
+    console.log('industrytype', req.body); 
     var industrytypeData = req.body.industrytype;
     console.log('industrytypeData',industrytypeData);
     if(industrytypeData){
@@ -15,7 +15,7 @@ exports.create_industrytype = (req,res,next)=>{
 					message: 'Industry Type already exists'
 				});
 			}else{
-				const industrytypes = new industrytype({
+				const industrytypes = new Industrytype({
                     _id             : new mongoose.Types.ObjectId(),
                     industrytype    : industrytypeData.toLowerCase(),
                     company_ID      : req.body.company_ID,
