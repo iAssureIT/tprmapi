@@ -11,12 +11,12 @@ router.get('/list/:company_ID', FrameworktypeController.list_frameworktype_compa
 
 router.get('/:frameworktype', FrameworktypeController.detail_frameworktype);
 
+router.get('/:frameworktype_ID', FrameworktypeController.find_single_frameworktype);
+
 router.put('/',FrameworktypeController.update_frameworktype);
 
 router.delete('/:frameworktype_ID',FrameworktypeController.delete_frameworktype);
 
 router.delete('/',FrameworktypeController.delete_all_frameworktype);
-
-
 
 module.exports = router;

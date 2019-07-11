@@ -11,12 +11,12 @@ router.get('/list/:company_ID', DomainsController.list_domain_company_ID);
 
 router.get('/:domain', DomainsController.detail_domain);
 
+router.get('/:domain_ID',DomainsController.get_single_domain_ID);
+
 router.put('/',DomainsController.update_domain);
 
 router.delete('/:domain_ID',DomainsController.delete_domain);
 
-router.delete('/',DomainsController.delete_all_domain);
-
-
+router.delete('/',DomainsController.delete_all_domain); 
 
 module.exports = router;

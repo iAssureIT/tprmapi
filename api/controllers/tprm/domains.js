@@ -159,3 +159,16 @@ exports.delete_all_domain = (req,res,next)=>{
             });
         });
 }
+exports.get_single_domain_ID = (req,res,next)=>{
+    Domain.findOne({_id:req.params.domain_ID})
+        .exec()
+        .then(data=>{
+            res.status(200).json(data);
+        })
+        .catch(err =>{
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+}
