@@ -3,7 +3,7 @@ const mongoose	= require("mongoose");
 const Controlblocks = require('../../models/tprm/controlblocks');
 const Framwork      = require('../../models/tprm/frameworks');
 
-exports.create_controlblocks = (req,res,next)=>{
+exports.create_controlblocks_framwork = (req,res,next)=>{
 	Controlblocks.findOne({controlBlockName:req.body.controlBlockName})
 		.exec()
 		.then(data =>{
@@ -42,6 +42,73 @@ exports.create_controlblocks = (req,res,next)=>{
                                     .then(framework=>{
                                         if(framework.nModified == 1){
                                             res.status(200).json({message:"Control Block and Framework updated",ID:data._id})
+                                        }
+                                    })
+                                    .catch(err =>{
+                                        console.log(err);
+                                        res.status(500).json({
+                                            error: err
+                                        });
+                                    });
+                        }else{
+                            res.status(409).json({message: "Something went wrong"});
+                        }
+                    })
+                    .catch(err =>{
+                        console.log(err);
+                        res.status(500).json({
+                            error: err
+                        });
+                    });
+			}
+		})
+		.catch(err =>{
+			console.log(err);
+			res.status(500).json({
+				error: err
+			});
+		});
+};
+
+exports.create_controlblocks_subcontrolblock = (req,res,next)=>{
+	Controlblocks.findOne({controlBlockName:req.body.controlBlockName})
+		.exec()
+		.then(data =>{
+			if(data){
+				return res.status(200).json({
+					message: 'Control Block Name already exists'
+				});
+			}else{
+				const controlblocks = new Controlblocks({
+                    _id                     : new mongoose.Types.ObjectId(),
+                    controlBlockRef         : req.body.controlBlockRef,
+                    controlBlockName        : req.body.controlBlockName,
+                    controlBlockDesc        : req.body.controlBlockDesc,
+                    parentBlock             : req.body.parentBlock,
+                    domain_ID               : req.body.domain_ID,
+                    sequence                : req.body.sequence,
+                    weightage               : req.body.weightage,
+                    company_ID              : req.body.company_ID,
+                    createdBy               : req.body.createdBy,
+                    createdAt               : new Date(),
+                });
+                controlblocks.save()
+                    .then(data=>{
+                        if(data){
+                            Controlblocks.update(
+                                                {_id : req.body.controlblock_ID},
+                                                {
+                                                    $push : {
+                                                        subControlBlocks : {
+                                                            controlBlocks_ID : data._id
+                                                        }
+                                                    }
+                                                }
+                                            )
+                                    .exec()
+                                    .then(framework=>{
+                                        if(framework.nModified == 1){
+                                            res.status(200).json({message:"New Control Block created and Parent Control Block updated",ID:data._id})
                                         }
                                     })
                                     .catch(err =>{

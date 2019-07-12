@@ -7,18 +7,21 @@ const Control           = require('../../models/tprm/controls');
 
 exports.create_assessments = (req,res,next)=>{
     Framework   .findOne({_id:req.body.framework_ID})
+                .populate('assessments','controlBlockName')
                 .exec()
                 .then(framework=>{
                     if(framework){
-                        if(framework.controlBlocks.length > 0 ){
-                            var listcontrolblocks = framework.controlBlocks;
-                            listcontrolblocks.map((cb,index)={
+                        // if(framework.controlBlocks.length > 0 ){
+                        //     var listcontrolblocks = framework.controlBlocks;
+                        //     listcontrolblocks.map((cb,index)={
                                 
-                            });
+                        //     });
 
-                        }else{
-                            res.status(409).json({message:"Control Blocks details not found"});    
-                        }
+                        // }else{
+                        //     res.status(409).json({message:"Control Blocks details not found"});    
+                        // }
+                        console.log('control block ',framework.controlBlocks[0].controlBlockName);
+                        res.status(409).json({framework});
                     }else{
                         res.status(409).json({message:"Framework not found"});
                     }

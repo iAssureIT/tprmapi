@@ -27,6 +27,7 @@ const frequencyRoutes					= require('./api/routes/tprm/frequencys');
 const assessmentModeRoutes				= require('./api/routes/tprm/assessmentMode');
 const nccriticalityRoutes				= require('./api/routes/tprm/nccriticality');
 const actionpriorityRoutes				= require('./api/routes/tprm/actionpriorities');
+const assessmentRoutes 					= require('./api/routes/tprm/assessments');
 
 mongoose.connect('mongodb://localhost/qatprm',{
 	useNewUrlParser: true
@@ -75,6 +76,8 @@ app.use('/api/frequency',frequencyRoutes);
 app.use('/api/assessmentmodes',assessmentModeRoutes);
 app.use('/api/nccriticality',nccriticalityRoutes);
 app.use('/api/actionpriority',actionpriorityRoutes);
+app.use('/api/assessment',assessmentRoutes);
+
 
 // handle all other request which not found 
 app.use((req, res, next) => {

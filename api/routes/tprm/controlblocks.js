@@ -3,7 +3,9 @@ const router 	= express.Router();
 
 const ControlBlockController = require('../../controllers/tprm/controlblocks');
 
-router.post('/', ControlBlockController.create_controlblocks);
+router.post('/', ControlBlockController.create_controlblocks_framwork);
+
+router.post('/subcontrolBlock',ControlBlockController.create_controlblocks_subcontrolblock);
 
 router.get('/list', ControlBlockController.list_controlblocks);
 

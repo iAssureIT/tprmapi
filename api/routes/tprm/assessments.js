@@ -1,20 +1,20 @@
 const express 	= require("express");
 const router 	= express.Router();
 
-const ActionpriorityController = require('../../controllers/tprm/actionpriorities');
+const AssessmentsController = require('../../controllers/tprm/assessments');
 
-router.post('/', ActionpriorityController.create_actionpriority);
+router.post('/', AssessmentsController.create_assessments);
 
-router.get('/list', ActionpriorityController.list_actionpriority);
+// router.get('/list', AssessmentsController.list_actionpriority);
 
-router.get('/list/:company_ID', ActionpriorityController.list_actionpriority_company_ID);
+// router.get('/list/:company_ID', AssessmentsController.list_actionpriority_company_ID);
 
-router.get('/:actionpriority', ActionpriorityController.detail_actionpriority);
+// router.get('/:actionpriority', AssessmentsController.detail_actionpriority);
 
-router.put('/',ActionpriorityController.update_actionpriority);
+// router.put('/',AssessmentsController.update_actionpriority);
 
-router.delete('/:actionpriority_ID',ActionpriorityController.delete_actionpriority);
+// router.delete('/:actionpriority_ID',AssessmentsController.delete_actionpriority);
 
-router.delete('/',ActionpriorityController.delete_all_actionpriority);
+// router.delete('/',AssessmentsController.delete_all_actionpriority);
 
 module.exports = router;

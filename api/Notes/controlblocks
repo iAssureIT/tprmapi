@@ -28,7 +28,7 @@ Schema :
 
 APIs :
 -----------------------------------------------------------------------------------------------------
-1. Insert new control Block								    - Done
+1. Insert new control Block     						    - Done
     - Insert New Control Block
     - Update Framework
 2. Details of control Block								    - Done
@@ -39,6 +39,9 @@ APIs :
 7. List all control Block for specify company			    - Done
 8. Add / Remove the Sub Control Block   				    - Done
 9. Add / Remove the Controls     						    - Done
+10.Insert new control Block  (creating sub control block)  -
+    - Insert New Control Block
+    - Update Parent Control Block
 
 -----------------------------------------------------------------------------------------------------
 								1. Insert new control Block
@@ -267,3 +270,32 @@ Output      :
 				If not 
 					"Something went wrong."
 
+-----------------------------------------------------------------------------------------------------
+                        10. Insert new control Block  (creating sub control block)
+-----------------------------------------------------------------------------------------------------
+
+Method      : POST
+    
+URL         : /api/controlblocks/subcontrolBlock
+
+Input       : 
+				{
+					controlBlocksCode       : String,
+                    controlBlockRef         : Number,
+                    controlBlockName        : String,
+                    controlBlockDesc        : String,
+                    parentBlock             : Number,
+                    domain_ID               : String,
+                    sequence                : Number,
+                    weightage               : Number,
+                    controlblock_ID         : String, // Mandatory
+                    company_ID              : String,
+                    createdBy               : String,
+				}
+
+Output      : 
+				If successfully
+					{
+						message : "Control Block Added",
+                        ID      : String
+					}
