@@ -32,23 +32,22 @@ const assessmentRoutes 					= require('./api/routes/tprm/assessments');
 mongoose.connect('mongodb://localhost/qatprm',{
 	useNewUrlParser: true
 })
-mongoose.promise =global.Promise;
-global.JWT_KEY = "secret";
-// process.env.MANGO_ATLAS_PW envirnmaent variable name
-app.use(morgan('dev'));
-app.use(bodyParser.urlencoded({extended: false}));// urlencode true and false simple-body url data
-app.use(bodyParser.json());// it show json data in good manner
+mongoose.promise = global.Promise;
 
-app.use((req, res, next) =>{
-	res.header("Access-Control-Allow-origin","*"); // use API from anywhere insted of * we use domain
-	res.header("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept, Authorization");
+app.use(morgan("dev"));
+app.use('/uploads', express.static('uploads'));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
-	if (req.method === 'OPTIONS') {
-		console.log('in options');
-		req.header('Access-Control-Allow-Methods','PUT, POST, PATCH, DELETE, GET, OPTIONS');
+app.use((req, res, next) => {
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header(
+		"Access-Control-Allow-Headers",
+		"Origin, X-Requested-With, Content-Type, Accept, Authorization"
+	);
+	if (req.method === "OPTIONS") {
+		res.header("Access-Control-Allow-Methods", "PUT, POST, PATCH, DELETE, GET");
 		return res.status(200).json({});
-	}else{
-		console.log('no options');
 	}
 	next();
 });

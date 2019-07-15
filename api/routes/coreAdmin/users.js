@@ -21,7 +21,10 @@ router.get('/:userID',UserController.user_details); //Working
 
 router.put('/',UserController.user_update);  //Working
 
-router.patch('/:rolestatus',UserController.user_change_role);  //Working
+router.patch('/status',UserController.user_status_update);  //Working
+
+// router.patch('/:rolestatus',UserController.user_change_role);  //Working
+router.patch('/changeRole',UserController.user_change_role);  //Working
 
 
 module.exports = router;

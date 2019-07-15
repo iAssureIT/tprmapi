@@ -153,7 +153,7 @@ exports.users_list = (req,res,next)=>{
 }
 
 exports.users_list_company_role = (req,res,next)=>{
-	User.find({"profile.company_ID" : req.params.company_ID,roles : req.params.role})
+	User.find({"profile.company_ID" : req.params.company_ID,"roles" : req.params.role})
 		.select("profile roles")
 		.exec()
 		.then(users =>{
@@ -185,11 +185,13 @@ exports.user_details = (req, res, next)=>{
 }
 
 exports.user_delete = (req,res,next)=>{
+	console.log('req.params.userID',req.params.userID);
 	User.findOne({_id:req.params.userID})
 		.exec()
 		.then(data=>{
+			console.log('data',data);
 			if(data){
-				if(data.profile.status == 'Inactive'){
+				// if(data.profile.status == 'Inactive'){
 					User.deleteOne({_id:req.params.userID})
 						.exec()
 						.then(data=>{
@@ -201,10 +203,12 @@ exports.user_delete = (req,res,next)=>{
 								error: err
 							});
 						});
-				}else{
-					res.status(200).json("Inactive users can only be Deleted");
-				}
+				// }else{
+				// 	res.status(200).json("Inactive users can only be Deleted");
+				// }
 			}else{
+			console.log('data',data);
+
 				res.status(404).json("User Not found");
 			}
 		})
@@ -281,57 +285,81 @@ exports.user_update = (req,res,next)=>{
 }
 
 exports.user_change_role = (req,res,next)=>{
+	console.log('req',req);
+	// console.log('req.body.userID',req.body.userID);
 	User.findOne({_id:req.body.userID})
 		.exec()
 		.then(user=>{
 			if(user){
-				if(req.params.rolestatus == 'assign'){
-					User.updateOne(
-						{_id:req.body.userID},
-						{
-							$push:{
-								roles : req.body.role
-							}
+				User.updateOne(
+					{_id:req.body.userID},
+					{
+						$set:{
+							[roles+'.0'] : req.body.role
 						}
-					)
-					.exec()
-					.then(data=>{
-						if(data.nModified == 1){
-							res.status(200).json("Role Assigned");
-						}else{
-							res.status(401).json("Something went wrong.");
-						}
-					})
-					.catch(err =>{
-						console.log('user error ',err);
-						res.status(500).json({
-							error: err
-						});
+					}
+				)
+				.exec()
+				.then(data=>{
+					if(data.nModified == 1){
+						res.status(200).json("Role Updated");
+					}else{
+						res.status(401).json("Something went wrong.");
+					}
+				})
+				.catch(err =>{
+					console.log('user error ',err);
+					res.status(500).json({
+						error: err
 					});
-				}else if(req.params.rolestatus == 'remove'){
-					User.updateOne(
-						{_id:req.body.userID},
-						{
-							$pull:{
-								roles : req.body.role
-							}
-						}
-					)
-					.exec()
-					.then(data=>{
-						if(data.nModified == 1){
-							res.status(200).json("Role Removed");
-						}else{
-							res.status(401).json("Something went wrong.");
-						}
-					})
-					.catch(err =>{
-						console.log('user error ',err);
-						res.status(500).json({
-							error: err
-						});
-					});
-				}
+				});
+				// if(req.params.rolestatus == 'assign'){
+				// 	User.updateOne(
+				// 		{_id:req.body.userID},
+				// 		{
+				// 			$push:{
+				// 				roles : req.body.role
+				// 			}
+				// 		}
+				// 	)
+				// 	.exec()
+				// 	.then(data=>{
+				// 		if(data.nModified == 1){
+				// 			res.status(200).json("Role Assigned");
+				// 		}else{
+				// 			res.status(401).json("Something went wrong.");
+				// 		}
+				// 	})
+				// 	.catch(err =>{
+				// 		console.log('user error ',err);
+				// 		res.status(500).json({
+				// 			error: err
+				// 		});
+				// 	});
+				// }else if(req.params.rolestatus == 'remove'){
+				// 	User.updateOne(
+				// 		{_id:req.body.userID},
+				// 		{
+				// 			$pull:{
+				// 				roles : req.body.role
+				// 			}
+				// 		}
+				// 	)
+				// 	.exec()
+				// 	.then(data=>{
+				// 		if(data.nModified == 1){
+				// 			res.status(200).json("Role Removed");
+				// 		}else{
+				// 			res.status(401).json("Something went wrong.");
+				// 		}
+				// 	})
+				// 	.catch(err =>{
+				// 		console.log('user error ',err);
+				// 		res.status(500).json({
+				// 			error: err
+				// 		});
+				// 	});
+				// }
 			}else{
 				res.status(404).json("User Not Found");
 			}
@@ -425,3 +453,42 @@ exports.user_signup_login = (req,res,next)=>{
 		});
 }
 
+exports.user_status_update = (req,res,next)=>{
+	User.findOne({_id:req.body.userID})
+		.exec()
+		.then(user=>{
+			if(user){
+				User.updateOne(
+					{_id:req.body.userID},
+					{
+						$set:{
+							"profile.status"		: req.body.status,
+							"profile.company_ID"	: req.body.company_ID, //Reference
+						},
+					}
+				)
+				.exec()
+				.then(data=>{
+					if(data.nModified == 1){
+						res.status(200).json("User Status Updated");
+					}else{
+						res.status(401).status("Something went wrong.")
+					}
+				})
+				.catch(err =>{
+					console.log('user error ',err);
+					res.status(500).json({
+						error: err
+					});
+				});
+			}else{
+				res.status(404).json("User Not Found");
+			}
+		})
+		.catch(err=>{
+			console.log('update user status error ',err);
+			res.status(500).json({
+				error:err
+			});
+		});
+}
