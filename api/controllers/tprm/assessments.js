@@ -1,27 +1,59 @@
 const mongoose	= require("mongoose");
 
-const Assessments      = require('../../models/tprm/assessments');
+const Assessments       = require('../../models/tprm/assessments');
 const Framework         = require('../../models/tprm/frameworks');
 const ControlBlock      = require('../../models/tprm/controlblocks');
 const Control           = require('../../models/tprm/controls');
+var frameworkList       = [];
+var controlBlockList    = [];
+var controlsList        = [];
+
+fetch_subControlBlock = function(controlBlockArray){
+    controlBlockArray.map(doc=>{
+        ControlBlock.findOne({_id:doc.controlBlock_ID})
+                    .exec()
+                    .then(cb=>{
+                        if(cb){
+                            console.log('in sub cb');
+                            cb.subControlBlocks.map(scb=>{
+                                controlBlockList.push({
+                                    controlBlock_ID : scb.controlBlocks_ID,
+                                });
+                            })
+                            console.log()
+                        }
+                    })
+                    .catch(err =>{
+                        console.log(err);
+                        res.status(500).json({
+                            error: err
+                        });
+                    });    
+    })
+    console.log('scb',controlBlockList);
+    return true;
+}
 
 exports.create_assessments = (req,res,next)=>{
     Framework   .findOne({_id:req.body.framework_ID})
-                .populate('assessments','controlBlockName')
+                .populate('controlblocks','controlBlockName')
                 .exec()
                 .then(framework=>{
                     if(framework){
-                        // if(framework.controlBlocks.length > 0 ){
-                        //     var listcontrolblocks = framework.controlBlocks;
-                        //     listcontrolblocks.map((cb,index)={
-                                
-                        //     });
-
-                        // }else{
-                        //     res.status(409).json({message:"Control Blocks details not found"});    
-                        // }
-                        console.log('control block ',framework.controlBlocks[0].controlBlockName);
-                        res.status(409).json({framework});
+                        // controlBlockList = framework.controlBlocks;
+                        framework.controlBlocks.map(doc=>{
+                            controlBlockList.push({
+                                controlBlock_ID : doc.controlBlocks_ID,
+                            });
+                        });
+                        if(framework.controlBlocks.length == controlBlockList.length){
+                            //Find the sub control Blocks
+                            var subControlBlock = fetch_subControlBlock(controlBlockList);
+                            if(subControlBlock){
+                                res.status(200).json({controlBlockList});
+                            }
+                        }
+                        
                     }else{
                         res.status(409).json({message:"Framework not found"});
                     }
