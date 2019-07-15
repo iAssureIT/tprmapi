@@ -11,9 +11,10 @@ exports.create_controlblocks_framwork = (req,res,next)=>{
 				return res.status(200).json({
 					message: 'Control Block Name already exists'
 				});
-			}else{
+			}else{ 
 				const controlblocks = new Controlblocks({
-                    _id                     : new mongoose.Types.ObjectId(),
+                    _id                     : new mongoose.Types.ObjectId(), 
+                    controlBlocksCode       : req.body.controlBlocksCode,
                     controlBlockRef         : req.body.controlBlockRef,
                     controlBlockName        : req.body.controlBlockName,
                     controlBlockDesc        : req.body.controlBlockDesc,

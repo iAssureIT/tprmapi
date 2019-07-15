@@ -11,7 +11,7 @@ router.get('/list/:company_ID', FrameworktypeController.list_frameworktype_compa
 
 router.get('/:frameworktype', FrameworktypeController.detail_frameworktype);
 
-router.get('/:frameworktype_ID', FrameworktypeController.find_single_frameworktype);
+router.get('/find/:frameworktype_ID', FrameworktypeController.find_single_frameworktype);
 
 router.put('/',FrameworktypeController.update_frameworktype);
 

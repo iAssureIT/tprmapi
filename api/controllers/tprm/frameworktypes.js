@@ -159,7 +159,7 @@ exports.delete_all_frameworktype = (req,res,next)=>{
         });
 }
 exports.find_single_frameworktype = (req,res,next)=>{
-    Frameworktype.findOne({_id:req.params.frameworktype_ID})
+    Frameworktype.findOne({"_id":req.params.frameworktype_ID})
         .exec()
         .then(data=>{
             res.status(200).json(data);

@@ -13,7 +13,7 @@ exports.create_framework = (req,res,next)=>{
 			}else{
 				const framework = new Framework({
                     _id                 : new mongoose.Types.ObjectId(),
-                    frameworktype_ID    : req.body.frameworktype_ID,
+                    frameworktype       : req.body.frameworktype,
                     frameworkname       : req.body.frameworkname,
                     purpose             : req.body.purpose,
                     domain_ID           : req.body.domain_ID,
@@ -107,7 +107,7 @@ exports.update_framework = (req,res,next)=>{
                     { _id:req.body.id},  
                     {
                         $set:{
-                            'frameworktype_ID'    : req.body.frameworktype_ID,
+                            'frameworktype'       : req.body.frameworktype,
                             'frameworkname'       : frameworknameData.toLowerCase(),
                             'purpose'             : req.body.purpose,
                             'domain_ID'           : req.body.domain_ID,

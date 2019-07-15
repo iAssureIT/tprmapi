@@ -157,11 +157,13 @@ exports.delete_all_domain = (req,res,next)=>{
             res.status(500).json({
                 error: err
             });
-        });
-}
+        }); 
+} 
+
 exports.get_single_domain_ID = (req,res,next)=>{
-    Domain.findOne({_id:req.params.domain_ID})
-        .exec()
+    // console.log("req.body",req.params);
+    Domain.findOne({"_id":req.params.domain_ID})
+        .exec() 
         .then(data=>{
             res.status(200).json(data);
         })
