@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const frameworksSchema = mongoose.Schema({
 	_id			        : mongoose.Schema.Types.ObjectId,
-    frameworktype_ID    : { type: mongoose.Schema.Types.ObjectId, ref: 'frameworktypes' },
+    frameworktype       : String,
     frameworkname       : String,
     purpose             : String,
     domain_ID           : { type: mongoose.Schema.Types.ObjectId, ref: 'domains' },

@@ -6,7 +6,7 @@ const controlblocksSchema = mongoose.Schema({
     controlBlockRef         : Number,
     controlBlockName        : String,
     controlBlockDesc        : String,
-    parentBlock             : Number,
+    parentBlock             : String,
     domain_ID               : { type: mongoose.Schema.Types.ObjectId, ref: 'domains' },
     sequence                : Number,
     weightage               : Number,

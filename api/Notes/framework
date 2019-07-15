@@ -3,7 +3,7 @@ Schema :
 
 {
 	_id			        : String,
-	frameworktype_ID    : String,
+	frameworktype    : String,
     frameworkname       : String,
     purpose             : String,
     domain              : String,
@@ -41,7 +41,7 @@ URL         : /api/frameworks
 
 Input       : 
 				{
-					frameworktype_ID    : String,
+					frameworktype    : String,
                     frameworkname       : String,
                     purpose             : String,
                     domain_ID           : String,
@@ -73,7 +73,7 @@ Input       : - NA-
 Output      : 
 				If successfully
 					{
-						frameworktype_ID    : String,
+						frameworktype    : String,
 						frameworkname       : String,
 						purpose             : String,
 						domain_ID           : String,
@@ -101,7 +101,7 @@ Output      :
 					[
 						{
 							"_id"				: String,
-							frameworktype_ID    : String,
+							frameworktype    : String,
 							frameworkname       : String,
 							purpose             : String,
 							domain_ID           : String,
@@ -125,7 +125,7 @@ URL         : /api/frameworks/
 Input       : 
                 {
 					id 					  : String
-                    'frameworktype_ID'    : String,
+                    'frameworktype'    : String,
 					'frameworkname'       : String,
 					'purpose'             : String,
 					'domain_ID'           : String,
@@ -184,7 +184,7 @@ Output      :
 					[
 						{
                             "_id"			: String,
-							frameworktype_ID    : String,
+							frameworktype    : String,
 							frameworkname       : String,
 							purpose             : String,
 							domain_ID           : String,
