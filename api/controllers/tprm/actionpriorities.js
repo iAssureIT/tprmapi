@@ -4,7 +4,7 @@ const  Actionpriority = require('../../models/tprm/actionpriorities');
 
 exports.create_actionpriority = (req,res,next)=>{
     var actionpriorityData = req.body.actionpriority;
-	Actionpriority.findOne({actionpriority:actionpriorityData.toLowerCase()})
+	Actionpriority.findOne({actionpriority:actionpriorityData.toLowerCase(),company_ID:req.body.company_ID})
 		.exec()
 		.then(data =>{
 			if(data ){

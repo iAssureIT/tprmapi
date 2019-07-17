@@ -4,7 +4,7 @@ const Controltags = require('../../models/tprm/controltags');
 
 exports.create_controltag = (req,res,next)=>{
     var controltagData = req.body.controltag;
-	Controltags.findOne({controltag:controltagData.toLowerCase()})
+	Controltags.findOne({controltag:controltagData.toLowerCase(),company_ID:req.body.company_ID})
 		.exec()
 		.then(data =>{
 			if(data){

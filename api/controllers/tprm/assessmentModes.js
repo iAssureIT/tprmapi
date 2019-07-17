@@ -4,7 +4,7 @@ const  AssessmentModes = require('../../models/tprm/assessmentMode');
 
 exports.create_assessmentModes = (req,res,next)=>{
     var assessmentModesData = req.body.assessmentMode;
-	AssessmentModes.findOne({assessmentMode:assessmentModesData.toLowerCase()})
+	AssessmentModes.findOne({assessmentMode:assessmentModesData.toLowerCase(),company_ID:req.body.company_ID})
 		.exec()
 		.then(data =>{
 			if(data){

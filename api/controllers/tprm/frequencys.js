@@ -4,7 +4,7 @@ const  Frequency = require('../../models/tprm/frequencys');
 
 exports.create_frequency = (req,res,next)=>{
     var frequencyData = req.body.frequency;
-	Frequency.findOne({frequency:frequencyData.toLowerCase()})
+	Frequency.findOne({frequency:frequencyData.toLowerCase(),company_ID:req.body.company_ID})
 		.exec()
 		.then(data =>{
 			if(data){

@@ -4,7 +4,7 @@ const  Nccriticality = require('../../models/tprm/nccriticality');
 
 exports.create_nccriticality = (req,res,next)=>{
     var nccriticalityData = req.body.nccriticality;
-	Nccriticality.findOne({nccriticality:nccriticalityData.toLowerCase()})
+	Nccriticality.findOne({nccriticality:nccriticalityData.toLowerCase(),company_ID:req.body.company_ID})
 		.exec()
 		.then(data =>{
 			if(data ){
