@@ -89,7 +89,7 @@ exports.detail_assessmentModes = (req,res,next)=>{
 }
 
 exports.update_assessmentModes = (req,res,next)=>{
-    var assessmentModesData = req.body.assessmentModes;
+    var assessmentModesData = req.body.assessmentMode;
     AssessmentModes.findOne({assessmentMode:assessmentModesData.toLowerCase()})
 		.exec()
 		.then(data =>{
@@ -133,7 +133,7 @@ exports.update_assessmentModes = (req,res,next)=>{
 }
 
 exports.delete_assessmentModes = (req,res,next)=>{
-    AssessmentModes.deleteOne({_id:req.params.assessmentModes_ID})
+    AssessmentModes.deleteOne({_id:req.params.assessmentmodes_ID})
         .exec()
         .then(data=>{
             console.log('data ',data);

@@ -4,7 +4,7 @@ const Domain = require('../../models/tprm/domains');
 
 exports.create_domain = (req,res,next)=>{
     var domainData = req.body.domain;
-	Domain.findOne({domain:domainData.toLowerCase()})
+	Domain.findOne({domain:domainData.toLowerCase(),company_ID:req.body.company_ID})
 		.exec()
 		.then(data =>{
 			if(data){

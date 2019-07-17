@@ -4,7 +4,7 @@ const Riskfactors = require('../../models/tprm/riskfactors');
 
 exports.create_riskfactor = (req,res,next)=>{
     var riskfactorData = req.body.riskfactor;
-	Riskfactors.findOne({riskfactor:riskfactorData.toLowerCase()})
+	Riskfactors.findOne({riskfactor:riskfactorData.toLowerCase(),company_ID:req.body.company_ID})
 		.exec()
 		.then(data =>{
 			if(data){

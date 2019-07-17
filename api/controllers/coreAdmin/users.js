@@ -92,41 +92,45 @@ exports.user_signup = (req,res,next)=>{
 };
 
 exports.user_login = (req,res,next)=>{
+	console.log('req',req.body);
 	User.findOne({emails:{$elemMatch:{address:req.body.email}}})
 		.exec()
 		.then(user => {
 			if(user){
 				var pwd = user.services.password.bcrypt;
-				bcrypt.compare(req.body.pwd,pwd,(err,result)=>{
-					if(err){
+				if(pwd){
+					bcrypt.compare(req.body.password,pwd,(err,result)=>{
+						if(err){
+							return res.status(401).json({
+								message: 'Auth failed'
+							});		
+						}
+						if(result){
+							const token = jwt.sign({
+								email 	: req.body.email,
+								userId	:  user._id ,
+							},global.JWT_KEY,
+							{
+								expiresIn: "1h"
+							}
+							);
+							res.header("Access-Control-Allow-Origin","*");
+							return res.status(200).json({
+								message	: 'Auth successful',
+								token	: token,
+								user 	: user
+							});	
+						}
 						return res.status(401).json({
 							message: 'Auth failed'
-						});		
-					}
-					if(result){
-						const token = jwt.sign({
-							email 	: req.body.email,
-							userId	:  user._id ,
-						},global.JWT_KEY,
-						{
-							expiresIn: "1h"
-						}
-						);
-						res.header("Access-Control-Allow-Origin","*");
-						return res.status(200).json({
-							message	: 'Auth successful',
-							token	: token,
-							user 	: user
-						});	
-					}
-					return res.status(401).json({
-						message: 'Auth failed'
-					});
-				})
+						});
+					})
+				}else{
+                    res.status(409).status({message:"Password not found"}); 
+				}
 			}else{
-				res.status(401).json("Auth Failed");
-			}
-			
+                res.status(409).status({message:"User Not found"});
+			}			
 		})
 		.catch(err =>{
 			console.log(err);

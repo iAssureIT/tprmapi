@@ -133,14 +133,14 @@ exports.update_frequency = (req,res,next)=>{
 }
 
 exports.delete_frequency = (req,res,next)=>{
-    Frequency.deleteOne({_id:req.params.frequency_ID})
+    Frequency.deleteOne({_id:req.params.Frequency_ID})
         .exec()
         .then(data=>{
             console.log('data ',data);
             if(data.deletedCount == 1){
                 res.status(200).json("frequency deleted");
             }else{
-                res.status(200).json("Something went wrong");
+                res.status(400).json("Something went wrong");
             }
         })
         .catch(err =>{

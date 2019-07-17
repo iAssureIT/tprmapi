@@ -89,7 +89,7 @@ exports.detail_nccriticality = (req,res,next)=>{
 }
 
 exports.update_nccriticality = (req,res,next)=>{
-    var nccriticalitysData = req.body.nccriticalitys;
+    var nccriticalitysData = req.body.nccriticality;
     Nccriticality.findOne({nccriticality:nccriticalitysData.toLowerCase()})
 		.exec()
 		.then(data =>{

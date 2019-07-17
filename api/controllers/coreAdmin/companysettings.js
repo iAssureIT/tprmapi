@@ -15,15 +15,15 @@ exports.create_companysettings = (req,res,next)=>{
                                 companyName            : req.body.companyName,
                                 companyContactNumber   : req.body.companyContactNumber,
                                 companyMobileNumber    : req.body.companyMobileNumber,
-                                companyEmail           : req.body.companyAltEmail,
+                                companyEmail           : req.body.companyEmail,
                                 companyAltEmail        : req.body.companyAltEmail,
                                 logoFilename           : req.body.logoFilename,
                                 companyUniqueID        : req.body.companyUniqueID,
                                 companyLogo            : req.body.companyLogo,
-                                companywebsite         : req.body.companywebsite,
+                                // companywebsite         : req.body.companywebsite,
                                 companyLocationsInfo   : [
                                                             {
-                                                                location        : req.body.location,
+                                                                // location        : req.body.location,
                                                                 companyAddress  : req.body.companyAddress,
                                                                 companyPincode  : req.body.companyPincode,
                                                                 companyCity     : req.body.companyCity,
@@ -32,7 +32,7 @@ exports.create_companysettings = (req,res,next)=>{
                                                             }
                                                         ],
                                 type                   : 'Admin',
-                                riskprofile            : req.body.riskprofile, 
+                                // riskprofile            : req.body.riskprofile, 
                                 createdBy              : req.body.createdBy,
                                 createdAt              : new Date(),
                                 creatorRole            : req.body.creatorRole
@@ -62,6 +62,24 @@ exports.create_companysettings = (req,res,next)=>{
 
 exports.detail_companysettings = (req,res,next)=>{
     Companysettings.findOne({companyId:req.params.companysettings_ID})
+        .exec()
+        .then(data=>{
+            if(data){
+                res.status(200).json(data);
+            }else{
+                res.status(404).json('Company Details not found');
+            }
+        })
+        .catch(err =>{
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+}
+
+exports.details_ByUserId = (req,res,next)=>{
+    Companysettings.findOne({companyUniqueID:req.params.user_ID})
         .exec()
         .then(data=>{
             if(data){
@@ -395,13 +413,13 @@ exports.update_basicinfo_companysettings = (req,res,next)=>{
                                     "companyName"                              : req.body.companyName,
                                     "companyContactNumber"                     : req.body.companyContactNumber,
                                     "companyMobileNumber"                      : req.body.companyMobileNumber,
-                                    "companyEmail"                             : req.body.companyAltEmail,
+                                    "companyEmail"                             : req.body.companyEmail,
                                     "companyAltEmail"                          : req.body.companyAltEmail,
                                     "logoFilename"                             : req.body.logoFilename,
                                     "companyUniqueID"                          : req.body.companyUniqueID,
                                     "companyLogo"                              : req.body.companyLogo,
-                                    "companywebsite"                           : req.body.companywebsite,
-                                    "companyLocationsInfo.0.location"          : req.body.location,
+                                    // "companywebsite"                           : req.body.companywebsite,
+                                    // "companyLocationsInfo.0.location"          : req.body.location,
                                     "companyLocationsInfo.0.companyAddress"    : req.body.companyAddress,
                                     "companyLocationsInfo.0.companyPincode"    : req.body.companyPincode,
                                     "companyLocationsInfo.0.companyCity"       : req.body.companyCity,
@@ -469,170 +487,172 @@ exports.update_spoc_userID = (req,res,next)=>{
 
 exports.create_client = (req,res,next)=>{
     Companysettings.findOne({companyName:req.body.companyName})
-                    .exec()
-                    .then(company=>{
-                        if(company){
-                            res.status(200).json({message:"Company Already Exits"});
+    .exec()
+    .then(company=>{
+        if(company){
+            res.status(200).json({message:"Company already exists"});
+        }else{
+            Users.find({emails:{$elemMatch:{address:req.body.spocemailId}}})
+            .exec()
+            .then(user =>{
+                // console.log('user',user);
+                if(user.length >= 1){
+                    return res.status(409).json({
+                        message: 'Email Id already exits.'
+                    });
+                }else{
+                    bcrypt.hash(req.body.pwd,10,(err,hash)=>{
+                        if(err){
+                            return res.status(500).json({
+                                error:err
+                            });
                         }else{
-                            Users.find({emails:{$elemMatch:{address:req.body.spocemailId}}})
-                                .exec()
-                                .then(user =>{
-                                    if(user.length >= 1){
-                                        return res.status(409).json({
-                                            message: 'Email Id already exits.'
-                                        });
-                                    }else{
-                                        bcrypt.hash(req.body.pwd,10,(err,hash)=>{
-                                            if(err){
-                                                return res.status(500).json({
-                                                    error:err
-                                                });
-                                            }else{
-                                                const user = new Users({
-                                                                _id: new mongoose.Types.ObjectId(),
-                                                                createdAt	: new Date,
-                                                                services	: {
-                                                                    password:{
-                                                                                bcrypt:hash
-                                                                                },
-                                                                    resume: {
-                                                                        loginTokens:[
-                                                                            {
-                                                                                when: new Date(),
-                                                                                hashedToken : "String"
-                                                                            }
-                                                                        ]
-                                                                    }
-                                                                },
-                                                                username	: req.body.spocemailId,
-                                                                emails		: [
-                                                                        {
-                                                                            address  : req.body.spocemailId,
-                                                                            verified : true 
-                                                                        }
-                                                                ],
-                                                                profile		:
-                                                                        {
-                                                                            fullName      : req.body.spocfullname,
-                                                                            emailId       : req.body.spocemailId,
-                                                                            mobNumber     : req.body.spocmobNumber,
-                                                                            createdOn     : new Date(),
-                                                                            userCode	  : req.body.pwd.split("").reverse().join(""),
-                                                                            status		  : req.body.spocstatus,
-                                                                            spoc		  : true,
-                                                                        },
-                                                                roles 		: [(req.body.spocrole).toLowerCase()]
-                                                });	
-                                                user.save()
-                                                    .then(result =>{
-                                                        Companysettings.find()
-                                                                        .count()
-                                                                        .exec()
-                                                                        .then(companyLength =>{
-                                                                            var companyId = companyLength + 1;
-                                                                            const companysettings = new Companysettings({
-                                                                                    _id                    : new mongoose.Types.ObjectId(),
-                                                                                    companyId              : companyId,
-                                                                                    companyName            : req.body.companyName,
-                                                                                    spocDetails            : {
-                                                                                                                fullname        : req.body.spocfullname,
-                                                                                                                emailId         : req.body.spocemailId,
-                                                                                                                mobNumber       : req.body.spocmobNumber,
-                                                                                                                designation     : req.body.spocdesignation,
-                                                                                                                user_ID         : result._id,
-                                                                                                            },
-                                                                                    createdBy              : req.body.createdBy,
-                                                                                    createdAt              : new Date(),
-                                                                                    creatorRole            : req.body.creatorRole,
-                                                                                    type                   : req.body.type
-                                                                            });
-                                                                            companysettings.save()
-                                                                                            .then(data=>{
-                                                                                               Users.updateOne(
-                                                                                                                    {_id:result._id},
-                                                                                                                    {
-                                                                                                                        $set:{
-                                                                                                                            "profile.companyID" : data.companyId,
-                                                                                                                            "profile.company_ID": data._id
-                                                                                                                        }
-                                                                                                                    }
-                                                                                                            )
-                                                                                                    .exec()
-                                                                                                    .then(cdata=>{
-                                                                                                        companysettings.updateOne(
-                                                                                                                                        {_id:req.body.creatorCompany_ID},
-                                                                                                                                        {
-                                                                                                                                            $push:{
-                                                                                                                                                listofClient:{
-                                                                                                                                                    companyID       : data.companyId,
-                                                                                                                                                    company_ID      : data._id,
-                                                                                                                                                }
-                                                                                                                                            }
-                                                                                                                                        }
-                                                                                                                                )
-                                                                                                                       .exec()
-                                                                                                                       .then(createor_comp=>{
-                                                                                                                           if(createor_comp.nModified == 1){
-                                                                                                                                res.status(200).json({message:"Company Created",ID:data._id})
-                                                                                                                           }else{
-                                                                                                                                res.status(404).json({message:"Something went wrong"});
-                                                                                                                           }
-                                                                                                                        
-                                                                                                                       })
-                                                                                                                       .catch(err =>{
-                                                                                                                        console.log(err);
-                                                                                                                        res.status(500).json({
-                                                                                                                            error: err
-                                                                                                                        });
-                                                                                                                    });                    
-                                                                                                        
-                                                                                                    })
-                                                                                                    .catch(err =>{
-                                                                                                        console.log(err);
-                                                                                                        res.status(500).json({
-                                                                                                            error: err
-                                                                                                        });
-                                                                                                    });             
-                                                                                                    
-                                                                                            })
-                                                                                            .catch(err =>{
-                                                                                                console.log(err);
-                                                                                                res.status(500).json({
-                                                                                                    error: err
-                                                                                                });
-                                                                                            });
-                                                                        })
-                                                                        .catch(err =>{
-                                                                            console.log(err);
-                                                                            res.status(500).json({
-                                                                                error: err
-                                                                            });
-                                                                        });
-                                                    })
-                                                    .catch(err =>{
-                                                        console.log(err);
-                                                        res.status(500).json({
-                                                            error: err
-                                                        });
-                                                    });
-                                            }			
-                                        });
+                            const user = new Users({
+                                _id: new mongoose.Types.ObjectId(),
+                                createdAt	: new Date,
+                                services	: {
+                                    password:{
+                                        bcrypt:hash
+                                    },
+                                    resume: {
+                                        loginTokens:[
+                                            {
+                                                when: new Date(),
+                                                hashedToken : "String"
+                                            }
+                                        ]
                                     }
+                                },
+                                username	: req.body.spocemailId,
+                                emails		: [
+                                    {
+                                        address  : req.body.spocemailId,
+                                        verified : true 
+                                    }
+                                ],
+                                profile		:
+                                    {
+                                        fullName      : req.body.spocfullname,
+                                        emailId       : req.body.spocemailId,
+                                        mobNumber     : req.body.spocmobNumber,
+                                        createdOn     : new Date(),
+                                        userCode	  : req.body.pwd.split("").reverse().join(""),
+                                        status		  : req.body.spocstatus,
+                                        spoc		  : true
+                                    },
+                                roles 		: [(req.body.spocrole).toLowerCase()]
+                            });	
+                            user.save()
+                            .then(result =>{
+                                Companysettings.find()
+                                .count()
+                                .exec()
+                                .then(companyLength =>{
+                                    var companyId = companyLength + 1;
+                                    const companysettings = new Companysettings({
+                                        _id                    : new mongoose.Types.ObjectId(),
+                                        companyId              : companyId,
+                                        companyName            : req.body.companyName,
+                                        spocDetails            : {
+                                            fullname        : req.body.spocfullname,
+                                            emailId         : req.body.spocemailId,
+                                            mobNumber       : req.body.spocmobNumber,
+                                            designation     : req.body.spocdesignation,
+                                            user_ID         : result._id,
+                                        },
+                                        companyUniqueID        : result._id,
+                                        createdBy              : req.body.createdBy,
+                                        createdAt              : new Date(),
+                                        creatorRole            : req.body.creatorRole,
+                                        type                   : req.body.type
+                                    });
+                                    companysettings.save()
+                                    .then(data=>{
+                                        // console.log('data',data);
+                                        res.status(200).json({message:"Company Created",ID:data._id})
+                                        // Users.updateOne(
+                                        //     {_id:result._id},
+                                        //     {
+                                        //         $set:{
+                                        //             "profile.companyID" : data.companyId,
+                                        //             "profile.company_ID": data._id
+                                        //         }
+                                        //     }
+                                        // )
+                                        // .exec()
+                                        // .then(cdata=>{
+                                        //     companysettings.updateOne(
+                                        //         {_id:req.body.creatorCompany_ID},
+                                        //         {
+                                        //             $push:{
+                                        //                 listofClient:{
+                                        //                     companyID       : data.companyId,
+                                        //                     company_ID      : data._id,
+                                        //                 }
+                                        //             }
+                                        //         }
+                                        //     )
+                                        //    .exec()
+                                        //    .then(createor_comp=>{
+                                        //         if(createor_comp.nModified == 1){
+                                        //             res.status(200).json({message:"Company Created",ID:data._id})
+                                        //         }else{
+                                        //             res.status(404).json({message:"Something went wrong"});
+                                        //         }
+                                        //     })
+                                        //    .catch(err =>{
+                                        //         console.log(err);
+                                        //         res.status(500).json({
+                                        //             error: err
+                                        //         });
+                                        //     });                    
+                                            
+                                        // })
+                                        // .catch(err =>{
+                                        //     console.log(err);
+                                        //     res.status(500).json({
+                                        //         error: err
+                                        //     });
+                                        // });             
+                                    })
+                                    .catch(err =>{
+                                        console.log(err);
+                                        res.status(500).json({
+                                            error: err
+                                        });
+                                    });
                                 })
                                 .catch(err =>{
                                     console.log(err);
                                     res.status(500).json({
                                         error: err
                                     });
-                                });        
-                        }
-                    })
-                    .catch(err =>{
-                        console.log(err);
-                        res.status(500).json({
-                            error: err
-                        });
+                                });
+                            })
+                            .catch(err =>{
+                                console.log(err);
+                                res.status(500).json({
+                                    error: err
+                                });
+                            });
+                        }			
                     });
+                }
+            })
+            .catch(err =>{
+                console.log(err);
+                res.status(500).json({
+                    error: err
+                });
+            });        
+        }
+    })
+    .catch(err =>{
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+    });
     
 }
 

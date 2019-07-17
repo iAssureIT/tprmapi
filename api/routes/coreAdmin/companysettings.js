@@ -9,7 +9,9 @@ router.get('/list',CompanySettingController.list_companysettings);
 
 router.post('/createclient',CompanySettingController.create_client);
 
-router.get('/:companysettings_ID', CompanySettingController.detail_companysettings);
+router.get('/list/:companysettings_ID', CompanySettingController.detail_companysettings);
+
+router.get('/details/:user_ID', CompanySettingController.details_ByUserId);
 
 router.patch('/updatebasicadmin/:companysettings_ID',CompanySettingController.update_basicinfo_companysettings);
 
