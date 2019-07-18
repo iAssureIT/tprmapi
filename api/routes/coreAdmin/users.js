@@ -19,7 +19,7 @@ router.delete('/delete',UserController.user_delete_all);
 
 router.get('/:userID',UserController.user_details); //Working
 
-router.patch('/',UserController.user_update);  //Working
+router.put('/details',UserController.user_update);  //Working
 
 router.patch('/status',UserController.user_status_update);  //Working
 
