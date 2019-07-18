@@ -447,7 +447,7 @@ exports.update_basicinfo_companysettings = (req,res,next)=>{
 }
 
 exports.delete_companysettings = (req,res,next)=>{
-    Companysettings.deleteOne({_id:req.params.companysettingsID})
+    Companysettings.deleteOne({_id:req.params.companysettings_ID})
         .exec()
         .then(data=>{
             res.status(200).json("Company Settings deleted");
