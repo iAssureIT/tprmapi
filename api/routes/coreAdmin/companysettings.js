@@ -21,5 +21,6 @@ router.patch('/:info/:action', CompanySettingController.update_companysettings);
 
 router.delete('/:companysettings_ID',CompanySettingController.delete_companysettings);
 
+router.patch('/updateclient', CompanySettingController.update_created_client);
 
 module.exports = router;

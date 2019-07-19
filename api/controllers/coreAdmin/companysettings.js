@@ -61,7 +61,7 @@ exports.create_companysettings = (req,res,next)=>{
 };
 
 exports.detail_companysettings = (req,res,next)=>{
-    Companysettings.findOne({companyId:req.params.companysettings_ID})
+    Companysettings.findOne({'_id':req.params.companysettings_ID})
         .exec()
         .then(data=>{
             if(data){
@@ -532,6 +532,8 @@ exports.create_client = (req,res,next)=>{
                                 ],
                                 profile		:
                                     {
+                                        // firstname     : req.body.spocfullname.split(' ')[0],
+                                        // lastname      : req.body.spocfullname.split(' ')[1],
                                         fullName      : req.body.spocfullname,
                                         emailId       : req.body.spocemailId,
                                         mobNumber     : req.body.spocmobNumber,
@@ -654,6 +656,68 @@ exports.create_client = (req,res,next)=>{
         });
     });
     
+}
+
+exports.update_created_client = (req,res,next)=>{
+    Companysettings.findOne({_id:req.body.companyID})
+    .exec()
+    .then(company=>{
+        if(company){
+            Companysettings.updateOne(
+                {_id:req.body.companyID},
+                {
+                    $set:{
+                        'companyName' : req.body.companyName,
+                        'spocDetails.fullname'  :req.body.spocfullname, 
+                        'spocDetails.emailId'   :req.body.spocemailId, 
+                        'spocDetails.mobNumber' :req.body.spocmobNumber, 
+                        'spocDetails.designation' :req.body.spocdesignation, 
+                    }
+                }
+            )
+           .exec()
+           .then(createor_comp=>{
+                if(createor_comp.nModified == 1){
+                    Users.updateOne(
+                        {_id:company.companyUniqueID},
+                        {
+                            $set:{
+                                // "profile.firstname"     : req.body.spocfullname.split(' ')[0],
+                                // "profile.lastname"      : req.body.spocfullname.split(' ')[1],
+                                "profile.fullName"      : req.body.spocfullname,
+                                "profile.mobNumber"     : req.body.spocmobNumber,
+                                "profile.emailId"       : req.body.spocemailId,
+                            }
+                        }
+                    )
+                    .exec()
+                    .then(user=>{
+                        if(user.nModified == 1){
+                            res.status(200).json({message:"User Modified.",ID:company._id})
+                        }else{
+                            res.status(404).json({message:"Something went wrong"});
+                        }
+                    })
+                }else{
+                    res.status(404).json({message:"Something went wrong"});
+                }
+            })
+            .catch(err =>{
+                console.log(err);
+                res.status(500).json({
+                    error: err
+                });
+            });     
+        }else{
+            res.status(200).json({message:"Company details not updated."});
+        }
+    })
+    .catch(err =>{
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+    });   
 }
 
 

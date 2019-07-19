@@ -266,9 +266,6 @@ exports.user_update = (req,res,next)=>{
 				.then(data=>{
 					if(data.nModified == 1){
 						res.status(200).json("User Updated");
-						 return res.status(504).json({
-						 	"message" : "GateWay-Time-Out"
-						 })
 					}else{
 						res.status(401).status("Something went wrong.")
 					}
@@ -469,6 +466,7 @@ exports.user_status_update = (req,res,next)=>{
 					{_id:req.body.userID},
 					{
 						$set:{
+							// "emails.0.verified"     : req.body.status=='Active'?true:false,
 							"profile.status"		: req.body.status,
 							"profile.company_ID"	: req.body.company_ID, //Reference
 						},
