@@ -23,6 +23,7 @@ exports.create_framework = (req,res,next)=>{
                     state               : req.body.state,
                     stage               : req.body.stage,
                     version             : req.body.version,
+                    controlBlocks       : req.body.controlBlocks,
                     createdAt           : new Date(),
                 });
                 framework.save()
@@ -144,6 +145,59 @@ exports.update_framework = (req,res,next)=>{
         
     
 }
+exports.update_framework_stage_state = (req,res,next)=>{
+    // console.log("req.body.id",req.body.id);
+    Framework.findOne({"_id" : req.body.id})
+        .exec()
+        .then(data =>{
+            console.log('data ',data);
+            if (data) {
+                if(data._id != req.body.id){
+                    return res.status(200).json({
+                        message: 'Not valid framework'
+                    });
+                }else{
+                    Framework.updateOne(
+                        { _id:req.body.id},  
+                        {
+                            $set:{
+                                'state'               : req.body.state,
+                                'stage'               : req.body.stage,
+                                'version'             : req.body.version,
+                            }
+                        }
+                    )
+                    .exec()
+                    .then(data=>{
+                        console.log('data ',data);
+                        if(data.nModified == 1){
+                            res.status(200).json("Framework Published");
+                        }else{
+                            res.status(401).json("Something went wrong");
+                        }
+                    })
+                    .catch(err =>{
+                        console.log(err);
+                        res.status(500).json({
+                            error: err
+                        });
+                    });
+                }
+            }else{
+                return res.status(401).json({
+                    message: 'Framework not exists'
+                });
+            }
+        })
+        .catch(err =>{
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+        
+    
+}
 
 exports.update_controlblock = (req,res,next)=>{
     switch(req.params.action){
@@ -231,3 +285,37 @@ exports.delete_all_framework = (req,res,next)=>{
             });
         });
 }
+exports.list_framework_stage = (req,res,next)=>{
+    // console.log("req.params.company_ID",req.params.company_ID);
+    Framework.find({company_ID:req.params.company_ID,stage:req.params.stage,frameworktype:req.params.frameworktype})
+        .exec()
+        .then(data=>{
+            res.status(200).json(data);
+        })
+        .catch(err =>{
+            console.log(err);
+            res.status(500).json({
+                error: err 
+            });
+        });
+}
+exports.frameworks_count_of_company = (req,res,next)=>{
+    Framework.find({company_ID : req.params.company_ID})
+        .count()
+        .exec()
+        .then(data=>{
+            console.log("data",data);
+            if(data){
+                res.status(200).json(data);
+            }else{
+                res.status(404).json({message:'Frameworks not found'});
+            }
+        })
+        .catch(err =>{
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+}
+

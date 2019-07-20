@@ -13,6 +13,8 @@ router.get('/list/:company_ID',ControlBlockController.list_controlblocks_company
 
 router.get('/:controlBlock_ID', ControlBlockController.detail_controlblocks);
 
+router.get('/company_blocks_count/:company_ID', ControlBlockController.controlblocks_count_of_count);
+
 router.put('/',ControlBlockController.update_basic_controlblocks);
 
 router.put('/subcontrolblock/:action/:controlBlocks_ID',ControlBlockController.update_controlblock);

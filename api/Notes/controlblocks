@@ -42,6 +42,7 @@ APIs :
 10.Insert new control Block  (creating sub control block)  -
     - Insert New Control Block
     - Update Parent Control Block
+11. Get count of control blocks of specific company 
 
 -----------------------------------------------------------------------------------------------------
 								1. Insert new control Block
@@ -202,7 +203,7 @@ Method      : GET
     
 URL         : /api/controlblocks/list/:company_ID
 
-Input       : - NA-
+Input       : - NA- 
 
 Output      : 
 				If successfully
@@ -299,3 +300,19 @@ Output      :
 						message : "Control Block Added",
                         ID      : String
 					}
+-----------------------------------------------------------------------------------------------------
+                        11. Get count of control blocks of specific company
+-----------------------------------------------------------------------------------------------------
+
+Method      : POST
+    
+URL         : /api/controlblocks/company_blocks_count/:company_ID
+
+Input       : 
+            -NA-
+
+Output      : 
+                If successfully
+                    {
+                       count
+                    }

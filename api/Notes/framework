@@ -10,9 +10,9 @@ Schema :
     company_ID          : String,
     createdBy           : String,
     ref_framework_ID    : String,
-	state               : Boolean,
+	  state               : Boolean,
     stage               : Boolean,
-	version				: Number,
+	  version			      	: Number,
     controlBlocks       : [
                                 {
                                    controlBlocks_ID :  String
@@ -30,7 +30,9 @@ APIs :
 6. Delete all the frameworks							- Done
 7. List all framework for specify company			    - Done
 8. Add / Remove the Control Block 						- Done
-
+9. Update state and stage framework           - Done 
+10. List of framework according to draft and published - Done
+11. Get count of frameworks of specific company
 -----------------------------------------------------------------------------------------------------
 								1. Insert new framework
 -----------------------------------------------------------------------------------------------------
@@ -42,12 +44,12 @@ URL         : /api/frameworks
 Input       : 
 				{
 					frameworktype    : String,
-                    frameworkname       : String,
-                    purpose             : String,
-                    domain_ID           : String,
-                    company_ID          : String,
-                    createdBy           : String,
-                    ref_framework_ID    : String,
+	        frameworkname       : String,
+	        purpose             : String,
+	        domain_ID           : String,
+	        company_ID          : String,
+	        createdBy           : String,
+	        ref_framework_ID    : String,
 					state               : Boolean,
 					stage               : Boolean,
 					version				: Number
@@ -57,7 +59,7 @@ Output      :
 				If successfully
 					{
 						message : "Framework Added",
-                        ID      : String
+            ID      : String
 					}
 
 -----------------------------------------------------------------------------------------------------
@@ -73,7 +75,7 @@ Input       : - NA-
 Output      : 
 				If successfully
 					{
-						frameworktype    : String,
+						frameworktype      : String,
 						frameworkname       : String,
 						purpose             : String,
 						domain_ID           : String,
@@ -82,8 +84,8 @@ Output      :
 						ref_framework_ID    : String,
 						state               : Boolean,
 						stage               : Boolean,
-						version				: Number
-						"controlBlocks"		: [],
+						version				      : Number
+						"controlBlocks"	   	: [],
 					}
 					
 -----------------------------------------------------------------------------------------------------
@@ -175,7 +177,7 @@ Output      :
 
 Method      : GET
     
-URL         : /api/api/frameworks/list/:company_ID
+URL         : /api/frameworks/list/:company_ID
 
 Input       : - NA-
 
@@ -197,7 +199,7 @@ Output      :
 							"controlBlocks"	: [],
 						}
 					]
-
+ 
 -----------------------------------------------------------------------------------------------------
 							8. Add / Remove the Control Block
 -----------------------------------------------------------------------------------------------------
@@ -220,3 +222,73 @@ Output      :
 					"Control Block removed"
 				If not 
 					"Something went wrong."
+
+
+-----------------------------------------------------------------------------------------------------
+								9.Update state and stage framework
+-----------------------------------------------------------------------------------------------------
+
+Method      : PUT
+    
+URL         : /api/frameworks/state_stage
+
+Input       : 
+            {
+				       id 					        : String
+							'state'               : String,
+							'stage'               : String,
+							'version'             : Number,
+            }
+
+Output      : 
+				If successfully 
+					"Framework Published"	 
+				If not 
+					"Something went wrong."
+
+
+-----------------------------------------------------------------------------------------------------
+							10. List of framework according to draft and published
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/frameworks/stage_company/list/:company_ID/:stage
+
+Input       : - NA-
+
+Output      : 
+				If successfully
+					[
+						{
+              "_id"			: String,
+							frameworktype    : String,
+							frameworkname       : String,
+							purpose             : String,
+							domain_ID           : String,
+							company_ID          : String,
+							createdBy           : String,
+							ref_framework_ID    : String,
+							state               : Boolean,
+							stage               : Boolean,
+							version				: Number
+							"controlBlocks"	: [],
+						}
+					]
+-----------------------------------------------------------------------------------------------------
+                        11. Get count of frameworks of specific company
+-----------------------------------------------------------------------------------------------------
+
+Method      : POST
+    
+URL         : /api/frameworks/company_frameworks_count/:company_ID
+
+Input       : 
+            -NA-
+
+Output      : 
+                If successfully
+                    {
+                       count
+                    }
+ 

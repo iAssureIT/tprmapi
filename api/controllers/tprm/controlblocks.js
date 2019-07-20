@@ -2,6 +2,7 @@ const mongoose	= require("mongoose");
 
 const Controlblocks = require('../../models/tprm/controlblocks');
 const Framwork      = require('../../models/tprm/frameworks');
+const Control       = require('../../models/tprm/controls');
 
 exports.create_controlblocks_framwork = (req,res,next)=>{
 	Controlblocks.findOne({controlBlockName:req.body.controlBlockName})
@@ -396,3 +397,23 @@ exports.delete_all_controlblocks = (req,res,next)=>{
             });
         });
 }
+exports.controlblocks_count_of_count = (req,res,next)=>{
+    Controlblocks.find({company_ID : req.params.company_ID})
+        .count()
+        .exec()
+        .then(data=>{
+            console.log("data",data);
+            if(data){
+                res.status(200).json(data);
+            }else{
+                res.status(404).json({message:'Control block not found'});
+            }
+        })
+        .catch(err =>{
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+}
+

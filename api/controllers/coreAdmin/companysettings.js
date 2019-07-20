@@ -540,6 +540,7 @@ exports.create_client = (req,res,next)=>{
                                         createdOn     : new Date(),
                                         userCode	  : req.body.pwd.split("").reverse().join(""),
                                         status		  : req.body.spocstatus,
+                                        company_ID    : req.body.createdBy,
                                         spoc		  : true
                                     },
                                 roles 		: [(req.body.spocrole).toLowerCase()]

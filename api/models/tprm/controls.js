@@ -8,12 +8,13 @@ const controlsSchema = mongoose.Schema({
     ref1                    : String,
     ref2                    : String,
     ref3                    : String,
-    risk                    : String,
+    risk                    : { type: mongoose.Schema.Types.ObjectId, ref: 'riskfactors' },
     multiplier              : Number,
     mandatory               : Boolean,
     scored                  : Boolean,
     company_ID              : { type: mongoose.Schema.Types.ObjectId, ref: 'companysettings' },
     createdBy               : { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
+    controlBlocks_ID        : { type: mongoose.Schema.Types.ObjectId, ref: 'controlblocks' },
     createdAt               : Date,
 });
 

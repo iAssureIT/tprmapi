@@ -13,6 +13,7 @@ Schema :
     multiplier              : Number,
     mandatory               : Boolean,
     scored                  : Boolean,
+    controlBlocks_ID        : String,
     company_ID              : String,
     createdBy               : String,
     createdAt               : Date,
@@ -29,7 +30,7 @@ APIs :
 5. Delete particular control 							- Done
 6. Delete all the controls							    - Done
 7. List all control  for specify company			    - Done
-
+8. Get count of controls of specific company
 -----------------------------------------------------------------------------------------------------
 								1. Insert new framework
 -----------------------------------------------------------------------------------------------------
@@ -221,3 +222,19 @@ Output      :
                             createdAt               : Date,
 						}
 					]
+-----------------------------------------------------------------------------------------------------
+                        11. Get count of controls of specific company
+-----------------------------------------------------------------------------------------------------
+
+Method      : POST
+    
+URL         : /api/controls/company_controls_count/:company_ID
+
+Input       : 
+            -NA-
+
+Output      : 
+                If successfully
+                    {
+                       count
+                    }                    
