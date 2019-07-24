@@ -5,6 +5,8 @@ const FrameworkController = require('../../controllers/tprm/frameworks');
 
 router.post('/', FrameworkController.create_framework);
 
+router.post('/create_Customize_framework',FrameworkController.create_Customize_framework);
+
 router.get('/list', FrameworkController.list_framework);
 
 router.get('/list/:company_ID',FrameworkController.list_framework_company);

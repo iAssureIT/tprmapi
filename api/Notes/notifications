@@ -7,7 +7,7 @@ Schema :
 	templateName    : String,
 	subject         : String,
 	content         : String,	
-    createdAt       : Date,
+  createdAt       : Date,
 }
 
 APIs :
@@ -31,18 +31,18 @@ Note        : templateName and templateType combination should be unique
 Input       : 
 				{
                     masternotificationId  : String,
-					event                 : String,
-					toMailId              : String,
-					toUserId              : String,
-					notifBody             : String,	
-					createdBy			  : String, // Either empty or _id of companysettings
+										event                 : String,
+										toMailId              : String,
+										toUserId              : String,
+										notifBody             : String,	
+										createdBy			  : String, // Either empty or _id of companysettings
 				}
 
 Output      : 
 				If successfully
 					{
 						message : "Notification Details Added",
-                        ID      : String
+            ID      : String
 					}
 
 -----------------------------------------------------------------------------------------------------

@@ -77,36 +77,36 @@ exports.update_masternotification = (req,res,next)=>{
 		.exec()
 		.then(data =>{
 			if(data){
-				return res.status(200).json({
-					message: 'Notification Details already exists'
-				});
-			}else{
 				Masternotifications.updateOne(
-                                        { _id:req.body.id},  
-                                        {
-                                            $set:{
-                                                templateType    : req.body.templateType,	
-                                                templateName    : req.body.templateName,
-                                                subject         : req.body.subject,
-                                                content         : req.body.content
-                                            }
+                                    { _id:req.body.id},  
+                                    {
+                                        $set:{
+                                            templateType    : req.body.templateType,	
+                                            templateName    : req.body.templateName,
+                                            subject         : req.body.subject,
+                                            content         : req.body.content
                                         }
-                                    )
-                                    .exec()
-                                    .then(data=>{
-                                        console.log('data ',data);
-                                        if(data.nModified == 1){
-                                            res.status(200).json("Master notifications Updated");
-                                        }else{
-                                            res.status(401).json("Master notifications Found");
-                                        }
-                                    })
-                                    .catch(err =>{
-                                        console.log(err);
-                                        res.status(500).json({
-                                            error: err
-                                        });
+                                    }
+                                )
+                                .exec()
+                                .then(data=>{
+                                    console.log('data ',data);
+                                    if(data.nModified == 1){
+                                        res.status(200).json({ message:"Master notifications Updated"});
+                                    }else{
+                                        res.status(401).json({ message:"Master notifications Found"});
+                                    }
+                                })
+                                .catch(err =>{
+                                    console.log(err);
+                                    res.status(500).json({
+                                        error: err
                                     });
+                                });
+            }else{
+                return res.status(200).json({
+                    message: 'Notification Details already exists'
+                });
 			}
 		})
 		.catch(err =>{

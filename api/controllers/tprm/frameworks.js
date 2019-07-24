@@ -18,7 +18,7 @@ exports.create_framework = (req,res,next)=>{
                     purpose             : req.body.purpose,
                     domain_ID           : req.body.domain_ID,
                     company_ID          : req.body.company_ID,
-                    createdBy           : req.body.createdBy,
+                    createdBy           : req.body.createdBy, 
                     ref_framework_ID    : req.body.ref_framework_ID,
                     state               : req.body.state,
                     stage               : req.body.stage,
@@ -44,6 +44,49 @@ exports.create_framework = (req,res,next)=>{
 				error: err
 			});
 		});
+};
+exports.create_Customize_framework = (req,res,next)=>{
+    // Framework.findOne({frameworkname:req.body.frameworkname,version:req.body.version})
+    //     .exec()
+    //     .then(data =>{
+    //         if(data){
+    //             return res.status(200).json({
+    //                 message: 'Framework already exists'
+    //             });
+    //         }else{
+                const framework = new Framework({
+                    _id                 : new mongoose.Types.ObjectId(),
+                    frameworktype       : req.body.frameworktype,
+                    frameworkname       : req.body.frameworkname,
+                    purpose             : req.body.purpose,
+                    domain_ID           : req.body.domain_ID,
+                    company_ID          : req.body.company_ID,
+                    createdBy           : req.body.createdBy, 
+                    ref_framework_ID    : req.body.ref_framework_ID,
+                    state               : req.body.state,
+                    stage               : req.body.stage,
+                    version             : req.body.version,
+                    controlBlocks       : req.body.controlBlocks,
+                    createdAt           : new Date(),
+                });
+                framework.save()
+                    .then(data=>{
+                        res.status(200).json({message: "Framework Added",ID:data._id});
+                    })
+                    .catch(err =>{
+                        console.log(err);
+                        res.status(500).json({
+                            error: err
+                        });
+                    });
+        //     }
+        // })
+        // .catch(err =>{
+        //     console.log(err);
+        //     res.status(500).json({
+        //         error: err
+        //     });
+        // });
 };
 
 exports.list_framework = (req,res,next)=>{
