@@ -97,7 +97,26 @@ exports.details_ByUserId = (req,res,next)=>{
 }
 
 exports.list_companysettings = (req,res,next)=>{
-    console.log('list');
+    // console.log('list');
+    Companysettings.find({'createdBy':req.params.user_ID,'type':req.params.user_type})
+        .exec()
+        .then(data=>{
+            if(data){
+                res.status(200).json(data);
+            }else{
+                res.status(404).json('Company Details not found');
+            }
+        })
+        .catch(err =>{
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+}
+
+exports.listAll_companysettings = (req,res,next)=>{
+    // console.log('list');
     Companysettings.find({})
         .exec()
         .then(data=>{

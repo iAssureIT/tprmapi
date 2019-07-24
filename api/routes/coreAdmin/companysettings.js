@@ -5,7 +5,9 @@ const CompanySettingController = require('../../controllers/coreAdmin/companyset
 
 router.post('/', CompanySettingController.create_companysettings);
 
-router.get('/list',CompanySettingController.list_companysettings);
+router.get('/list',CompanySettingController.listAll_companysettings);
+
+router.get('/list/:user_ID/:user_type',CompanySettingController.list_companysettings);
 
 router.post('/createclient',CompanySettingController.create_client);
 
