@@ -26,5 +26,6 @@ router.patch('/status',UserController.user_status_update);  //Working
 // router.patch('/:rolestatus',UserController.user_change_role);  //Working
 router.patch('/changeRole',UserController.user_change_role);  //Working
 
+router.get('/users_count/:company_ID', UserController.users_count);
 
 module.exports = router;

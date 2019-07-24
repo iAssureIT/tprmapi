@@ -584,7 +584,7 @@ exports.create_client = (req,res,next)=>{
                                         // )
                                         // .exec()
                                         // .then(cdata=>{
-                                        //     companysettings.updateOne(
+                                        //     Companysettings.updateOne(
                                         //         {_id:req.body.creatorCompany_ID},
                                         //         {
                                         //             $push:{
