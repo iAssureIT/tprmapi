@@ -499,23 +499,3 @@ exports.user_status_update = (req,res,next)=>{
 			});
 		});
 }
-
-exports.users_count = (req,res,next)=>{
-    User.find({'profile.company_ID' : req.params.company_ID})
-    .count()
-    .exec()
-    .then(data=>{
-        // console.log("data",data);
-        if(data){
-            res.status(200).json(data);
-        }else{
-            res.status(404).json({message:'User not found'});
-        }
-    })
-    .catch(err =>{
-        console.log(err);
-        res.status(500).json({
-            error: err
-        });
-    });
-}

@@ -96,6 +96,26 @@ exports.details_ByUserId = (req,res,next)=>{
         });
 }
 
+exports.users_count = (req,res,next)=>{
+    Companysettings.find({'createdBy':req.params.user_ID,'type':req.params.user_type})
+    .count()
+    .exec()
+    .then(data=>{
+        console.log("data",data);
+        if(data){
+            res.status(200).json(data);
+        }else{
+            res.status(404).json({message:'User not found'});
+        }
+    })
+    .catch(err =>{
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+    });
+}
+
 exports.list_companysettings = (req,res,next)=>{
     // console.log('list');
     Companysettings.find({'createdBy':req.params.user_ID,'type':req.params.user_type})
