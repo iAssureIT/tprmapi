@@ -525,7 +525,7 @@ exports.update_spoc_userID = (req,res,next)=>{
 }
 
 exports.create_client = (req,res,next)=>{
-    Companysettings.findOne({companyName:req.body.companyName})
+    Companysettings.findOne({companyName:req.body.companyName,createdBy:req.body.createdBy})
     .exec()
     .then(company=>{
         if(company){
