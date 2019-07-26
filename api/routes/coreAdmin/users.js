@@ -26,4 +26,9 @@ router.patch('/status',UserController.user_status_update);  //Working
 // router.patch('/:rolestatus',UserController.user_change_role);  //Working
 router.patch('/changeRole',UserController.user_change_role);  //Working
 
+router.post('/resetpassword',UserController.user_resetpassword);  //Working
+
+router.get('/list/:emailID', UserController.user_byEmailId); //Working
+
+
 module.exports = router;

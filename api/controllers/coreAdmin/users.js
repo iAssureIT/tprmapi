@@ -461,41 +461,112 @@ exports.user_signup_login = (req,res,next)=>{
 
 exports.user_status_update = (req,res,next)=>{
 	User.findOne({_id:req.body.userID})
-		.exec()
-		.then(user=>{
-			if(user){
-				User.updateOne(
-					{_id:req.body.userID},
-					{
-						$set:{
-							// "emails.0.verified"     : req.body.status=='Active'?true:false,
-							"profile.status"		: req.body.status,
-							"profile.company_ID"	: req.body.company_ID, //Reference
-						},
-					}
-				)
-				.exec()
-				.then(data=>{
-					if(data.nModified == 1){
-						res.status(200).json("User Status Updated");
-					}else{
-						res.status(401).status("Something went wrong.")
-					}
-				})
-				.catch(err =>{
-					console.log('user error ',err);
-					res.status(500).json({
-						error: err
-					});
+	.exec()
+	.then(user=>{
+		if(user){
+			User.updateOne(
+				{_id:req.body.userID},
+				{
+					$set:{
+						// "emails.0.verified"     : req.body.status=='Active'?true:false,
+						"profile.status"		: req.body.status,
+						"profile.company_ID"	: req.body.company_ID, //Reference
+					},
+				}
+			)
+			.exec()
+			.then(data=>{
+				if(data.nModified == 1){
+					res.status(200).json("User Status Updated");
+				}else{
+					res.status(401).status("Something went wrong.")
+				}
+			})
+			.catch(err =>{
+				console.log('user error ',err);
+				res.status(500).json({
+					error: err
 				});
-			}else{
-				res.status(404).json("User Not Found");
-			}
-		})
-		.catch(err=>{
-			console.log('update user status error ',err);
-			res.status(500).json({
-				error:err
 			});
+		}else{
+			res.status(404).json("User Not Found");
+		}
+	})
+	.catch(err=>{
+		console.log('update user status error ',err);
+		res.status(500).json({
+			error:err
 		});
+	});
+}
+
+exports.user_resetpassword = (req,res,next)=>{
+	// console.log('req.body',req.body);
+	User.findOne({_id:req.body.userID})
+	.exec()
+	.then(user=>{
+		if(user){
+			bcrypt.hash(req.body.pwd,10,(err,hash)=>{
+			    User.updateOne(
+			        {_id:req.body.userID},  
+			        {
+			            $set:{
+							services: {
+								password: {
+									bcrypt:hash
+								},
+							},
+						}			
+			        }
+			    )
+			    .exec()
+			    .then(data=>{
+			        // console.log('data ',data);
+			        if(data.nModified == 1){
+			            res.status(200).json("Password Updated");
+			        }else{
+			            res.status(401).json("Password Not Found");
+			        }
+			    })
+			    .catch(err =>{
+			        console.log(err);
+			        res.status(500).json({
+			            error: err
+			        });
+				});
+			});
+		}else{
+			res.status(404).json("User Not Found");
+		}
+	})
+	.catch(err=>{
+		// console.log('update user status error ',err);
+		res.status(500).json({
+			error:err
+		});
+	});
+}
+
+exports.user_byEmailId = (req,res,next)=>{
+	// console.log('req.body',req.body);
+	User.findOne({'profile.emailId':req.params.emailID})
+	.exec()
+	.then(user=>{
+		console.log('user',user);
+		if(user){
+			// res.status(200).json("User found");
+			res.status(200).json({
+				message: 'User Found.',
+				ID : user._id
+			});
+		}else{
+			res.status(404).json("User Not Found");
+		}
+	})
+	.catch(err=>{
+		// console.log('update user status error ',err);
+		res.status(500).json({
+			error:err
+		});
+	});
 }
