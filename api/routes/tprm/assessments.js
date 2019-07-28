@@ -5,16 +5,24 @@ const AssessmentsController = require('../../controllers/tprm/assessments');
 
 router.post('/', AssessmentsController.create_assessments);
 
-// router.get('/list', AssessmentsController.list_actionpriority);
+router.get('/list', AssessmentsController.list_assessments);
 
-// router.get('/list/:company_ID', AssessmentsController.list_actionpriority_company_ID);
+router.get('/getframework/:assessments_ID/:controlBlock_ID/:control_ID',AssessmentsController.fetch_specific_framework);
 
-// router.get('/:actionpriority', AssessmentsController.detail_actionpriority);
+router.get('/list/assessed/:assessedParty_ID', AssessmentsController.list_assessments_assessedParty_ID);
 
-// router.put('/',AssessmentsController.update_actionpriority);
+router.get('/list/:corporate_ID', AssessmentsController.list_assessments_company_ID);
 
-// router.delete('/:actionpriority_ID',AssessmentsController.delete_actionpriority);
+router.get('/:assessments_ID', AssessmentsController.detail_assessments);
 
-// router.delete('/',AssessmentsController.delete_all_actionpriority);
+router.put('/',AssessmentsController.update_assessments);
+
+router.patch('/assessmentStatus/:assessments_ID/:status',AssessmentsController.update_assessmentStatus);
+
+router.patch('/response',AssessmentsController.update_response);
+
+router.delete('/:assessments_ID',AssessmentsController.delete_assessments);
+
+router.delete('/',AssessmentsController.delete_all_assessments);
 
 module.exports = router;

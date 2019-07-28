@@ -44,50 +44,45 @@ exports.create_framework = (req,res,next)=>{
 				error: err
 			});
 		});
-};
+}
+
 exports.create_Customize_framework = (req,res,next)=>{
-    // Framework.findOne({frameworkname:req.body.frameworkname,version:req.body.version})
-    //     .exec()
-    //     .then(data =>{
-    //         if(data){
-    //             return res.status(200).json({
-    //                 message: 'Framework already exists'
-    //             });
-    //         }else{
-                const framework = new Framework({
-                    _id                 : new mongoose.Types.ObjectId(),
-                    frameworktype       : req.body.frameworktype,
-                    frameworkname       : req.body.frameworkname,
-                    purpose             : req.body.purpose,
-                    domain_ID           : req.body.domain_ID,
-                    company_ID          : req.body.company_ID,
-                    createdBy           : req.body.createdBy, 
-                    ref_framework_ID    : req.body.ref_framework_ID,
-                    state               : req.body.state,
-                    stage               : req.body.stage,
-                    version             : req.body.version,
-                    controlBlocks       : req.body.controlBlocks,
-                    createdAt           : new Date(),
-                });
-                framework.save()
-                    .then(data=>{
-                        res.status(200).json({message: "Framework Added",ID:data._id});
-                    })
-                    .catch(err =>{
-                        console.log(err);
-                        res.status(500).json({
-                            error: err
-                        });
+    
+    Framework   .findOne({_id:req.params.framework_ID}, {"_id":0})
+                .exec()
+                .then(FWDoc=>{
+                    if(FWDoc){
+                        console.log("FWDoc ",FWDoc);
+                        var tempObj = {
+                            _id : new mongoose.Types.ObjectId()
+                        };
+                        // var _id = new mongoose.Types.ObjectId();
+                        // const newDoc = {...FWDoc,...tempObj};
+                        const newDoc = Object.assign(FWDoc,tempObj);
+                        console.log("newDoc = ",newDoc);
+
+                        const NewFWDoc = new Framework(newDoc);
+                        // console.log("NewFWDoc ",NewFWDoc);
+                        NewFWDoc.save()
+                                 .then(data=>{
+                                     console.log("Success = ",data)
+                                     res.status(200).json(data);
+                                  })
+                                 .catch(err =>{
+                                    console.log(err);
+                                    res.status(500).json({
+                                        error: err
+                                    });
+                                });        
+                    }
+                })
+                .catch(err =>{
+                    console.log(err);
+                    res.status(500).json({
+                        error: err
                     });
-        //     }
-        // })
-        // .catch(err =>{
-        //     console.log(err);
-        //     res.status(500).json({
-        //         error: err
-        //     });
-        // });
-};
+                });        
+}
 
 exports.list_framework = (req,res,next)=>{
     Framework.find()
@@ -328,6 +323,7 @@ exports.delete_all_framework = (req,res,next)=>{
             });
         });
 }
+
 exports.list_framework_stage = (req,res,next)=>{
     // console.log("req.params.company_ID",req.params.company_ID);
     Framework.find({company_ID:req.params.company_ID,stage:req.params.stage,frameworktype:req.params.frameworktype})
@@ -342,6 +338,7 @@ exports.list_framework_stage = (req,res,next)=>{
             });
         });
 }
+
 exports.frameworks_count_of_company = (req,res,next)=>{
     Framework.find({company_ID : req.params.company_ID})
         .count()
@@ -361,4 +358,3 @@ exports.frameworks_count_of_company = (req,res,next)=>{
             });
         });
 }
-

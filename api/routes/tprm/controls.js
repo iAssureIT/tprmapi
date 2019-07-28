@@ -9,6 +9,8 @@ router.get('/list', ControlController.list_control);
 
 router.get('/list/:company_ID',ControlController.list_control_company);
 
+router.post('/duplicateControl',ControlController.duplicate_control);
+
 router.get('/company_controls_count/:company_ID',ControlController.controls_count_of_company);
 
 router.get('/:control_ID', ControlController.detail_control);

@@ -1,4 +1,6 @@
 const mongoose	= require("mongoose");
+var ObjectID = require('mongodb').ObjectID;
+var request     = require('request-promise');
 
 const Controlblocks = require('../../models/tprm/controlblocks');
 const Framwork      = require('../../models/tprm/frameworks');
@@ -415,5 +417,150 @@ exports.controlblocks_count_of_count = (req,res,next)=>{
                 error: err
             });
         });
+}
+
+exports.fetch_all_subcontrolblocks = (req,res,next)=>{
+    processCBArray(req.body.lstcontrolblocks);
+    async function processCBArray(cbs){
+        var outputArray = [];
+        for ( i = cbs.length-1; i >= 0; i--) {
+            var newArray = await findCB(cbs[i]);
+            if(newArray.length > 0){
+                outputArray = outputArray.concat(newArray);
+            }
+        }
+        res.header("Access-Control-Allow-Origin","*");
+        res.status(200).json(outputArray);
+    }
+    function findCB(inputCB){
+        return new Promise(function(resolve,reject){
+            Controlblocks   .findOne({ _id : new ObjectID(inputCB.controlBlocks_ID) })
+                            .exec()
+                            .then(data=>{
+                                resolve(data.subControlBlocks); 
+                            })
+                            .catch(err =>{
+                                console.log(err);
+                                res.status(500).json({
+                                    error: err
+                                });
+                            });
+        });
+    }
+}
+
+exports.fetch_all_controls = (req,res,next)=>{
+    processControlArray(req.body.lstcontrolblocks);
+    async function processControlArray(controlblocks){
+        var outputArray = [];
+        for ( i = controlblocks.length-1; i >= 0; i--) {
+            var newArray = await findControls(controlblocks[i]);
+            if(newArray.length > 0){
+                outputArray = outputArray.concat(newArray);
+            }
+        }
+        res.header("Access-Control-Allow-Origin","*");
+        res.status(200).json(outputArray);
+    }
+    function findControls(inputCB){
+        return new Promise(function(resolve,reject){
+            Controlblocks   .aggregate([
+                                            {
+                                                $match : { _id : new ObjectID(inputCB.controlBlocks_ID) }
+                                            },
+                                            {
+                                                $project : {"controlBlock_ID" : "$_id","control_ID":"$controls","_id":0}
+                                            },
+                                            {
+                                                $unwind : "$control_ID"
+                                            },
+                                            {
+                                                $project : {"controlBlock_ID":1,"control_ID" : "$control_ID.control_ID"}
+                                            }
+                                        ])
+                            .exec()
+                            .then(data=>{
+                                console.log("data ",data);
+                                resolve(data); 
+                            })
+                            .catch(err =>{
+                                console.log(err);
+                                res.status(500).json({
+                                    error: err
+                                });
+                            });
+        });
+    }
+}
+
+exports.fetch_specific_domain = (req,res,next)=>{
+    Controlblocks.find({domain_ID : req.params.domain_ID})
+                .exec()
+                .then(data=>{
+                    res.status(200).json(data);
+                })
+                .catch(err =>{
+                    console.log(err);
+                    res.status(500).json({
+                        error: err
+                    });
+                });
+}
+
+exports.duplicate_controlBlocks = (req,res,next)=>{
+    Controlblocks.findOne({_id:req.body.controlBlock_ID})
+                .exec()
+                .then(baseControlblock=>{
+                    if(baseControlblock){
+                        var newControlblocks = new Controlblocks({
+                            _id                     : new mongoose.Types.ObjectId(), 
+                            controlBlocksCode       : baseControlblock.controlBlocksCode,
+                            controlBlockRef         : baseControlblock.controlBlockRef,
+                            controlBlockName        : baseControlblock.controlBlockName,
+                            controlBlockDesc        : baseControlblock.controlBlockDesc,
+                            parentBlock             : baseControlblock.parentBlock,
+                            domain_ID               : baseControlblock.domain_ID,
+                            sequence                : req.body.sequence,
+                            weightage               : baseControlblock.weightage,
+                            company_ID              : req.body.company_ID,
+                            createdBy               : req.body.createdBy,
+                            createdAt               : new Date(),
+                            // subControlBlocks        : baseControlblock.subControlBlocks,
+                            // controls                : baseControlblock.controls
+                        });
+                        newControlblocks.save()
+                                        .then(controlblock=>{
+                                            var lstSubControlBlocks = baseControlblock.subControlBlocks;
+                                            if(lstSubControlBlocks){
+                                                duplicateCB(lstSubControlBlocks);
+                                                 
+                                                for(i = 0 ; i < lstSubControlBlocks.length; i++){
+                                                    var cbDetails = {
+                                                        controlBlock_ID : req.body.controlBlock_ID,
+                                                        sequence        : req.body.sequence,
+                                                        company_ID      : req.body.company_ID,
+                                                        createdBy       : req.body.createdBy   
+                                                    };
+                                                    var newControlBlockID = duplicatecontrolblock(cbDetails);
+                                                }
+                                            }
+                                            res.status(200).json({message:"Control Block Duplicated",ID:controlblock._id})
+                                        })
+                                        .catch(err =>{
+                                            console.log(err);
+                                            res.status(500).json({
+                                                error: err
+                                            });
+                                        });                 
+                    }else{
+                        res.status(200).json({message:"Control Not found"})
+                    }
+                })
+                .catch(err =>{
+                        console.log(err);
+                        res.status(500).json({
+                            error: err
+                        });
+                    });
 }
 

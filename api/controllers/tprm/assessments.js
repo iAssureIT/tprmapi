@@ -1,26 +1,143 @@
 const mongoose	= require("mongoose");
+var request     = require('request-promise');
+var ObjectID = require('mongodb').ObjectID;
 
 const Assessments       = require('../../models/tprm/assessments');
 const Framework         = require('../../models/tprm/frameworks');
-const ControlBlock      = require('../../models/tprm/controlblocks');
-const Control           = require('../../models/tprm/controls');
-var frameworkList       = [];
-var controlBlockList    = [];
-var controlsList        = [];
 
-fetch_subControlBlock = function(controlBlockArray){
-    controlBlockArray.map(doc=>{
-        ControlBlock.findOne({_id:doc.controlBlock_ID})
+function fetch_cb(newCBList){
+    return new Promise(function(resolve,reject){
+            var data = request({
+                "method"    : "GET", 
+                "url"       : "http://localhost:3048/api/controlblocks/fetchcb",
+                "body"      : {lstcontrolblocks : newCBList },
+                "json"      : true,
+                "headers"   : {
+                                "User-Agent": "Test Agent"
+                            }
+            })
+            .then(allcb=>{
+                resolve(allcb); 
+            })
+            .catch(err =>{
+                console.log(err);
+                reject(err);
+            });
+    })
+}// end function
+
+function fetch_controls(newCBList){
+    return new Promise(function(resolve,reject){
+            var data = request({
+                "method"    : "GET", 
+                "url"       : "http://localhost:3048/api/controlblocks/fetchcontrols",
+                "body"      : {lstcontrolblocks : newCBList },
+                "json"      : true,
+                "headers"   : {
+                                "User-Agent": "Test Agent"
+                            }
+            })
+            .then(allcb_controls=>{
+                resolve(allcb_controls); 
+            })
+            .catch(err =>{
+                console.log(err);
+                reject(err);
+            });
+    })
+}// end function
+
+
+exports.create_assessments = (req,res,next)=>{
+        Framework   .findOne({_id : new ObjectID(req.body.framework_ID)})
                     .exec()
-                    .then(cb=>{
-                        if(cb){
-                            console.log('in sub cb');
-                            cb.subControlBlocks.map(scb=>{
-                                controlBlockList.push({
-                                    controlBlock_ID : scb.controlBlocks_ID,
-                                });
-                            })
-                            console.log()
+                    .then(lstcontrolblocks=>{
+                        if(lstcontrolblocks){
+                            var inputArray = lstcontrolblocks.controlBlocks;
+                            var mainCBArray = inputArray;
+                            getcb();
+                            async function getcb(){
+                                do{
+                                    var childCBArray = await fetch_cb(inputArray);
+                                    inputArray = childCBArray;
+                                    if(childCBArray.length > 0){
+                                        mainCBArray = mainCBArray.concat(childCBArray);
+                                    }
+                                }while(childCBArray.length > 0);
+                                var controlList = await fetch_controls(mainCBArray);
+                                Assessments.estimatedDocumentCount()
+                                           .exec()
+                                           .then(assessmentCount=>{
+                                               const assessment = new Assessments({
+                                                            _id                : new mongoose.Types.ObjectId(),
+                                                            corporate_ID       : req.body.corporate_ID,
+                                                            assessedParty_ID   : req.body.assessedParty_ID,
+                                                            framework_ID       : req.body.framework_ID,
+                                                            assessmentID       : assessmentCount + 1,
+                                                            frequency          : req.body.frequency,
+                                                            startDate          : req.body.startDate,
+                                                            endDate            : req.body.endDate,
+                                                            purpose            : req.body.purpose,
+                                                            assessmentMode     : req.body.assessmentMode,
+                                                            assessmentStatus   : 'Pending',
+                                                            assessmentStages   : 'Open',
+                                                            framework          : controlList
+                                                            //While inserting control set framework.controlOwner_ID  as SPOC 
+                                                });
+                                                assessment.save()
+                                                          .then(assessment=>{
+                                                              if(assessment){
+                                                                request({
+                                                                    "method"    : "GET", 
+                                                                    "url"       : "http://localhost:3048/api/companysettings/list/"+req.body.assessedParty_ID,
+                                                                    "json"      : true,
+                                                                    "headers"   : {
+                                                                                    "User-Agent": "Test Agent"
+                                                                                }
+                                                                })
+                                                                .then(cs=>{
+                                                                    console.log('cs SPOC ID',cs.spocDetails.user_ID);
+                                                                    Assessments .updateOne(
+                                                                                        {"_id":assessment._id},
+                                                                                        {
+                                                                                            "$set" : {"framework.$.controlOwner_ID" : cs.spocDetails.user_ID}
+                                                                                        },
+                                                                                        { "multi": true }
+                                                                                )
+                                                                                .exec()
+                                                                                .then(assessmentUpdate=>{
+                                                                                    if(assessmentUpdate.nModified == 1){
+                                                                                        res.status(200).json({message:"Assessment Created Succussfully",ID:assessment._id})
+                                                                                    }else{
+                                                                                        res.status(200).json({message:"Assessment Created but SPOC details not updated",ID:assessment._id})
+                                                                                    }
+                                                                                })
+                                                                                .catch(err =>{
+                                                                                    console.log(err);
+                                                                                    res.status(500).json(err);
+                                                                                });                 
+                                                                })
+                                                                .catch(err =>{
+                                                                    console.log(err);
+                                                                    reject(err);
+                                                                });
+                                                              }
+                                                          })
+                                                          .catch(err =>{
+                                                            console.log(err);
+                                                            res.status(500).json({
+                                                                error: err
+                                                            });
+                                                        });
+                                           })
+                                           .catch(err =>{
+                                                console.log(err);
+                                                res.status(500).json({
+                                                    error: err
+                                                });
+                                            }); 
+                                
+                            }
                         }
                     })
                     .catch(err =>{
@@ -28,65 +145,8 @@ fetch_subControlBlock = function(controlBlockArray){
                         res.status(500).json({
                             error: err
                         });
-                    });    
-    })
-    console.log('scb',controlBlockList);
-    return true;
-}
-
-exports.create_assessments = (req,res,next)=>{
-    Framework   .findOne({_id:req.body.framework_ID})
-                .populate('controlblocks','controlBlockName')
-                .exec()
-                .then(framework=>{
-                    if(framework){
-                        // controlBlockList = framework.controlBlocks;
-                        framework.controlBlocks.map(doc=>{
-                            controlBlockList.push({
-                                controlBlock_ID : doc.controlBlocks_ID,
-                            });
-                        });
-                        if(framework.controlBlocks.length == controlBlockList.length){
-                            //Find the sub control Blocks
-                            var subControlBlock = fetch_subControlBlock(controlBlockList);
-                            if(subControlBlock){
-                                res.status(200).json({controlBlockList});
-                            }
-                        }
-                        
-                    }else{
-                        res.status(409).json({message:"Framework not found"});
-                    }
-                })
-                .catch(err =>{
-                    console.log(err);
-                    res.status(500).json({
-                        error: err
                     });
-                });        
-    // const assessments = new assessments({
-    //     _id                 : new mongoose.Types.ObjectId(),
-    //     framework_ID        : req.body.framework_ID, // Mandatory Field
-    //     corporate_ID        : req.body.corporate_ID, // Corporate who is creating the assessment
-    //     assessedParty_ID    : req.body.assessedParty_ID, // Vendor to whom it is to be assined
-    //     frequency           : req.body.frequency, // Instead of _id frequency value is stored
-    //     startDate           : req.body.startDate,
-    //     endDate             : req.body.endDate,
-    //     createdBy           : req.body.createdBy,
-    //     createdAt           : new Date(),
-    //     framework           : listFramework,
-    // });
-    // assessments.save()
-    //     .then(data=>{
-    //         console.log('data ',data);
-    //         res.status(200).json({message:"Assessments Added",ID:data._id});
-    //     })
-    //     .catch(err =>{
-    //         console.log(err);
-    //         res.status(500).json({
-    //             error: err
-    //         });
-    //     });
+
 };
 
 exports.list_assessments = (req,res,next)=>{
@@ -104,7 +164,21 @@ exports.list_assessments = (req,res,next)=>{
 }
 
 exports.list_assessments_company_ID = (req,res,next)=>{
-    Assessments.find({company_ID:req.params.company_ID})
+    Assessments.find({corporate_ID:req.params.corporate_ID})
+        .exec()
+        .then(data=>{
+            res.status(200).json(data);
+        })
+        .catch(err =>{
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+}
+
+exports.list_assessments_assessedParty_ID = (req,res,next)=>{
+    Assessments.find({assessedParty_ID:req.params.assessedParty_ID})
         .exec()
         .then(data=>{
             res.status(200).json(data);
@@ -118,8 +192,7 @@ exports.list_assessments_company_ID = (req,res,next)=>{
 }
 
 exports.detail_assessments = (req,res,next)=>{
-    var assessmentsData = req.params.assessments;
-    Assessments.findOne({assessments:assessmentsData.toLowerCase()})
+    Assessments.findOne({_id:req.params.assessments_ID})
         .exec()
         .then(data=>{
             if(data){
@@ -137,8 +210,7 @@ exports.detail_assessments = (req,res,next)=>{
 }
 
 exports.update_assessments = (req,res,next)=>{
-    var assessmentssData = req.body.assessments;
-    Assessments.findOne({assessments:assessmentssData.toLowerCase()})
+    Assessments.findOne({_id:req.params.assessments_ID})
 		.exec()
 		.then(data =>{
 			if(data && data._id != req.body.id){
@@ -212,3 +284,86 @@ exports.delete_all_assessments = (req,res,next)=>{
             });
         });
 }
+
+exports.update_assessmentStatus = (req,res,next)=>{
+    Assessments.updateOne(
+                            { _id:req.params.assessments_ID},  
+                            {
+                                $set:{
+                                    "assessmentStatus" : req.params.status
+                                }
+                            }
+                        )
+                        .exec()
+                        .then(data=>{
+                            console.log('data ',data);
+                            if(data){
+                                res.status(200).json("assessmentStatus Updated");
+                            }else{
+                                res.status(401).json("assessmentStatus Not Found");
+                            }
+                        })
+                        .catch(err =>{
+                            console.log(err);
+                            res.status(500).json({
+                                error: err
+                            });
+                        });
+}
+
+exports.update_response = (req,res,next)=>{
+    console.log("response",req.body);
+    Assessments.updateOne(
+                            {
+                                "_id"                       : req.body.assessment_ID,
+                                "framework.controlBlock_ID" : req.body.controlBlock_ID,
+                                "framework.control_ID"      : req.body.control_ID,
+                            },
+                            {
+                                $set : {
+                                    "framework.$.response.response"  : req.body.response,
+                                    "framework.$.response.document"  : req.body.document,
+                                    "framework.$.response.comment"   : req.body.comment,                                               
+                                }
+                            }
+                )
+                .exec()
+                .then(data=>{
+                    if(data.nModified == 1){
+                        res.status(200).json({message:"Response updated"})
+                    }else{
+                        res.status(200).json({message:"Response not updated"})
+                    }
+                })
+                .catch(err =>{
+                    console.log(err);
+                    res.status(500).json({
+                        error: err
+                    });
+                });
+}
+
+exports.fetch_specific_framework = (req,res,next)=>{
+    console.log("response",req.params);
+    Assessments.findOne(
+                            {
+                                "_id"                       : req.params.assessments_ID,
+                                "framework.controlBlock_ID" : req.params.controlBlock_ID,
+                                "framework.control_ID"      : req.params.control_ID,
+                            },
+                            {
+                                "framework.$" : 1
+                            }
+                )
+                .exec()
+                .then(data=>{
+                    res.status(200).json(data);
+                })
+                .catch(err =>{
+                    console.log(err);
+                    res.status(500).json({
+                        error: err
+                    });
+                });
+}
+

@@ -242,3 +242,47 @@ exports.controls_count_of_company = (req,res,next)=>{
         });
 }
 
+exports.duplicate_control = (req,res,next) =>{
+    Control.findOne({_id:req.body.control_ID})
+           .exec()
+           .then(baseControl=>{
+               if(baseControl){
+                var newControl = new Control({
+                    _id                     : new mongoose.Types.ObjectId(),
+                    controlShort            : baseControl.controlShort, 
+                    controlDesc             : baseControl.controlDesc,
+                    controltag_ID           : baseControl.controltag_ID,
+                    ref1                    : baseControl.ref1,
+                    ref2                    : baseControl.ref2,
+                    ref3                    : baseControl.ref3,
+                    risk                    : baseControl.risk,
+                    multiplier              : baseControl.multiplier,
+                    mandatory               : baseControl.mandatory,
+                    scored                  : baseControl.scored, 
+                    controlBlocks_ID        : baseControl.controlBlocks_ID,
+                    company_ID              : req.body.company_ID,
+                    createdBy               : req.body.createdBy,
+                    createdAt               : new Date(),
+                });
+                newControl  .save()
+                            .then(control=>{
+                                res.status(200).json({message:"Control Duplicated",ID:control._id})
+                            })
+                            .catch(err =>{
+                                console.log(err);
+                                res.status(500).json({
+                                    error: err
+                                });
+                            });                 
+               }else{
+                   res.status(200).json({message:"Control Not found"})
+               }
+           })
+           .catch(err =>{
+                console.log(err);
+                res.status(500).json({
+                    error: err
+                });
+            });
+}
+

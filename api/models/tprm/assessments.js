@@ -10,11 +10,11 @@ const assessmentsSchema = mongoose.Schema({
     startDate               : Date,
     endDate                 : Date,
     purpose                 : String,
-    industryType            : String,
+    // industryType            : String,
     assessmentMode          : String,
     assessmentScore         : Number,
     assessmentStatus        : String,
-    assessmentStages        : String,
+    assessmentStages        : String, //From Vendor side
     assessor                : [
                                         {
                                             type    : String, //Corporator or Vendor
@@ -26,30 +26,46 @@ const assessmentsSchema = mongoose.Schema({
                                     controlBlock_ID     : { type: mongoose.Schema.Types.ObjectId, ref: 'conrolblocks' },
                                     control_ID          : { type: mongoose.Schema.Types.ObjectId, ref: 'conrols' },
                                     controlOwner_ID     : { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
-                                    selfAssessment      : Boolean,
-                                    selfAssessmentNote  : String,
-                                    response            : Boolean,
-                                    nc                  : [
-                                                                {
-                                                                    ncStatus    : Boolean,
-                                                                    remark      : String,
-                                                                    Criticality : String,
-                                                                    date        : Date,
-                                                                    status      : String,
-                                                                    actionPlan  : [
-                                                                                    {
-                                                                                        type            : String,
-                                                                                        plan            : String,
-                                                                                        priority        : String,
-                                                                                        owner_ID        : { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
-                                                                                        planDate        : Date,
-                                                                                        dueDate         : Date,
-                                                                                        coordinator_ID  : { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
-                                                                                        status          : String,
-                                                                                    }
-                                                                                ]
-                                                                }
-                                                          ]  
+                                    // selfAssessment      : Boolean,
+                                    // selfAssessmentNote  : String,
+
+                                    response            : {
+                                                                response : Boolean,
+                                                                document : [
+                                                                                {
+                                                                                    docLink : String,
+                                                                                    docName : String
+                                                                                }
+                                                                            ],
+                                                                comment   : String,
+                                                          },
+                                    nc                  : {
+                                                                ncStatus    : Boolean,
+                                                                remark      : String,
+                                                                Criticality : String,
+                                                                date        : Date,
+                                                                status      : String, //Open or Closed
+                                                                
+                                                                actionPlan  : [
+                                                                                {
+                                                                                    type            : String,
+                                                                                    plan            : String,
+                                                                                    priority        : String,
+                                                                                    owner_ID        : { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
+                                                                                    planDate        : Date,
+                                                                                    dueDate         : Date,
+                                                                                    coordinator_ID  : { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
+                                                                                    status          : String, //Open 
+                                                                                    document        : [
+                                                                                                        {
+                                                                                                            docLink : String,
+                                                                                                            docName : String
+                                                                                                        }
+                                                                                                    ],
+                                                                                    actionTaken     : String
+                                                                                }
+                                                                            ]
+                                                            }  
                                     }
 
                                 ],

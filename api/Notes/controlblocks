@@ -39,10 +39,12 @@ APIs :
 7. List all control Block for specify company			    - Done
 8. Add / Remove the Sub Control Block   				    - Done
 9. Add / Remove the Controls     						    - Done
-10.Insert new control Block  (creating sub control block)  -
+10.Insert new control Block  (creating sub control block)   - Done
     - Insert New Control Block
     - Update Parent Control Block
 11. Get count of control blocks of specific company 
+12. Duplicate Control Block                                 - Done
+13. Fetch Control blocks for specific Domain                - 
 
 -----------------------------------------------------------------------------------------------------
 								1. Insert new control Block
@@ -316,3 +318,57 @@ Output      :
                     {
                        count
                     }
+
+-----------------------------------------------------------------------------------------------------
+                        12. Duplicate Control Block
+-----------------------------------------------------------------------------------------------------
+
+Method      : POST
+    
+URL         : /api/controlblocks/duplicate_contorlblock
+
+Input       : 
+                {
+                    "controlBlock_ID"   : String,
+                    "createdBy"         : String,
+                    "company_ID"        : String,
+                    "sequence"          : Number
+                }
+
+Output      : 
+                If successfully
+                    {
+                       message : "Control Block Duplicated",
+                       ID      : String //New Control Block ID
+                    }
+
+-----------------------------------------------------------------------------------------------------
+                        13. Fetch Control blocks for specific Domain
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/controlblocks/domain_specific/:domain_ID
+
+Input       : 
+                -NA-
+
+Output      : 
+                If successfully
+					[
+						{
+                            "_id"               : String,
+                            "controlBlockRef"   : Number,
+                            "controlBlockName"  : Number,
+                            "controlBlockDesc"  : String,
+                            "parentBlock"       : String,
+                            "domain_ID"         : String,
+                            "sequence"          : Number,
+                            "weightage"         : Number,
+                            "company_ID"        : String,
+                            "createdBy"         : String,
+                            "createdAt"         : Date,
+                            "subControlBlocks"     : [],
+                            "controls"          : [],
+						}
+					]

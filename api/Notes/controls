@@ -31,6 +31,7 @@ APIs :
 6. Delete all the controls							    - Done
 7. List all control  for specify company			    - Done
 8. Get count of controls of specific company
+9. Make a copy of Control                               - 
 -----------------------------------------------------------------------------------------------------
 								1. Insert new framework
 -----------------------------------------------------------------------------------------------------
@@ -237,4 +238,27 @@ Output      :
                 If successfully
                     {
                        count
+                    }  
+
+-----------------------------------------------------------------------------------------------------
+                        9. Make a copy of Control
+-----------------------------------------------------------------------------------------------------
+
+Method      : POST
+    
+URL         : /api/controls/duplicateControl/:control_ID/:createdBy
+
+Input       : 
+                {
+                    control_ID : String,
+                    createdBy  : String,
+                    company_ID : String
+                }
+            
+
+Output      : 
+                If successfully
+                    {
+                       message : "Control Duplicated",
+                       ID      : String //ID of new Control
                     }                    
