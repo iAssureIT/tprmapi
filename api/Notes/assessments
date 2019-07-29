@@ -60,7 +60,7 @@ Schema :
 
 APIs :    9 /15
 -----------------------------------------------------------------------------------------------------
-1. Insert new assessments							                    - WIP
+1. Insert new assessments							                    - Done
 2. Details of assessments							                    - Done
 3. List details of all the assessments				                    - Done
 4. Update assessments details                  		                    - 

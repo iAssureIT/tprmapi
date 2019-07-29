@@ -26,9 +26,6 @@ const assessmentsSchema = mongoose.Schema({
                                     controlBlock_ID     : { type: mongoose.Schema.Types.ObjectId, ref: 'conrolblocks' },
                                     control_ID          : { type: mongoose.Schema.Types.ObjectId, ref: 'conrols' },
                                     controlOwner_ID     : { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
-                                    // selfAssessment      : Boolean,
-                                    // selfAssessmentNote  : String,
-
                                     response            : {
                                                                 response : Boolean,
                                                                 document : [

@@ -97,7 +97,7 @@ exports.create_assessments = (req,res,next)=>{
                                                                 .then(cs=>{
                                                                     console.log('cs SPOC ID',cs.spocDetails.user_ID);
                                                                     Assessments .updateOne(
-                                                                                        {"_id":assessment._id},
+                                                                                        {"_id":assessment._id, "framework.controlBlock_ID": {$exists: true}},
                                                                                         {
                                                                                             "$set" : {"framework.$.controlOwner_ID" : cs.spocDetails.user_ID}
                                                                                         },
@@ -106,9 +106,9 @@ exports.create_assessments = (req,res,next)=>{
                                                                                 .exec()
                                                                                 .then(assessmentUpdate=>{
                                                                                     if(assessmentUpdate.nModified == 1){
-                                                                                        res.status(200).json({message:"Assessment Created Succussfully",ID:assessment._id})
+                                                                                        res.status(200).json({message:"Assessment Created Succussfully",ID:assessment._id});
                                                                                     }else{
-                                                                                        res.status(200).json({message:"Assessment Created but SPOC details not updated",ID:assessment._id})
+                                                                                        res.status(200).json({message:"Assessment Created but SPOC details not updated",ID:assessment._id});
                                                                                     }
                                                                                 })
                                                                                 .catch(err =>{
