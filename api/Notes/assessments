@@ -58,7 +58,7 @@ Schema :
     createdAt               : Date,
 }
 
-APIs :    9 /15
+APIs :    11 /15
 -----------------------------------------------------------------------------------------------------
 1. Insert new assessments							                    - Done
 2. Details of assessments							                    - Done
@@ -76,7 +76,7 @@ APIs :    9 /15
 10. Change framework.nc.ncStatus either true or false                   - Done
     - Input would be controlBlock_ID and control_ID
     - If true then set status = Open
-11. Fetch all the framework with framework.nc.ncStatus = true           - 
+11. Fetch all the framework with framework.nc.ncStatus = true           - Done
 12. Operation on actionPlan (Add / Remove / Edit)                       -
     - Input would be controlBlock_ID and control_ID
 13. List all assessments for specify assessedParty_ID                   - Done

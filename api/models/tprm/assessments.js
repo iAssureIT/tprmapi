@@ -42,7 +42,6 @@ const assessmentsSchema = mongoose.Schema({
                                                                 Criticality : String,
                                                                 date        : Date,
                                                                 status      : String, //Open or Closed
-                                                                
                                                                 actionPlan  : [
                                                                                 {
                                                                                     type            : String,

@@ -47,6 +47,65 @@ function fetch_controls(newCBList){
     })
 }// end function
 
+function fetch_controlShort(control_ID){
+    return new Promise(function(resolve,reject){
+        request({
+            "method"    : "GET", 
+            "url"       : "http://localhost:3048/api/controls/"+control_ID,
+            "json"      : true,
+            "headers"   : {
+                            "User-Agent": "Test Agent"
+                        }
+        })
+        .then(control=>{
+            resolve(control.controlShort); 
+        })
+        .catch(err =>{
+            console.log(err);
+            reject(err);
+        });
+    })
+}
+
+function fetch_controlBlockName(controlBlock_ID){
+    return new Promise(function(resolve,reject){
+        request({
+            "method"    : "GET", 
+            "url"       : "http://localhost:3048/api/controlblocks/"+controlBlock_ID,
+            "json"      : true,
+            "headers"   : {
+                            "User-Agent": "Test Agent"
+                        }
+        })
+        .then(controlBlock=>{
+            resolve(controlBlock.controlBlockName); 
+        })
+        .catch(err =>{
+            console.log(err);
+            reject(err);
+        });
+    })
+}
+
+function fetch_controlOwnerName(user_ID){
+    return new Promise(function(resolve,reject){
+        request({
+            "method"    : "GET", 
+            "url"       : "http://localhost:3048/api/users/"+user_ID,
+            "json"      : true,
+            "headers"   : {
+                            "User-Agent": "Test Agent"
+                        }
+        })
+        .then(user=>{
+            resolve(user.profile.fullName); 
+        })
+        .catch(err =>{
+            console.log(err);
+            reject(err);
+        });
+    })
+}
 exports.create_assessments = (req,res,next)=>{
         Framework   .findOne({_id : new ObjectID(req.body.framework_ID)})
                     .exec()
@@ -448,38 +507,34 @@ exports.list_nc_true = (req,res,next) =>{
                                 },
                                 {
                                     $match : {"framework.nc.ncStatus" : true}
-                                },
-                                {
-                                    $lookup : 
-                                            {
-                                                "from"          : "controlblocks",
-                                                // "let"           : {"controlBlock_ID" : _id, "controlBlockName" : controlBlockName},
-                                                // "pipeline"      : [
-                                                                        // {$match : {_id : }}
-                                                                    // ],
-                                                "localField"    : "controlBlock_ID",
-                                                "foreignField"    : "_id",
-                                                "as"              : "controlBlockName"
-                                            }
                                 }
                         ])
-                    //         {
-                    //             "_id"      : req.params.assessments_ID,
-                    //             "framework" : {
-                    //                 $elemMatch : 
-                    //                         {
-                    //                             "nc.ncStatus" : true
-                    //                         }
-                    //             }
-                    //         },
-                    //         {
-                    //             "framework.$" : 1,
-                    //         },
-                    //         {multi: true}
-                    // )
                     .exec()
                     .then(data=>{
-                        res.status(200).json(data);
+                        var ncData = [];
+                        setNCDate();
+                        async function setNCDate(){
+                            for(i=0;i<data.length;i++){
+                                var controlShort        = await fetch_controlShort(data[0].framework.control_ID);
+                                var contorlBlockName    = await fetch_controlBlockName(data[0].framework.controlBlock_ID);
+                                var controlOwnerName    = await fetch_controlOwnerName(data[0].framework.controlOwner_ID);
+                                ncData.push({
+                                    "_id"               : data[0]._id,
+                                    "control_ID"        : data[0].framework.control_ID,
+                                    "controlShort"      : controlShort,
+                                    "controlBlock_ID"   : data[0].framework.controlBlock_ID,
+                                    "controlBlockName"  : contorlBlockName,
+                                    "controlOwner_ID"   : data[0].framework.controlOwner_ID,
+                                    "controlOwnerName"  : controlOwnerName,
+                                    "response"          : data[0].framework.response,
+                                    "nc"                : data[0].framework.nc,
+                                });
+                            }
+                            if(i >= data.length){
+                                res.status(200).json(ncData);
+                            }
+                        }
+                        
                     })
                     .catch(err =>{
                         console.log(err);
