@@ -7,7 +7,7 @@ router.post('/', AssessmentsController.create_assessments);
 
 router.get('/list', AssessmentsController.list_assessments);
 
-router.get('/list/nc_true/:assessments_ID',AssessmentsController.list_nc_true)
+router.get('/list/nc_true/:assessments_ID',AssessmentsController.list_nc_true);
 
 router.get('/getframework/:assessments_ID/:controlBlock_ID/:control_ID',AssessmentsController.fetch_specific_framework);
 

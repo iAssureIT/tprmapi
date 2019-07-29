@@ -80,7 +80,8 @@ exports.create_assessments = (req,res,next)=>{
                                                             assessmentMode     : req.body.assessmentMode,
                                                             assessmentStatus   : 'Pending',
                                                             assessmentStages   : 'Open',
-                                                            framework          : controlList
+                                                            framework          : controlList,
+                                                            assessor           : req.body.assessor
                                                             //While inserting control set framework.controlOwner_ID  as SPOC 
                                                 });
                                                 assessment.save()
@@ -329,30 +330,31 @@ exports.update_response = (req,res,next)=>{
                 .exec()
                 .then(data=>{
                     if(data.nModified == 1){
-                        // Assessments.findOne(
-                        //                     {
-                        //                         "_id"                : req.body.assessment_ID,
-                        //                         "framework.response" : { 
-                        //                                                 "$elemMatch": { "comment": { "$exists": false } }
-                        //                                                 }
-                        //                     }
-                        //             )
-                        //             .exec()
-                        //             .then(assessmentStages=>{
-                        //                 res.status(200).json(assessmentStages);
-                        //                 // if(assessmentStages.nModified == 1){
-                        //                 //     res.status(200).json({message:"Response updated and assessmentStages changed to Mark as Review"})                 
-                        //                 // }else{
-                        //                 //     res.status(200).json({message:"Response updated"})
-                        //                 // }
-                        //             })
-                        //             .catch(err =>{
-                        //                 console.log(err);
-                        //                 res.status(500).json({
-                        //                     error: err
-                        //                 });
-                        //             });
-                        res.status(200).json({message:"Response updated"})
+                        Assessments.findOne(
+                                            {
+                                                "_id"                         : req.body.assessment_ID,
+                                                "framework.response.response" : { $exists : true }
+                                            },
+                                            {
+                                                $set : {assessmentStatus : "Mark for Review"}
+                                            }
+                                    )
+                                    .exec()
+                                    .then(assessmentStages=>{
+                                        res.status(200).json(assessmentStages);
+                                        // if(assessmentStages.nModified == 1){
+                                        //     res.status(200).json({message:"Response updated and assessmentStages changed to Mark as Review"})                 
+                                        // }else{
+                                        //     res.status(200).json({message:"Response updated"})
+                                        // }
+                                    })
+                                    .catch(err =>{
+                                        console.log(err);
+                                        res.status(500).json({
+                                            error: err
+                                        });
+                                    });
+                        // res.status(200).json({message:"Response updated"})
                     }else{
                         res.status(200).json({message:"Response not updated"})
                     }
@@ -431,17 +433,53 @@ exports.fetch_specific_framework = (req,res,next)=>{
 exports.list_nc_true = (req,res,next) =>{
     // res.status(200).json({"nc_true ":req.params.assessments_ID});
     console.log('assessments_ID ',req.params.assessments_ID);
-    Assessments.findOne(
-                            {
-                                "_id"                       : req.params.assessments_ID,
-                            },
-                            {
-                                "framework" : 1,
-                            }
-                    )
+    Assessments.aggregate([
+                                {
+                                    $match : { _id       : new ObjectID("5d3e928472e50833827d4074")}
+                                },
+                                {
+                                    $project :{
+                                        _id       : 1,
+                                        framework : 1,
+                                    }
+                                },
+                                {
+                                    $unwind : "$framework"
+                                },
+                                {
+                                    $match : {"framework.nc.ncStatus" : true}
+                                },
+                                {
+                                    $lookup : 
+                                            {
+                                                "from"          : "controlblocks",
+                                                // "let"           : {"controlBlock_ID" : _id, "controlBlockName" : controlBlockName},
+                                                // "pipeline"      : [
+                                                                        // {$match : {_id : }}
+                                                                    // ],
+                                                "localField"    : "controlBlock_ID",
+                                                "foreignField"    : "_id",
+                                                "as"              : "controlBlockName"
+                                            }
+                                }
+                        ])
+                    //         {
+                    //             "_id"      : req.params.assessments_ID,
+                    //             "framework" : {
+                    //                 $elemMatch : 
+                    //                         {
+                    //                             "nc.ncStatus" : true
+                    //                         }
+                    //             }
+                    //         },
+                    //         {
+                    //             "framework.$" : 1,
+                    //         },
+                    //         {multi: true}
+                    // )
                     .exec()
                     .then(data=>{
-                    
+                        res.status(200).json(data);
                     })
                     .catch(err =>{
                         console.log(err);

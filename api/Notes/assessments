@@ -101,6 +101,12 @@ Input       :
                     startDate           : Date,
                     endDate             : Date,
 					createdBy		    : String, // Either empty or _id of users
+                    assessor            : [
+                                            {
+                                                type    : String,
+                                                user_ID : String,
+                                            }
+                                          ]
 				}
 
 Output      : 
