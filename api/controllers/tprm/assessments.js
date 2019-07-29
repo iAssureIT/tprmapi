@@ -47,7 +47,6 @@ function fetch_controls(newCBList){
     })
 }// end function
 
-
 exports.create_assessments = (req,res,next)=>{
         Framework   .findOne({_id : new ObjectID(req.body.framework_ID)})
                     .exec()
@@ -330,6 +329,29 @@ exports.update_response = (req,res,next)=>{
                 .exec()
                 .then(data=>{
                     if(data.nModified == 1){
+                        // Assessments.findOne(
+                        //                     {
+                        //                         "_id"                : req.body.assessment_ID,
+                        //                         "framework.response" : { 
+                        //                                                 "$elemMatch": { "comment": { "$exists": false } }
+                        //                                                 }
+                        //                     }
+                        //             )
+                        //             .exec()
+                        //             .then(assessmentStages=>{
+                        //                 res.status(200).json(assessmentStages);
+                        //                 // if(assessmentStages.nModified == 1){
+                        //                 //     res.status(200).json({message:"Response updated and assessmentStages changed to Mark as Review"})                 
+                        //                 // }else{
+                        //                 //     res.status(200).json({message:"Response updated"})
+                        //                 // }
+                        //             })
+                        //             .catch(err =>{
+                        //                 console.log(err);
+                        //                 res.status(500).json({
+                        //                     error: err
+                        //                 });
+                        //             });
                         res.status(200).json({message:"Response updated"})
                     }else{
                         res.status(200).json({message:"Response not updated"})
@@ -344,20 +366,59 @@ exports.update_response = (req,res,next)=>{
 }
 
 exports.fetch_specific_framework = (req,res,next)=>{
-    console.log("response",req.params);
-    Assessments.findOne(
-                            {
-                                "_id"                       : req.params.assessments_ID,
-                                "framework.controlBlock_ID" : req.params.controlBlock_ID,
-                                "framework.control_ID"      : req.params.control_ID,
-                            },
-                            {
-                                "framework.$" : 1
-                            }
+    Assessments.find(
+                        {
+                            "_id"                       : req.params.assessments_ID,
+                            "framework.controlBlock_ID" : req.params.controlBlock_ID,
+                            "framework.control_ID"      : req.params.control_ID,
+                        },
+                        {
+                            "framework.$" : 1
+                        }
                 )
                 .exec()
                 .then(data=>{
-                    res.status(200).json(data);
+                    request({
+                        "method"    : "GET", 
+                        "url"       : "http://localhost:3048/api/controlblocks/"+req.params.controlBlock_ID,
+                        "json"      : true,
+                        "headers"   : {
+                                        "User-Agent": "Test Agent"
+                                    }
+                    })
+                    .then(cb=>{
+                        request({
+                            "method"    : "GET", 
+                            "url"       : "http://localhost:3048/api/controls/"+req.params.control_ID,
+                            "json"      : true,
+                            "headers"   : {
+                                            "User-Agent": "Test Agent"
+                                        }
+                        })
+                        .then(c=>{
+                            var framework = {
+                                _id                 : data[0]._id,
+                                framework_ID        : data[0].framework[0]._id,
+                                controlBlock_ID     : data[0].framework[0].controlBlock_ID,
+                                controlBlockName    : cb.controlBlockName,
+                                control_ID          : data[0].framework[0].control_ID,
+                                controlName         : c.controlShort,
+                                response            : data[0].framework[0].response,
+                                nc                  : data[0].framework[0].nc,                                
+                            };
+                            if(framework){
+                                res.status(200).json({framework}); 
+                            }
+                        })
+                        .catch(err =>{
+                            console.log(err);
+                            res.status(200).json(err);
+                        });    
+                    })
+                    .catch(err =>{
+                        console.log(err);
+                        res.status(200).json(err);
+                    });
                 })
                 .catch(err =>{
                     console.log(err);
@@ -367,3 +428,228 @@ exports.fetch_specific_framework = (req,res,next)=>{
                 });
 }
 
+exports.list_nc_true = (req,res,next) =>{
+    // res.status(200).json({"nc_true ":req.params.assessments_ID});
+    console.log('assessments_ID ',req.params.assessments_ID);
+    Assessments.findOne(
+                            {
+                                "_id"                       : req.params.assessments_ID,
+                            },
+                            {
+                                "framework" : 1,
+                            }
+                    )
+                    .exec()
+                    .then(data=>{
+                    
+                    })
+                    .catch(err =>{
+                        console.log(err);
+                        res.status(500).json({
+                            error: err
+                        });
+                    });
+}
+
+exports.fetch_specific_response = (req,res,next)=>{
+    Assessments.findOne(
+                            {
+                                "_id"                       : req.params.assessments_ID,
+                                "framework.controlBlock_ID" : req.params.controlBlock_ID,
+                                "framework.control_ID"      : req.params.control_ID,
+                            },
+                            {
+                                "framework.$.response" : 1,
+                                "framework.$.nc"        : 0,
+
+                            }
+                )
+                .exec()
+                .then(data=>{
+                    request({
+                                "method"    : "GET", 
+                                "url"       : "http://localhost:3048/api/controlblocks/"+req.params.controlBlock_ID,
+                                "json"      : true,
+                                "headers"   : {
+                                                "User-Agent": "Test Agent"
+                                            }
+                            })
+                            .then(cb=>{
+                                resolve({cb,data}); 
+                            })
+                            .catch(err =>{
+                                console.log(err);
+                                res.status(200).json(err);
+                            });
+                })
+                .catch(err =>{
+                    console.log(err);
+                    res.status(500).json({
+                        error: err
+                    });
+                });
+}
+
+exports.update_ncstatus = (req,res,next)=>{
+    console.log('params ',req.params);
+    if(req.params.ncStatus === 'true'){
+        Assessments.updateOne(
+                                {
+                                    "_id"                       : req.params.assessments_ID,
+                                    "framework.controlBlock_ID" : req.params.controlBlock_ID,
+                                    "framework.control_ID"      : req.params.control_ID,
+                                },
+                                {
+                                    $set : {
+                                        "framework.$.nc.ncStatus"  : req.params.ncStatus,
+                                        "framework.$.nc.status"    : 'Open',
+                                    }
+                                }
+                    )
+                    .exec()
+                    .then(data=>{
+                        if(data.nModified == 1){
+                            res.status(200).json({message:"NC Status and Status updated"})
+                        }else{
+                            res.status(200).json({message:"NC Status and Status not updated"})
+                        }
+                    })
+                    .catch(err =>{
+                        console.log(err);
+                        res.status(500).json({
+                            error: err
+                        });
+                    });
+    }else{
+        Assessments.updateOne(
+                        {
+                            "_id"                       : req.params.assessments_ID,
+                            "framework.controlBlock_ID" : req.params.controlBlock_ID,
+                            "framework.control_ID"      : req.params.control_ID,
+                        },
+                        {
+                            $set : {
+                                "framework.$.nc.ncStatus"  : req.params.ncStatus,
+                            }
+                        }
+            )
+            .exec()
+            .then(data=>{
+                if(data.nModified == 1){
+                    res.status(200).json({message:"NC Status updated"})
+                }else{
+                    res.status(200).json({message:"NC Status not updated"})
+                }
+            })
+            .catch(err =>{
+                console.log(err);
+                res.status(500).json({
+                    error: err
+                });
+            });
+    }
+    
+}
+
+exports.operation_actionPlan = (req,res,next)=>{
+    switch(req.params.action){
+        case 'add' :
+            Assessments .updateOne(
+                                { 
+                                    "_id"                       : req.params.assessments_ID,
+                                    "framework.controlBlock_ID" : req.body.controlBlock_ID,
+                                    "framework.control_ID"      : req.body.control_ID,
+                                },
+                                {
+                                    $push : {
+                                        "nc.actionPlan" :
+                                            {
+                                                type            : req.body.type,
+                                                plan            : req.body.plan,
+                                                priority        : req.body.priority,
+                                                owner_ID        : req.body.owner_ID,
+                                                planDate        : req.body.planDate,
+                                                dueDate         : req.body.dueDate,
+                                                coordinator_ID  : req.body.coordinator_ID,
+                                                status          : req.body.status, //Open 
+                                                document        : req.body.document,
+                                                actionTaken     : req.body.actionTaken
+                                            }
+                                    }
+                                }
+                        )
+                        .exec()
+                        .then(data=>{
+                            res.status(200).json({message:"Action Plan Added"})
+                        })
+                        .catch(err =>{
+                            console.log(err);
+                            res.status(500).json({
+                                error: err
+                            });
+                        }); 
+            // res.status(200).json({message:"add"});
+            break;
+        case 'remove' :
+                Assessments .updateOne(
+                                        { _id : req.params.assessments_ID},
+                                        {
+                                            $pull:{
+                                                actionPlan : {
+                                                    _id        : req.body.actionPlan_ID,
+                                                }
+                                            }
+                                        }
+                            )
+                            .exec()
+                            .then(data=>{
+                                if(data.deletedCount == 1){
+                                    res.status(200).json({message:"Action Plan Removed"})
+                                }else{
+                                    res.status(200).json({message:"Action Plan Not Removed"})
+                                }
+                            })
+                            .catch(err =>{
+                                console.log(err);
+                                res.status(500).json({
+                                    error: err
+                                });
+                            }); 
+            break;
+        case 'edit'  :
+                Assessments .updateOne(
+                                    { _id : req.params.assessments_ID , "framework.actionPlan._id" : req.body.actionPlan_ID},
+                                    {
+                                        $set : {
+                                                    "actionPlan.$.type"            : req.body.type,
+                                                    "actionPlan.$.plan"            : req.body.plan,
+                                                    "actionPlan.$.priority"        : req.body.priority,
+                                                    "actionPlan.$.owner_ID"        : req.body.owner_ID,
+                                                    "actionPlan.$.planDate"        : req.body.planDate,
+                                                    "actionPlan.$.dueDate"         : req.body.dueDate,
+                                                    "actionPlan.$.coordinator_ID"  : req.body.coordinator_ID,
+                                                    "actionPlan.$.status"          : req.body.status, //Open 
+                                                    "actionPlan.$.document"        : req.body.document,
+                                                    "actionPlan.$.actionTaken"     : req.body.actionTaken
+                                                }
+                                    }
+                            )
+                            .exec()
+                            .then(data=>{
+                                if(data.deletedCount == 1){
+                                    res.status(200).json({message:"Action Plan Updated"})
+                                }else{
+                                    res.status(200).json({message:"Action Plan Not Updated"})
+                                }
+                            })
+                            .catch(err =>{
+                                console.log(err);
+                                res.status(500).json({
+                                    error: err
+                                });
+                            }); 
+            break;
+        default :
+            res.status(200).json({message:"Invalid Action"});
+    }
+}

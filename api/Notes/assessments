@@ -58,7 +58,7 @@ Schema :
     createdAt               : Date,
 }
 
-APIs :
+APIs :    9 /15
 -----------------------------------------------------------------------------------------------------
 1. Insert new assessments							                    - WIP
 2. Details of assessments							                    - Done
@@ -73,17 +73,15 @@ APIs :
     - If all the framework array has response then -YTS
         set assessmentStages to "Mark for Review"
 9. Update assessmentStatus                                              - Done
-10. Change framework.nc.ncStatus  either true or false                  - 
+10. Change framework.nc.ncStatus either true or false                   - Done
     - Input would be controlBlock_ID and control_ID
     - If true then set status = Open
-11. Fetch all the framework with framework.nc.ncStatus = true           -
+11. Fetch all the framework with framework.nc.ncStatus = true           - 
 12. Operation on actionPlan (Add / Remove / Edit)                       -
     - Input would be controlBlock_ID and control_ID
-13. Update framework.nc.status                                          - 
-    - Input would be controlBlock_ID and control_ID
-14. List all assessments for specify assessedParty_ID                   - Done
-15. Fetch framework for specify Control                                 - Done
-16. Fetch response for specify Control                                  - 
+13. List all assessments for specify assessedParty_ID                   - Done
+14. Fetch framework for specify Control                                 - Done
+15. Fetch response for specify Control                                  - 
 
 
 -----------------------------------------------------------------------------------------------------
@@ -453,6 +451,185 @@ Output      :
                     assessmentStatus Not Updated
 
 -----------------------------------------------------------------------------------------------------
+                    10. Change framework.nc.ncStatus  either true or false
+-----------------------------------------------------------------------------------------------------
+
+Method      : PATCH
+    
+URL         : /api/assessment/update_ncstatus/:assessments_ID/:controlBlock_ID/:control_ID/:ncStatus
+
+Input       : - NA-
+
+Output      : 
+				If ncStatus is true, successfully
+					NC Status and Status updated
+                If ncStatus is true, failed
+                    NC Status and Status not updated
+                If ncStatus is flase, failed
+                    NC Status updated
+                else 
+                    NC Status not updated
+
+-----------------------------------------------------------------------------------------------------
+                    11. Fetch all the framework with framework.nc.ncStatus = true
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/assessment/list/nc_true/:assessments_ID
+
+Input       : - NA-
+
+Output      : 
+				If successfully
+					[
+						{
+                            _id			            : String,
+                            corporate_ID            : String,
+                            assessedParty_ID        : String,
+                            framework_ID            : String,
+                            assessmentID            : Number,
+                            frequency               : String,
+                            startDate               : Date,
+                            endDate                 : Date,
+                            purpose                 : String,
+                            assessmentMode          : String,
+                            assessmentScore         : Number,
+                            assessmentStatus        : String,
+                            assessmentStages        : String, //From Vendor side
+                            assessor                : [
+                                                                {
+                                                                    type    : String, //Corporator or Vendor
+                                                                    user_ID : String
+                                                                }
+                                                        ],
+                            framework               : [
+                                                        {
+                                                            controlBlock_ID     : String,
+                                                            control_ID          : String,
+                                                            controlOwner_ID     : String,
+                                                            response            : {
+                                                                                        response : Boolean,
+                                                                                        document : [
+                                                                                                        {
+                                                                                                            doc     : String,
+                                                                                                            docName : String
+                                                                                                        }
+                                                                                                    ],
+                                                                                        comment   : String,
+                                                                                },
+                                                            nc                  : {
+                                                                                        ncStatus    : Boolean,
+                                                                                        remark      : String,
+                                                                                        Criticality : String,
+                                                                                        date        : Date,
+                                                                                        status      : String, //Open or Closed
+                                                                                        
+                                                                                        actionPlan  : [
+                                                                                                        {
+                                                                                                            type            : String,
+                                                                                                            plan            : String,
+                                                                                                            priority        : String,
+                                                                                                            owner_ID        : String,
+                                                                                                            planDate        : Date,
+                                                                                                            dueDate         : Date,
+                                                                                                            coordinator_ID  : String,
+                                                                                                            status          : String, //Open 
+                                                                                                            document        : [
+                                                                                                                                {
+                                                                                                                                    docLink : String,
+                                                                                                                                    docName : String
+                                                                                                                                }
+                                                                                                                            ],
+                                                                                                            actionTaken     : String
+                                                                                                        }
+                                                                                                    ]
+                                                                                    }  
+                                                            }
+
+                                                        ],
+                            createdBy               : String,
+                            createdAt               : Date,
+                        }
+					]
+
+-----------------------------------------------------------------------------------------------------
+                    12. Operation on actionPlan (Add / Remove / Edit)
+-----------------------------------------------------------------------------------------------------
+
+Method      : PATCH
+    
+URL         : /api/assessment/actionPlan/:assessments_ID/:action
+
+Note        : action => add / edit / remove
+
+Input       : 
+                For add :
+                    {
+                        controlBlock_ID : String,
+                        control_ID      : String,
+                        type            : String,
+                        plan            : String,
+                        priority        : String,
+                        owner_ID        : { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
+                        planDate        : Date,
+                        dueDate         : Date,
+                        coordinator_ID  : { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
+                        status          : String, //Open 
+                        document        : [
+                                            {
+                                                docLink : String,
+                                                docName : String
+                                            }
+                                        ],
+                        actionTaken     : String
+                    }
+                For edit :
+                    {
+                        controlBlock_ID : String,
+                        control_ID      : String,
+                        actionPlan_ID   : String, // actionPlan._id
+                        type            : String,
+                        plan            : String,
+                        priority        : String,
+                        owner_ID        : { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
+                        planDate        : Date,
+                        dueDate         : Date,
+                        coordinator_ID  : { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
+                        status          : String, //Open 
+                        document        : [
+                                            {
+                                                docLink : String,
+                                                docName : String
+                                            }
+                                        ],
+                        actionTaken     : String
+                    }
+                For remove :
+                    {
+                        controlBlock_ID : String,
+                        control_ID      : String,
+                        actionPlan_ID   : String, // actionPlan._id
+                    }
+
+Output      : 
+                Add : 
+                    If successfully then
+                        Action Plan Added
+                Edit :
+                    If successfully then
+                        Action Plan Updated
+                    else
+                        Action Plan Not Updated
+                Remove :
+                    If successfully then
+                        Action Plan Removed
+                    else
+                        Action Plan Not Removed
+                Else :
+                    Invalid Action
+
+-----------------------------------------------------------------------------------------------------
 							14. List all assessments for specify assessedParty_ID
 -----------------------------------------------------------------------------------------------------
 
@@ -548,51 +725,31 @@ Input       : - NA-
 Output      : 
 				If successfully
 						{
-                            _id			            : String,
-                            framework               : [
-                                                        {
-                                                            controlBlock_ID     : String,
-                                                            control_ID          : String,
-                                                            controlOwner_ID     : String,
-                                                            response            : {
-                                                                                        response : Boolean,
-                                                                                        document : [
-                                                                                                        {
-                                                                                                            doc     : String,
-                                                                                                            docName : String
-                                                                                                        }
-                                                                                                    ],
-                                                                                        comment   : String,
-                                                                                },
-                                                            nc                  : {
-                                                                                        ncStatus    : Boolean,
-                                                                                        remark      : String,
-                                                                                        Criticality : String,
-                                                                                        date        : Date,
-                                                                                        status      : String, //Open or Closed
-                                                                                        
-                                                                                        actionPlan  : [
-                                                                                                        {
-                                                                                                            type            : String,
-                                                                                                            plan            : String,
-                                                                                                            priority        : String,
-                                                                                                            owner_ID        : String,
-                                                                                                            planDate        : Date,
-                                                                                                            dueDate         : Date,
-                                                                                                            coordinator_ID  : String,
-                                                                                                            status          : String, //Open 
-                                                                                                            document        : [
-                                                                                                                                {
-                                                                                                                                    docLink : String,
-                                                                                                                                    docName : String
-                                                                                                                                }
-                                                                                                                            ],
-                                                                                                            actionTaken     : String
-                                                                                                        }
-                                                                                                    ]
-                                                                                    }  
-                                                            }
-
-                                                        ],
+                            "framework": {
+                                "_id": "5d3d19cb9d0def36609754bf",
+                                "framework_ID": "5d3d19cb9d0def36609754c8",
+                                "controlBlock_ID": "5d3a77367ef3360e62f43ab8",
+                                "controlBlockName": "CB Name 6",
+                                "control_ID": "5d3a77867ef3360e62f43aba",
+                                "controlName": "Control 6",
+                                "response": {
+                                    "document": [
+                                        {
+                                            "_id": "5d3d1a5229eb0b37277c06c6",
+                                            "docLink": "Link1",
+                                            "docName": "doc1.png"
+                                        },
+                                        {
+                                            "_id": "5d3d1a5229eb0b37277c06c5",
+                                            "docLink": "Link2",
+                                            "docName": "doc2.png"
+                                        }
+                                    ],
+                                    "comment": "Comment1",
+                                    "response": true
+                                },
+                                "nc": {
+                                    "actionPlan": []
+                                }
+                            }
                         }
-					]
