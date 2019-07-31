@@ -27,8 +27,9 @@ router.patch('/update_assessor/:assessments_ID/:action',AssessmentsController.up
 
 router.patch('/assessmentStatus/:assessments_ID/:status',AssessmentsController.update_assessmentStatus);
 
-router.patch('/update_ncstatus/:assessments_ID/:controlBlock_ID/:control_ID/:ncStatus',AssessmentsController.update_ncstatus);
+router.patch('/assessmentStages/:assessments_ID/:status',AssessmentsController.update_assessmentStages);
 
+router.patch('/update_ncstatus/:assessments_ID/:controlBlock_ID/:control_ID/:ncStatus',AssessmentsController.update_ncstatus);
 
 router.patch('/response',AssessmentsController.update_response);
 

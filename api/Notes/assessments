@@ -58,7 +58,7 @@ Schema :
     createdAt               : Date,
 }
 
-APIs :    11 /15
+APIs :    14 /17
 -----------------------------------------------------------------------------------------------------
 1. Insert new assessments							                    - Done
 2. Details of assessments							                    - Done
@@ -67,11 +67,9 @@ APIs :    11 /15
 5. Delete particular assessments					                    - Done
 6. Delete all the assessments						                    - Done
 7. List all assessments for specify corporate_ID	                    - Done
-8. Set Response for specify Control                                     - WIP
+8. Set Response for specify Control                                     - Done
     - Using controlBlock_ID and control_ID update - Done
         response
-    - If all the framework array has response then -YTS
-        set assessmentStages to "Mark for Review"
 9. Update assessmentStatus                                              - Done
 10. Change framework.nc.ncStatus either true or false                   - Done
     - Input would be controlBlock_ID and control_ID
@@ -82,7 +80,8 @@ APIs :    11 /15
 13. List all assessments for specify assessedParty_ID                   - Done
 14. Fetch framework for specify Control                                 - Done
 15. Fetch response for specify Control                                  - 
-16. Update assessor (Add / remove / Edit)                               - 
+16. Update assessor (Add / remove / Edit)                               - Done
+17. Update assessmentStages                                             - Done
 
 
 -----------------------------------------------------------------------------------------------------
@@ -775,13 +774,13 @@ Input       :
                 For add :
                     {
                         assessor_type       : String,
-                        assessor_User_ID    : String
+                        user_ID             : String
                     }
                 For edit :
                     {
                         assessor_ID         : String, // assessor._id
                         assessor_type       : String,
-                        assessor_User_ID    : String
+                        user_ID             : String
                     }
                 For remove :
                     {
@@ -804,3 +803,19 @@ Output      :
                         Assessor Not Removed
                 Else :
                     Invalid Assessor
+
+-----------------------------------------------------------------------------------------------------
+							9. Update assessmentStages
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/assessment/assessmentStages/:assessments_ID/:status
+
+Input       : - NA-
+
+Output      : 
+				If successfully
+					assessmentStages Updated
+                else
+                    assessmentStages Not Updated

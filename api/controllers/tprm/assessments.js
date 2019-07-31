@@ -374,6 +374,32 @@ exports.update_assessmentStatus = (req,res,next)=>{
                         });
 }
 
+exports.update_assessmentStages = (req,res,next)=>{
+    Assessments.updateOne(
+                            { _id:req.params.assessments_ID},  
+                            {
+                                $set:{
+                                    "assessmentStages" : req.params.status
+                                }
+                            }
+                        )
+                        .exec()
+                        .then(data=>{
+                            console.log('data ',data);
+                            if(data){
+                                res.status(200).json("assessmentStages Updated");
+                            }else{
+                                res.status(401).json("assessmentStages Not Found");
+                            }
+                        })
+                        .catch(err =>{
+                            console.log(err);
+                            res.status(500).json({
+                                error: err
+                            });
+                        });
+}
+
 exports.update_response = (req,res,next)=>{
     console.log("response",req.body);
     Assessments.updateOne(
@@ -393,23 +419,7 @@ exports.update_response = (req,res,next)=>{
                 .exec()
                 .then(data=>{
                     if(data.nModified == 1){
-                        Assessments.findOne({"_id" : req.body.assessment_ID,})
-                                    .exec()
-                                    .then(assessment=>{
-                                        var framework = assessment.framework;
-                                        if(framework){
-                                            var responseIndex = framework.find(function(d){if(!d.response.response || d.response.response != false) return d});
-                                            console.log('responseIndex ',responseIndex);
-
-                                            res.status(200).json({message:"Response updated"});
-                                        }
-                                    })
-                                    .catch(err =>{
-                                        console.log(err);
-                                        res.status(500).json({
-                                            error: err
-                                        });
-                                    });                    
+                        res.status(200).json({message:"Response updated"});
                     }else{
                         res.status(200).json({message:"Response not updated"})
                     }
@@ -744,23 +754,54 @@ exports.operation_actionPlan = (req,res,next)=>{
 }
 
 exports.update_assessor = (req,res,next)=>{
-    console.log('update assessor ',req.body," type of ", typeof req.body);
+    console.log('update assessor body ',req.body.user_ID," params ", req.params);
     switch(req.params.action){
         case 'add'      :
+            Assessments.updateOne(
+                            {_id : req.params.assessments_ID},
+                            {
+                                $push :{
+                                    assessor : {
+                                        assessor_type   : req.body.assessor_type,
+                                        user_ID         : req.body.user_ID
+                                    }
+                                }
+                            }
+                        )
+                        .exec()
+                        .then(data=>{
+                            console.log('data ',data);
+                            if(data.nModified == 1){
+                                res.status(200).json({message:"Assessor Added"});
+                            }else{
+                                res.status(200).json({message:"Assessor Not Added"});
+                            }
+                        })
+                        .catch(err =>{
+                            console.log(err);
+                            res.status(500).json({
+                                error: err
+                            });
+                        });
+            // res.status(200).json({message:"Add"}); 
+            break;
+        case 'edit'     :
                 Assessments.updateOne(
-                                    { _id : req.params.assessments_ID},  
+                                    {_id : req.params.assessments_ID,"assessor._id":req.body.assessor_ID},
                                     {
-                                        $push:{
-                                            assesor : req.body
-                                        }
+                                        $set :{
+                                                "assessor.$.assessor_type" : req.body.assessor_type,
+                                                "assessor.$.user_ID"         : req.body.user_ID
+                                            }
                                     }
                                 )
                                 .exec()
                                 .then(data=>{
+                                    console.log('data ',data);
                                     if(data.nModified == 1){
-                                        res.status(200).json("Assessor added");
+                                        res.status(200).json({message:"Assessor Edited"});
                                     }else{
-                                        res.status(401).json("Assessor Not Updated");
+                                        res.status(200).json({message:"Assessor Not Edited"});
                                     }
                                 })
                                 .catch(err =>{
@@ -769,12 +810,34 @@ exports.update_assessor = (req,res,next)=>{
                                         error: err
                                     });
                                 });
-            // res.status(200).json({message:"Add"}); 
-            break;
-        case 'edit'     :
-            res.status(200).json({message:"Edit"}); 
+            // res.status(200).json({message:"Edit"}); 
             break;
         case 'remove'   :
+                Assessments.updateOne(
+                            {_id : req.params.assessments_ID,"assessor._id":req.body.assessor_ID},
+                            {
+                                $pull:{
+                                    assessor : {
+                                        _id        : req.body.assessor_ID,
+                                    }
+                                }
+                            }
+                        )
+                        .exec()
+                        .then(data=>{
+                            console.log('data ',data);
+                            if(data.nModified == 1){
+                                res.status(200).json({message:"Assessor Removed"});
+                            }else{
+                                res.status(200).json({message:"Assessor Not Removed"});
+                            }
+                        })
+                        .catch(err =>{
+                            console.log(err);
+                            res.status(500).json({
+                                error: err
+                            });
+                        });
             res.status(200).json({message:"Remove"}); 
             break;
         default         :
