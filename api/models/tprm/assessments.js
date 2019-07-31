@@ -10,7 +10,6 @@ const assessmentsSchema = mongoose.Schema({
     startDate               : Date,
     endDate                 : Date,
     purpose                 : String,
-    // industryType            : String,
     assessmentMode          : String,
     assessmentScore         : Number,
     assessmentStatus        : String,
@@ -44,7 +43,7 @@ const assessmentsSchema = mongoose.Schema({
                                                                 status      : String, //Open or Closed
                                                                 actionPlan  : [
                                                                                 {
-                                                                                    type            : String,
+                                                                                    actionPlan_type            : String,
                                                                                     plan            : String,
                                                                                     priority        : String,
                                                                                     owner_ID        : { type: mongoose.Schema.Types.ObjectId, ref: 'users' },

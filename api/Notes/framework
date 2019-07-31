@@ -30,9 +30,10 @@ APIs :
 6. Delete all the frameworks							- Done
 7. List all framework for specify company			    - Done
 8. Add / Remove the Control Block 						- Done
-9. Update state and stage framework           - Done 
-10. List of framework according to draft and published - Done
+9. Update state and stage framework           			- Done 
+10. List of framework according to draft and published 	- Done
 11. Get count of frameworks of specific company
+
 -----------------------------------------------------------------------------------------------------
 								1. Insert new framework
 -----------------------------------------------------------------------------------------------------
@@ -44,12 +45,12 @@ URL         : /api/frameworks
 Input       : 
 				{
 					frameworktype    : String,
-	        frameworkname       : String,
-	        purpose             : String,
-	        domain_ID           : String,
-	        company_ID          : String,
-	        createdBy           : String,
-	        ref_framework_ID    : String,
+					frameworkname       : String,
+					purpose             : String,
+					domain_ID           : String,
+					company_ID          : String,
+					createdBy           : String,
+					ref_framework_ID    : String,
 					state               : Boolean,
 					stage               : Boolean,
 					version				: Number

@@ -4,12 +4,13 @@ const Framework         = require('../../models/tprm/frameworks');
 const Controlblocks     = require('../../models/tprm/controlblocks');
 
 function duplicate_controlBlocks(controlBlock){
+    console.log('duplicate fun ',controlBlock.controlBlocks_ID);
     return new Promise(function(resolve,reject){
         Controlblocks.findOne({_id:controlBlock.controlBlocks_ID})
                 .exec()
                 .then(baseControlblock=>{
                     if(baseControlblock){
-                        var newControlblocks = new Controlblocks({
+                        const newControlblocks = new Controlblocks({
                             _id                     : new mongoose.Types.ObjectId(), 
                             controlBlocksCode       : baseControlblock.controlBlocksCode,
                             controlBlockRef         : baseControlblock.controlBlockRef,
@@ -17,7 +18,7 @@ function duplicate_controlBlocks(controlBlock){
                             controlBlockDesc        : baseControlblock.controlBlockDesc,
                             parentBlock             : baseControlblock.parentBlock,
                             domain_ID               : baseControlblock.domain_ID,
-                            sequence                : controlBlock.sequence,
+                            sequence                : baseControlblock.sequence,
                             weightage               : baseControlblock.weightage,
                             company_ID              : controlBlock.company_ID,
                             createdBy               : controlBlock.createdBy,
@@ -25,6 +26,7 @@ function duplicate_controlBlocks(controlBlock){
                             subControlBlocks        : baseControlblock.subControlBlocks,
                             controls                : baseControlblock.controls
                         });
+                        console.log("newControlblocks ",newControlblocks);
                         newControlblocks.save()
                                         .then(controlblock=>{
                                             console.log('dupicat controlblock ',controlblock._id);
@@ -89,29 +91,30 @@ exports.create_framework = (req,res,next)=>{
 }
 
 exports.create_Customize_framework = (req,res,next)=>{
-    
-    Framework   .findOne({_id:req.params.framework_ID}, {"_id":0})
+    Framework   .findOne({_id:req.params.framework_ID})
                 .exec()
                 .then(FWDoc=>{
                     if(FWDoc){
                         fetchNewCB(FWDoc);
                         var newCBArray = [];
                         async function fetchNewCB(FWDoc){
-                            console.log('FWDoc',FWDoc);
                             for(i = 0;i < FWDoc.controlBlocks.length; i++){
-                                console.log('i ',i);
                                 var controlBlock = {
-                                    controlBlocks_ID : FWDoc._id,
-                                    sequence         : req.body.sequence,
+                                    controlBlocks_ID : FWDoc.controlBlocks[i].controlBlocks_ID,
+                                    // sequence         : req.body.sequence,
                                     company_ID       : req.body.company_ID,
                                     createdBy        : req.body.createdBy
                                 };
                                 if(controlBlock){
                                     var newCB = await duplicate_controlBlocks(controlBlock);
+                                    console.log("newCB ",newCB);
+                                    if(newCB == "Control Not found"){
+                                        res.status(200).json({message:"Control Block Not Found"})
+                                    }
                                     newCBArray.push(newCB);
                                 }
                             }
-                            if(FWDoc.controlBlocks.length == newCBArray){
+                            if(FWDoc.controlBlocks.length == newCBArray.length){
                                 const framework = new Framework({
                                         _id                 : new mongoose.Types.ObjectId(),
                                         frameworktype       : FWDoc.frameworktype,
@@ -139,9 +142,9 @@ exports.create_Customize_framework = (req,res,next)=>{
                                         });
                             }
                         };
+                    }else{
+                        res.status(200).json({message:"Framework Not Found"}); 
                     }
-                    
-                    // res.status(200).json(FWDoc);
                 })
                 .catch(err =>{
                     console.log(err);

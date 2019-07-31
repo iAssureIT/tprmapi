@@ -273,46 +273,35 @@ exports.detail_assessments = (req,res,next)=>{
 }
 
 exports.update_assessments = (req,res,next)=>{
-    Assessments.findOne({_id:req.params.assessments_ID})
-		.exec()
-		.then(data =>{
-			if(data && data._id != req.body.id){
-				return res.status(200).json({
-					message: 'assessmentss already exists'
-				});
-			}else{
-				Assessments.updateOne(
-                                { _id:req.body.id},  
-                                {
-                                    $set:{
-                                        "assessments" : assessmentssData.toLowerCase()
-                                    }
-                                }
-                            )
-                            .exec()
-                            .then(data=>{
-                                console.log('data ',data);
-                                if(data){
-                                    res.status(200).json("assessmentss Updated");
-                                }else{
-                                    res.status(401).json("assessments Not Found");
-                                }
-                            })
-                            .catch(err =>{
-                                console.log(err);
-                                res.status(500).json({
-                                    error: err
-                                });
-                            });
-			}
-		})
-		.catch(err =>{
-			console.log(err);
-			res.status(500).json({
-				error: err
-			});
-		});
-    
+    Assessments.updateOne(
+                        { _id:req.params.assessments_ID},  
+                        {
+                            $set:{
+                                frequency          : req.body.frequency,
+                                startDate          : req.body.startDate,
+                                endDate            : req.body.endDate,
+                                purpose            : req.body.purpose,
+                                assessmentMode     : req.body.assessmentMode,
+                                assessmentStatus   : req.body.assessmentStatus,
+                                assessmentStages   : req.body.assessmentStages,
+                            }
+                        }
+                    )
+                    .exec()
+                    .then(data=>{
+                        console.log('data ',data);
+                        if(data.nModified == 1){
+                            res.status(200).json("assessmentss Updated");
+                        }else{
+                            res.status(401).json("assessments Not Updated");
+                        }
+                    })
+                    .catch(err =>{
+                        console.log(err);
+                        res.status(500).json({
+                            error: err
+                        });
+                    });
 }
 
 exports.delete_assessments = (req,res,next)=>{
@@ -661,9 +650,9 @@ exports.operation_actionPlan = (req,res,next)=>{
                                 },
                                 {
                                     $push : {
-                                        "nc.actionPlan" :
+                                        "framework.$.nc.actionPlan" :
                                             {
-                                                type            : req.body.type,
+                                                actionPlan_type : req.body.actionPlan_type,
                                                 plan            : req.body.plan,
                                                 priority        : req.body.priority,
                                                 owner_ID        : req.body.owner_ID,
@@ -679,7 +668,12 @@ exports.operation_actionPlan = (req,res,next)=>{
                         )
                         .exec()
                         .then(data=>{
-                            res.status(200).json({message:"Action Plan Added"})
+                            if(data.nModified == 1){
+                                res.status(200).json({message:"Action Plan Added"})
+                            }else{
+                                res.status(200).json({message:"Action Plan Not Added"})
+                            }
+                            
                         })
                         .catch(err =>{
                             console.log(err);
@@ -691,10 +685,14 @@ exports.operation_actionPlan = (req,res,next)=>{
             break;
         case 'remove' :
                 Assessments .updateOne(
-                                        { _id : req.params.assessments_ID},
+                                        { 
+                                            "_id"                       : req.params.assessments_ID,
+                                            "framework.controlBlock_ID" : req.body.controlBlock_ID,
+                                            "framework.control_ID"      : req.body.control_ID,
+                                        },
                                         {
                                             $pull:{
-                                                actionPlan : {
+                                                "framework.$.nc.actionPlan" : {
                                                     _id        : req.body.actionPlan_ID,
                                                 }
                                             }
@@ -717,7 +715,12 @@ exports.operation_actionPlan = (req,res,next)=>{
             break;
         case 'edit'  :
                 Assessments .updateOne(
-                                    { _id : req.params.assessments_ID , "framework.actionPlan._id" : req.body.actionPlan_ID},
+                                    { 
+                                        "_id"                           : req.params.assessments_ID,
+                                        "framework.controlBlock_ID"     : req.body.controlBlock_ID,
+                                        "framework.control_ID"          : req.body.control_ID,
+                                        "framework.nc.actionPlan._id"   : req.body.actionPlan_ID
+                                    },
                                     {
                                         $set : {
                                                     "actionPlan.$.type"            : req.body.type,

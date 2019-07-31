@@ -19,7 +19,7 @@ router.get('/list/:corporate_ID', AssessmentsController.list_assessments_company
 
 router.get('/:assessments_ID', AssessmentsController.detail_assessments);
 
-router.put('/',AssessmentsController.update_assessments);
+router.patch('/update_basic/:assessments_ID',AssessmentsController.update_assessments);
 
 router.patch('/actionPlan/:assessments_ID/:action',AssessmentsController.operation_actionPlan);
 
