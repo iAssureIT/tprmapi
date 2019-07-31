@@ -31,7 +31,7 @@ const assessmentRoutes 					= require('./api/routes/tprm/assessments');
 
 global.JWT_KEY = "secret";
 
-mongoose.connect('mongodb://localhost/qatprm',{
+mongoose.connect('mongodb://localhost/tprm',{
 	useNewUrlParser: true
 })
 mongoose.promise = global.Promise;
