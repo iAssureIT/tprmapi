@@ -16,10 +16,10 @@ const assessmentsSchema = mongoose.Schema({
     assessmentStatus        : String,
     assessmentStages        : String, //From Vendor side
     assessor                : [
-                                        {
-                                            type    : String, //Corporator or Vendor
-                                            user_ID : { type: mongoose.Schema.Types.ObjectId, ref: 'users' }
-                                        }
+                                    {
+                                        assessor_type    : String, //Corporator or Vendor
+                                        user_ID : { type: mongoose.Schema.Types.ObjectId, ref: 'users' }
+                                    },
                                 ],
     framework               : [
                                 {

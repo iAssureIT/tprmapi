@@ -77,11 +77,12 @@ APIs :    11 /15
     - Input would be controlBlock_ID and control_ID
     - If true then set status = Open
 11. Fetch all the framework with framework.nc.ncStatus = true           - Done
-12. Operation on actionPlan (Add / Remove / Edit)                       -
+12. Operation on actionPlan (Add / Remove / Edit)                       - 
     - Input would be controlBlock_ID and control_ID
 13. List all assessments for specify assessedParty_ID                   - Done
 14. Fetch framework for specify Control                                 - Done
 15. Fetch response for specify Control                                  - 
+16. Update assessor (Add / remove / Edit)                               - 
 
 
 -----------------------------------------------------------------------------------------------------
@@ -759,3 +760,47 @@ Output      :
                                 }
                             }
                         }
+
+-----------------------------------------------------------------------------------------------------
+                    16. Update assessor (Add / remove / Edit)
+-----------------------------------------------------------------------------------------------------
+
+Method      : PATCH
+    
+URL         : /api/assessment/update_assessor/:assessments_ID/:action
+
+Note        : action => add / edit / remove
+
+Input       : 
+                For add :
+                    {
+                        assessor_type       : String,
+                        assessor_User_ID    : String
+                    }
+                For edit :
+                    {
+                        assessor_ID         : String, // assessor._id
+                        assessor_type       : String,
+                        assessor_User_ID    : String
+                    }
+                For remove :
+                    {
+                         assessor_ID         : String, // assessor._id
+                    }
+
+Output      : 
+                Add : 
+                    If successfully then
+                        Assessor Added
+                Edit :
+                    If successfully then
+                        Assessor Updated
+                    else
+                        Assessor Not Updated
+                Remove :
+                    If successfully then
+                        Assessor Removed
+                    else
+                        Assessor Not Removed
+                Else :
+                    Invalid Assessor

@@ -7,7 +7,7 @@ router.post('/', ControlBlockController.create_controlblocks_framwork);
 
 router.post('/subcontrolBlock',ControlBlockController.create_controlblocks_subcontrolblock);
 
-router.post('/duplicate_contorlblock',ControlBlockController.duplicate_controlBlocks);
+// router.post('/duplicate_contorlblock',ControlBlockController.duplicate_controlBlocks);
 
 router.get('/list', ControlBlockController.list_controlblocks);
 

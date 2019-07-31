@@ -106,7 +106,9 @@ function fetch_controlOwnerName(user_ID){
         });
     })
 }
+
 exports.create_assessments = (req,res,next)=>{
+        console.log('body ',typeof req.body.assessor," $ ",req.body.assessor);
         Framework   .findOne({_id : new ObjectID(req.body.framework_ID)})
                     .exec()
                     .then(lstcontrolblocks=>{
@@ -126,77 +128,79 @@ exports.create_assessments = (req,res,next)=>{
                                 Assessments.estimatedDocumentCount()
                                            .exec()
                                            .then(assessmentCount=>{
-                                               const assessment = new Assessments({
-                                                            _id                : new mongoose.Types.ObjectId(),
-                                                            corporate_ID       : req.body.corporate_ID,
-                                                            assessedParty_ID   : req.body.assessedParty_ID,
-                                                            framework_ID       : req.body.framework_ID,
-                                                            assessmentID       : assessmentCount + 1,
-                                                            frequency          : req.body.frequency,
-                                                            startDate          : req.body.startDate,
-                                                            endDate            : req.body.endDate,
-                                                            purpose            : req.body.purpose,
-                                                            assessmentMode     : req.body.assessmentMode,
-                                                            assessmentStatus   : 'Pending',
-                                                            assessmentStages   : 'Open',
-                                                            framework          : controlList,
-                                                            assessor           : req.body.assessor
-                                                            //While inserting control set framework.controlOwner_ID  as SPOC 
-                                                });
-                                                assessment.save()
-                                                          .then(assessment=>{
-                                                              if(assessment){
-                                                                request({
-                                                                    "method"    : "GET", 
-                                                                    "url"       : "http://localhost:3048/api/companysettings/list/"+req.body.assessedParty_ID,
-                                                                    "json"      : true,
-                                                                    "headers"   : {
-                                                                                    "User-Agent": "Test Agent"
-                                                                                }
-                                                                })
-                                                                .then(cs=>{
-                                                                    console.log('cs SPOC ID',cs.spocDetails.user_ID);
-                                                                    Assessments .updateOne(
-                                                                                        {"_id":assessment._id, "framework.controlBlock_ID": {$exists: true}},
-                                                                                        {
-                                                                                            "$set" : {"framework.$.controlOwner_ID" : cs.spocDetails.user_ID}
-                                                                                        },
-                                                                                        { "multi": true }
-                                                                                )
-                                                                                .exec()
-                                                                                .then(assessmentUpdate=>{
-                                                                                    if(assessmentUpdate.nModified == 1){
-                                                                                        res.status(200).json({message:"Assessment Created Succussfully",ID:assessment._id});
-                                                                                    }else{
-                                                                                        res.status(200).json({message:"Assessment Created but SPOC details not updated",ID:assessment._id});
+                                               if(assessmentCount){
+                                                    console.log('body ',typeof req.body.assessor," $ ",req.body.assessor);
+                                                    const assessment = new Assessments({
+                                                        _id                : new mongoose.Types.ObjectId(),
+                                                        corporate_ID       : req.body.corporate_ID,
+                                                        assessedParty_ID   : req.body.assessedParty_ID,
+                                                        framework_ID       : req.body.framework_ID,
+                                                        assessmentID       : assessmentCount + 1,
+                                                        frequency          : req.body.frequency,
+                                                        startDate          : req.body.startDate,
+                                                        endDate            : req.body.endDate,
+                                                        purpose            : req.body.purpose,
+                                                        assessmentMode     : req.body.assessmentMode,
+                                                        assessmentStatus   : 'Pending',
+                                                        assessmentStages   : 'Open',
+                                                        assessor           : req.body.assessor,
+                                                        framework          : controlList,
+                                                    });
+                                                    assessment.save()
+                                                            .then(assessment=>{
+                                                                if(assessment){
+                                                                    request({
+                                                                        "method"    : "GET", 
+                                                                        "url"       : "http://localhost:3048/api/companysettings/list/"+req.body.assessedParty_ID,
+                                                                        "json"      : true,
+                                                                        "headers"   : {
+                                                                                        "User-Agent": "Test Agent"
                                                                                     }
-                                                                                })
-                                                                                .catch(err =>{
-                                                                                    console.log(err);
-                                                                                    res.status(500).json(err);
-                                                                                });                 
-                                                                })
-                                                                .catch(err =>{
-                                                                    console.log(err);
-                                                                    reject(err);
+                                                                    })
+                                                                    .then(cs=>{
+                                                                        console.log('cs SPOC ID',cs.spocDetails.user_ID);
+                                                                        Assessments .updateOne(
+                                                                                            {"_id":assessment._id, "framework.controlBlock_ID": {$exists: true}},
+                                                                                            {
+                                                                                                "$set"  : {"framework.$.controlOwner_ID" : cs.spocDetails.user_ID},
+                                                                                            },
+                                                                                            { "multi": true }
+                                                                                    )
+                                                                                    .exec()
+                                                                                    .then(assessmentUpdate=>{
+                                                                                        if(assessmentUpdate.nModified == 1){
+                                                                                            res.status(200).json({message:"Assessment Created Succussfully",ID:assessment._id});
+                                                                                        }else{
+                                                                                            res.status(200).json({message:"Assessment Created but SPOC details not updated",ID:assessment._id});
+                                                                                        }
+                                                                                    })
+                                                                                    .catch(err =>{
+                                                                                        console.log(err);
+                                                                                        res.status(500).json(err);
+                                                                                    });                 
+                                                                    })
+                                                                    .catch(err =>{
+                                                                        console.log(err);
+                                                                        reject(err);
+                                                                    });
+                                                                }
+                                                            })
+                                                            .catch(err =>{
+                                                                console.log(err);
+                                                                res.status(500).json({
+                                                                    error: err
                                                                 });
-                                                              }
-                                                          })
-                                                          .catch(err =>{
-                                                            console.log(err);
-                                                            res.status(500).json({
-                                                                error: err
                                                             });
-                                                        });
-                                           })
-                                           .catch(err =>{
+                                                        }
+                                            })
+                                            .catch(err =>{
                                                 console.log(err);
                                                 res.status(500).json({
                                                     error: err
                                                 });
                                             }); 
                                 
-                            }
+                            }//End of async
                         }
                     })
                     .catch(err =>{
@@ -389,31 +393,23 @@ exports.update_response = (req,res,next)=>{
                 .exec()
                 .then(data=>{
                     if(data.nModified == 1){
-                        Assessments.findOne(
-                                            {
-                                                "_id"                         : req.body.assessment_ID,
-                                                "framework.response.response" : { $exists : true }
-                                            },
-                                            {
-                                                $set : {assessmentStatus : "Mark for Review"}
-                                            }
-                                    )
+                        Assessments.findOne({"_id" : req.body.assessment_ID,})
                                     .exec()
-                                    .then(assessmentStages=>{
-                                        res.status(200).json(assessmentStages);
-                                        // if(assessmentStages.nModified == 1){
-                                        //     res.status(200).json({message:"Response updated and assessmentStages changed to Mark as Review"})                 
-                                        // }else{
-                                        //     res.status(200).json({message:"Response updated"})
-                                        // }
+                                    .then(assessment=>{
+                                        var framework = assessment.framework;
+                                        if(framework){
+                                            var responseIndex = framework.find(function(d){if(!d.response.response || d.response.response != false) return d});
+                                            console.log('responseIndex ',responseIndex);
+
+                                            res.status(200).json({message:"Response updated"});
+                                        }
                                     })
                                     .catch(err =>{
                                         console.log(err);
                                         res.status(500).json({
                                             error: err
                                         });
-                                    });
-                        // res.status(200).json({message:"Response updated"})
+                                    });                    
                     }else{
                         res.status(200).json({message:"Response not updated"})
                     }
@@ -744,5 +740,45 @@ exports.operation_actionPlan = (req,res,next)=>{
             break;
         default :
             res.status(200).json({message:"Invalid Action"});
+    }
+}
+
+exports.update_assessor = (req,res,next)=>{
+    console.log('update assessor ',req.body," type of ", typeof req.body);
+    switch(req.params.action){
+        case 'add'      :
+                Assessments.updateOne(
+                                    { _id : req.params.assessments_ID},  
+                                    {
+                                        $push:{
+                                            assesor : req.body
+                                        }
+                                    }
+                                )
+                                .exec()
+                                .then(data=>{
+                                    if(data.nModified == 1){
+                                        res.status(200).json("Assessor added");
+                                    }else{
+                                        res.status(401).json("Assessor Not Updated");
+                                    }
+                                })
+                                .catch(err =>{
+                                    console.log(err);
+                                    res.status(500).json({
+                                        error: err
+                                    });
+                                });
+            // res.status(200).json({message:"Add"}); 
+            break;
+        case 'edit'     :
+            res.status(200).json({message:"Edit"}); 
+            break;
+        case 'remove'   :
+            res.status(200).json({message:"Remove"}); 
+            break;
+        default         :
+            res.status(200).json({message:"Invalid Action"});
+            break;
     }
 }

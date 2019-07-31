@@ -1,7 +1,49 @@
 const mongoose	= require("mongoose");
 
-const Framework = require('../../models/tprm/frameworks');
+const Framework         = require('../../models/tprm/frameworks');
+const Controlblocks     = require('../../models/tprm/controlblocks');
 
+function duplicate_controlBlocks(controlBlock){
+    return new Promise(function(resolve,reject){
+        Controlblocks.findOne({_id:controlBlock.controlBlocks_ID})
+                .exec()
+                .then(baseControlblock=>{
+                    if(baseControlblock){
+                        var newControlblocks = new Controlblocks({
+                            _id                     : new mongoose.Types.ObjectId(), 
+                            controlBlocksCode       : baseControlblock.controlBlocksCode,
+                            controlBlockRef         : baseControlblock.controlBlockRef,
+                            controlBlockName        : baseControlblock.controlBlockName,
+                            controlBlockDesc        : baseControlblock.controlBlockDesc,
+                            parentBlock             : baseControlblock.parentBlock,
+                            domain_ID               : baseControlblock.domain_ID,
+                            sequence                : controlBlock.sequence,
+                            weightage               : baseControlblock.weightage,
+                            company_ID              : controlBlock.company_ID,
+                            createdBy               : controlBlock.createdBy,
+                            createdAt               : new Date(),
+                            subControlBlocks        : baseControlblock.subControlBlocks,
+                            controls                : baseControlblock.controls
+                        });
+                        newControlblocks.save()
+                                        .then(controlblock=>{
+                                            console.log('dupicat controlblock ',controlblock._id);
+                                            resolve(controlblock._id)
+                                        })
+                                        .catch(err =>{
+                                            console.log(err);
+                                            reject(err);
+                                        });                 
+                    }else{
+                        resolve("Control Not found")
+                    }
+                })
+                .catch(err =>{
+                        console.log(err);
+                        reject(err);
+                    });
+    });
+}
 exports.create_framework = (req,res,next)=>{
 	Framework.findOne({frameworkname:req.body.frameworkname,version:req.body.version})
 		.exec()
@@ -52,29 +94,54 @@ exports.create_Customize_framework = (req,res,next)=>{
                 .exec()
                 .then(FWDoc=>{
                     if(FWDoc){
-                        console.log("FWDoc ",FWDoc);
-                        var tempObj = {
-                            _id : new mongoose.Types.ObjectId()
-                        };
-                        // var _id = new mongoose.Types.ObjectId();
-                        // const newDoc = {...FWDoc,...tempObj};
-                        const newDoc = Object.assign(FWDoc,tempObj);
-                        console.log("newDoc = ",newDoc);
-
-                        const NewFWDoc = new Framework(newDoc);
-                        // console.log("NewFWDoc ",NewFWDoc);
-                        NewFWDoc.save()
-                                 .then(data=>{
-                                     console.log("Success = ",data)
-                                     res.status(200).json(data);
-                                  })
-                                 .catch(err =>{
-                                    console.log(err);
-                                    res.status(500).json({
-                                        error: err
+                        fetchNewCB(FWDoc);
+                        var newCBArray = [];
+                        async function fetchNewCB(FWDoc){
+                            console.log('FWDoc',FWDoc);
+                            for(i = 0;i < FWDoc.controlBlocks.length; i++){
+                                console.log('i ',i);
+                                var controlBlock = {
+                                    controlBlocks_ID : FWDoc._id,
+                                    sequence         : req.body.sequence,
+                                    company_ID       : req.body.company_ID,
+                                    createdBy        : req.body.createdBy
+                                };
+                                if(controlBlock){
+                                    var newCB = await duplicate_controlBlocks(controlBlock);
+                                    newCBArray.push(newCB);
+                                }
+                            }
+                            if(FWDoc.controlBlocks.length == newCBArray){
+                                const framework = new Framework({
+                                        _id                 : new mongoose.Types.ObjectId(),
+                                        frameworktype       : FWDoc.frameworktype,
+                                        frameworkname       : FWDoc.frameworkname,
+                                        purpose             : FWDoc.purpose,
+                                        domain_ID           : FWDoc.domain_ID,
+                                        company_ID          : req.body.company_ID,
+                                        createdBy           : req.body.createdBy, 
+                                        ref_framework_ID    : FWDoc.ref_framework_ID,
+                                        state               : FWDoc.state,
+                                        stage               : FWDoc.stage,
+                                        version             : FWDoc.version,
+                                        controlBlocks       : newCBArray,
+                                        createdAt           : new Date(),
                                     });
-                                });        
+                                    framework.save()
+                                        .then(data=>{
+                                            res.status(200).json({message: "Framework Duplicated Added",ID:data._id});
+                                        })
+                                        .catch(err =>{
+                                            console.log(err);
+                                            res.status(500).json({
+                                                error: err
+                                            });
+                                        });
+                            }
+                        };
                     }
+                    
+                    // res.status(200).json(FWDoc);
                 })
                 .catch(err =>{
                     console.log(err);

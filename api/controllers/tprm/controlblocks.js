@@ -216,7 +216,6 @@ exports.update_basic_controlblocks = (req,res,next)=>{
                 )
                 .exec()
                 .then(data=>{
-                    console.log('data ',data);
                     if(data.nModified == 1){
                         res.status(200).json("Control Block Updated");
                     }else{
@@ -245,7 +244,6 @@ exports.update_controlblock = (req,res,next)=>{
     console.log('controlblock params ',req.params);
     switch(req.params.action){
         case 'add'      :
-        console.log('add body',req.body);
             Controlblocks.updateOne(
                 { _id : req.params.controlBlocks_ID},  
                 {
@@ -258,7 +256,6 @@ exports.update_controlblock = (req,res,next)=>{
             )
             .exec()
             .then(data=>{
-                console.log('data ',data);
                 if(data.nModified == 1){
                     res.status(200).json("Control Block added");
                 }else{
@@ -304,7 +301,6 @@ exports.update_controlblock = (req,res,next)=>{
 }
 
 exports.update_control = (req,res,next)=>{
-    console.log('control parmas ',req.params);
     switch(req.params.action){
         case 'add'      :
             Controlblocks.updateOne(
@@ -404,7 +400,6 @@ exports.controlblocks_count_of_count = (req,res,next)=>{
         .count()
         .exec()
         .then(data=>{
-            console.log("data",data);
             if(data){
                 res.status(200).json(data);
             }else{
@@ -480,7 +475,6 @@ exports.fetch_all_controls = (req,res,next)=>{
                                         ])
                             .exec()
                             .then(data=>{
-                                console.log("data ",data);
                                 resolve(data); 
                             })
                             .catch(err =>{
@@ -507,60 +501,5 @@ exports.fetch_specific_domain = (req,res,next)=>{
                 });
 }
 
-exports.duplicate_controlBlocks = (req,res,next)=>{
-    Controlblocks.findOne({_id:req.body.controlBlock_ID})
-                .exec()
-                .then(baseControlblock=>{
-                    if(baseControlblock){
-                        var newControlblocks = new Controlblocks({
-                            _id                     : new mongoose.Types.ObjectId(), 
-                            controlBlocksCode       : baseControlblock.controlBlocksCode,
-                            controlBlockRef         : baseControlblock.controlBlockRef,
-                            controlBlockName        : baseControlblock.controlBlockName,
-                            controlBlockDesc        : baseControlblock.controlBlockDesc,
-                            parentBlock             : baseControlblock.parentBlock,
-                            domain_ID               : baseControlblock.domain_ID,
-                            sequence                : req.body.sequence,
-                            weightage               : baseControlblock.weightage,
-                            company_ID              : req.body.company_ID,
-                            createdBy               : req.body.createdBy,
-                            createdAt               : new Date(),
-                            // subControlBlocks        : baseControlblock.subControlBlocks,
-                            // controls                : baseControlblock.controls
-                        });
-                        newControlblocks.save()
-                                        .then(controlblock=>{
-                                            var lstSubControlBlocks = baseControlblock.subControlBlocks;
-                                            if(lstSubControlBlocks){
-                                                duplicateCB(lstSubControlBlocks);
-                                                 
-                                                for(i = 0 ; i < lstSubControlBlocks.length; i++){
-                                                    var cbDetails = {
-                                                        controlBlock_ID : req.body.controlBlock_ID,
-                                                        sequence        : req.body.sequence,
-                                                        company_ID      : req.body.company_ID,
-                                                        createdBy       : req.body.createdBy   
-                                                    };
-                                                    var newControlBlockID = duplicatecontrolblock(cbDetails);
-                                                }
-                                            }
-                                            res.status(200).json({message:"Control Block Duplicated",ID:controlblock._id})
-                                        })
-                                        .catch(err =>{
-                                            console.log(err);
-                                            res.status(500).json({
-                                                error: err
-                                            });
-                                        });                 
-                    }else{
-                        res.status(200).json({message:"Control Not found"})
-                    }
-                })
-                .catch(err =>{
-                        console.log(err);
-                        res.status(500).json({
-                            error: err
-                        });
-                    });
-}
+
 
