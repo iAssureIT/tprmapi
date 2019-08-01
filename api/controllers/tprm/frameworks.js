@@ -2,40 +2,105 @@ const mongoose	= require("mongoose");
 
 const Framework         = require('../../models/tprm/frameworks');
 const Controlblocks     = require('../../models/tprm/controlblocks');
+const Control           = require('../../models/tprm/controls');
 
 function duplicate_controlBlocks(controlBlock){
-    console.log('duplicate fun ',controlBlock.controlBlocks_ID);
+    var company_ID = controlBlock.company_ID;
+    var createdBy = controlBlock.createdBy;
+    var sequence = controlBlock.sequence;
     return new Promise(function(resolve,reject){
         Controlblocks.findOne({_id:controlBlock.controlBlocks_ID})
                 .exec()
                 .then(baseControlblock=>{
                     if(baseControlblock){
-                        const newControlblocks = new Controlblocks({
-                            _id                     : new mongoose.Types.ObjectId(), 
-                            controlBlocksCode       : baseControlblock.controlBlocksCode,
-                            controlBlockRef         : baseControlblock.controlBlockRef,
-                            controlBlockName        : baseControlblock.controlBlockName,
-                            controlBlockDesc        : baseControlblock.controlBlockDesc,
-                            parentBlock             : baseControlblock.parentBlock,
-                            domain_ID               : baseControlblock.domain_ID,
-                            sequence                : baseControlblock.sequence,
-                            weightage               : baseControlblock.weightage,
-                            company_ID              : controlBlock.company_ID,
-                            createdBy               : controlBlock.createdBy,
-                            createdAt               : new Date(),
-                            subControlBlocks        : baseControlblock.subControlBlocks,
-                            controls                : baseControlblock.controls
-                        });
-                        console.log("newControlblocks ",newControlblocks);
-                        newControlblocks.save()
-                                        .then(controlblock=>{
-                                            console.log('dupicat controlblock ',controlblock._id);
-                                            resolve(controlblock._id)
-                                        })
-                                        .catch(err =>{
-                                            console.log(err);
-                                            reject(err);
-                                        });                 
+                        fetchNewSCB(baseControlblock);
+                        async function fetchNewSCB(SCB){
+                            var newSubCB = [];
+                            for(i = 0;i < SCB.subControlBlocks.length; i++){
+                                var controlBlock = {
+                                    controlBlocks_ID : SCB.subControlBlocks[i].controlBlocks_ID,
+                                    sequence         : sequence,
+                                    company_ID       : company_ID,
+                                    createdBy        : createdBy
+                                };
+                                if(controlBlock){
+                                    var newCB = await duplicate_controlBlocks(controlBlock);
+                                    if(newCB == "Control Not found"){
+                                        res.status(200).json({message:"Control Block Not Found"})
+                                    }
+                                    newSubCB.push({"controlBlocks_ID":newCB});
+                                }
+                            }
+                            if(SCB.subControlBlocks.length == newSubCB.length){
+                                const newSubControlblocks = new Controlblocks({
+                                    _id                     : new mongoose.Types.ObjectId(), 
+                                    controlBlocksCode       : baseControlblock.controlBlocksCode,
+                                    controlBlockRef         : baseControlblock.controlBlockRef,
+                                    controlBlockName        : baseControlblock.controlBlockName,
+                                    controlBlockDesc        : baseControlblock.controlBlockDesc,
+                                    parentBlock             : baseControlblock.parentBlock,
+                                    domain_ID               : baseControlblock.domain_ID,
+                                    sequence                : sequence,
+                                    weightage               : baseControlblock.weightage,
+                                    company_ID              : company_ID,
+                                    subControlBlocks        : newSubCB,
+                                    createdBy               : createdBy,
+                                    createdAt               : new Date(),
+                                });
+                                console.log("newSubControlblocks ",newSubControlblocks);
+                                newSubControlblocks.save()
+                                                .then(subcontrolblock=>{
+                                                    console.log('dupicat controlblock ',subcontrolblock);
+                                                    // resolve(subcontrolblock._id)
+                                                    //Code for New control
+                                                    fetchNewControl(SCB);
+                                                    async function fetchNewControl(SCB){
+                                                        var newControlLst = [];
+                                                        for(j=0;j<SCB.controls.length;j++){
+                                                            var Oldcontrol = {
+                                                                control_ID      : SCB.controls[j].control_ID,
+                                                                company_ID      : company_ID,
+                                                                createdBy       : createdBy,
+                                                                controlBlocks_ID : subcontrolblock._id,
+                                                            };
+                                                            if(Oldcontrol){
+                                                                var newControl_ID = await duplicate_controls(Oldcontrol);
+                                                                console.log("newControl_ID ",newControl_ID);
+                                                                if(newControl_ID == "Control Not Found"){
+                                                                    res.status(200).json("Control Not Found");
+                                                                }else{
+                                                                    newControlLst.push({"control_ID":newControl_ID});
+                                                                }
+                                                            }
+                                                        }//controlblock
+                                                        if(SCB.controls.length == newControlLst.length){
+                                                            Controlblocks.update(
+                                                                            {_id:subcontrolblock._id},
+                                                                            {
+                                                                                $set :{
+                                                                                    controls : newControlLst
+                                                                                }
+                                                                            }
+                                                                        )
+                                                                        .exec()
+                                                                        .then(d1=>{
+                                                                            resolve(subcontrolblock._id)
+                                                                        })
+                                                                        .catch(err =>{
+                                                                            console.log(err);
+                                                                            reject(err);
+                                                                        });                                     
+                                                        }
+                                                    // //update controlBlock with control ID
+                                                    // // resolve(controlblock._id)
+                                                    }
+                                                })
+                                                .catch(err =>{
+                                                    console.log(err);
+                                                    reject(err);
+                                                });                 
+                            }
+                        };
                     }else{
                         resolve("Control Not found")
                     }
@@ -46,6 +111,53 @@ function duplicate_controlBlocks(controlBlock){
                     });
     });
 }
+
+function duplicate_controls(Oldcontrol){
+    var company_ID = Oldcontrol.company_ID;
+    var createdBy = Oldcontrol.createdBy;
+    var controlBlocks_ID = Oldcontrol.controlBlocks_ID;
+    return new Promise(function(resolve,reject){
+        console.log('OldControl ',Oldcontrol);
+        Control.findOne({_id:Oldcontrol.control_ID})
+                .exec()
+                .then(baseControl=>{
+                    if(baseControl){
+                        const control = new Control({
+                            _id                     : new mongoose.Types.ObjectId(),
+                            controlShort            : baseControl.controlShort, 
+                            controlDesc             : baseControl.controlDesc,
+                            controltag_ID           : baseControl.controltag_ID,
+                            ref1                    : baseControl.ref1,
+                            ref2                    : baseControl.ref2,
+                            ref3                    : baseControl.ref3,
+                            risk                    : baseControl.risk,
+                            multiplier              : baseControl.multiplier,
+                            mandatory               : baseControl.mandatory,
+                            scored                  : baseControl.scored, 
+                            controlBlocks_ID        : controlBlocks_ID,
+                            company_ID              : company_ID,
+                            createdBy               : createdBy,
+                            createdAt               : new Date(),
+                        });
+                        control.save()
+                            .then(data=>{
+                                   resolve(data._id);
+                            })
+                            .catch(err =>{
+                                console.log(err);
+                                reject(err);
+                            });
+                    }else{ //end of baseControl
+                        resolve("Control Not found")
+                    }
+                })
+                .catch(err =>{
+                        console.log(err);
+                        reject(err);
+                    });
+    });
+}
+
 exports.create_framework = (req,res,next)=>{
 	Framework.findOne({frameworkname:req.body.frameworkname,version:req.body.version})
 		.exec()
@@ -101,7 +213,7 @@ exports.create_Customize_framework = (req,res,next)=>{
                             for(i = 0;i < FWDoc.controlBlocks.length; i++){
                                 var controlBlock = {
                                     controlBlocks_ID : FWDoc.controlBlocks[i].controlBlocks_ID,
-                                    // sequence         : req.body.sequence,
+                                    sequence         : req.body.sequence,
                                     company_ID       : req.body.company_ID,
                                     createdBy        : req.body.createdBy
                                 };

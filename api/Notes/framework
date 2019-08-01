@@ -33,6 +33,7 @@ APIs :
 9. Update state and stage framework           			- Done 
 10. List of framework according to draft and published 	- Done
 11. Get count of frameworks of specific company
+12. Create Customize Framework 							- Done
 
 -----------------------------------------------------------------------------------------------------
 								1. Insert new framework
@@ -292,4 +293,24 @@ Output      :
                     {
                        count
                     }
- 
+-----------------------------------------------------------------------------------------------------
+							12. Create Customize Framework
+-----------------------------------------------------------------------------------------------------
+
+Method      : DELETE
+    
+URL         : /api/frameworks/create_Customize_framework/:framework_ID
+			
+Input       : 
+				{
+					"company_ID"  : String,
+					"createdBy"	  : String,
+					"sequence"	  : Number
+				}
+				
+Output      : 
+				If successfully 
+				{
+					"message": "Framework Duplicated Added",
+					"ID": String
+				}
