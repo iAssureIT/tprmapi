@@ -87,6 +87,24 @@ exports.detail_controltag = (req,res,next)=>{
         });
 }
 
+exports.detail_controltagId = (req,res,next)=>{
+    Controltags.findOne({_id:req.params.controltagId})
+        .exec()
+        .then(data=>{
+            if(data){
+                res.status(200).json(data);
+            }else{
+                res.status(404).json('Control tag not found');
+            }
+        })
+        .catch(err =>{
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+}
+
 exports.update_controltag = (req,res,next)=>{
     var controltagData = req.body.controltag;
     Controltags.findOne({controltag:controltagData.toLowerCase()})

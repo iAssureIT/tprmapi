@@ -9,7 +9,9 @@ router.get('/list', ControltagController.list_controltag);
 
 router.get('/list/:company_ID',ControltagController.list_controltag_company);
 
-router.get('/:controltag', ControltagController.detail_controltag);
+router.get('/details/:controltag', ControltagController.detail_controltag);
+
+router.get('/:controltagId', ControltagController.detail_controltagId);
 
 router.put('/',ControltagController.update_controltag);
 

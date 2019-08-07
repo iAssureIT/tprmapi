@@ -9,6 +9,14 @@ router.get('/list', AssessmentsController.list_assessments);
 
 router.get('/list/nc_true/:assessments_ID',AssessmentsController.list_nc_true);
 
+router.get('/list/nc_true_corporate/:corporate_ID',AssessmentsController.list_AllNC_true);
+
+router.get('/list/action_plan_assessedPartyID/:assessedParty_ID',AssessmentsController.list_actionplan_assessedParty_ID);
+
+router.get('/list/action_plan_corporateID/:corporate_ID',AssessmentsController.list_actionplan_corporate_ID);
+
+router.get('/list/action_plan_assessmentsID/:assessments_ID',AssessmentsController.list_actionplan_assessments_ID);
+
 router.get('/getframework/:assessments_ID/:controlBlock_ID/:control_ID',AssessmentsController.fetch_specific_framework);
 
 router.get('/getresponse/:assessments_ID/:controlBlock_ID/:control_ID',AssessmentsController.fetch_specific_response);

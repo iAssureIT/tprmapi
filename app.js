@@ -66,7 +66,6 @@ app.use('/api/domains',domainRoutes);
 app.use('/api/countries',countryRoutes);
 app.use('/api/riskfactors',riskfactorRoutes);
 app.use('/api/controltags',controltagRoutes);
-app.use('/api/controltags',controltagRoutes);
 app.use('/api/industrytags',industrytagRoutes);
 app.use('/api/industrytypes',industrytypeRoutes);
 app.use('/api/customertypes',customertyprRoutes);

@@ -26,7 +26,7 @@ const assessmentsSchema = mongoose.Schema({
                                     control_ID          : { type: mongoose.Schema.Types.ObjectId, ref: 'conrols' },
                                     controlOwner_ID     : { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
                                     response            : {
-                                                                response : Boolean,
+                                                                response : String,
                                                                 document : [
                                                                                 {
                                                                                     docLink : String,
