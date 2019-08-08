@@ -43,7 +43,8 @@ const assessmentsSchema = mongoose.Schema({
                                                                 status      : String, //Open or Closed
                                                                 actionPlan  : [
                                                                                 {
-                                                                                    actionPlan_type            : String,
+                                                                                    actionID        : Number,
+                                                                                    actionPlan_type : String,
                                                                                     plan            : String,
                                                                                     priority        : String,
                                                                                     owner_ID        : { type: mongoose.Schema.Types.ObjectId, ref: 'users' },

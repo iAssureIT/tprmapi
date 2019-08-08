@@ -77,11 +77,13 @@ APIs :    16 /17
 11. Fetch all the framework with framework.nc.ncStatus = true           - Done
 12. Operation on actionPlan (Add / Remove / Edit)                       - Done
     - Input would be controlBlock_ID and control_ID
+    - generate the sequence no for actionPlan
 13. List all assessments for specify assessedParty_ID                   - Done
 14. Fetch framework for specify Control                                 - Done
 15. Fetch response for specify Control                                  - 
 16. Update assessor (Add / remove / Edit)                               - Done
 17. Update assessmentStages                                             - Done
+18. Update controlOwnerID                                               - 
 
 
 -----------------------------------------------------------------------------------------------------
@@ -425,17 +427,17 @@ URL         : /api/assessment/response
 
 Input       : 
                 {
-                    assessment_ID       : String,
-                    controlBlock_ID     : String,
-                    control_ID          : String,
-                    response            : Boolean,
-                    document            : [
+                    "assessment_ID"       : String,
+                    "controlBlock_ID"     : String,
+                    "control_ID"          : String,
+                    "response"            : Boolean,
+                    "document"            : [
                                             {
                                                 docLink             : String, //URL of the document
                                                 docName             : String,
                                             }
                                           ]
-                    comment             : String
+                    "comment"             : String
                 }
 
 Output      : 
@@ -472,7 +474,11 @@ Method      : PATCH
     
 URL         : /api/assessment/update_ncstatus/:assessments_ID/:controlBlock_ID/:control_ID/:ncStatus
 
-Input       : - NA-
+Input       : 
+                {
+                    "remark"            : String,
+                    "criticality"       : String
+                }
 
 Output      : 
 				If ncStatus is true, successfully
@@ -575,28 +581,28 @@ Method      : PATCH
     
 URL         : /api/assessment/actionPlan/:assessments_ID/:action
 
-Note        : action => add / edit / remove
+Note        : action => add / edit / remove 
 
 Input       : 
                 For add :
                     {
-                        controlBlock_ID : String,
-                        control_ID      : String,
-                        type            : String,
-                        plan            : String,
-                        priority        : String,
-                        owner_ID        : { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
-                        planDate        : Date,
-                        dueDate         : Date,
-                        coordinator_ID  : { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
-                        status          : String, //Open 
-                        document        : [
+                        "controlBlock_ID" : String,
+                        "control_ID"      : String,
+                        "actionPlan_type" : String,
+                        "plan"            : String,
+                        "priority"        : String,
+                        "owner_ID"        : { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
+                        "planDate"        : Date,
+                        "dueDate"         : Date,
+                        "coordinator_ID"  : { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
+                        "status"          : String, //Open 
+                        "document"        : [
                                             {
                                                 docLink : String,
                                                 docName : String
                                             }
                                         ],
-                        actionTaken     : String
+                        "actionTaken"     : String
                     }
                 For edit :
                     {
@@ -827,3 +833,25 @@ Output      :
 					assessmentStages Updated
                 else
                     assessmentStages Not Updated
+
+-----------------------------------------------------------------------------------------------------
+                            18. Update controlOwnerID
+-----------------------------------------------------------------------------------------------------
+
+Method      : PATCH
+    
+URL         : /api/assessment/update_ownerid
+
+Input       : 
+                {
+                    "assessments_ID"    : String,
+                    "controlBlock_ID"   : String,
+                    "control_ID"        : String,
+                    "controlOwner_ID"   : String
+                }
+
+Output      : 
+                If successfully
+                    controlOwner_ID Updated
+                else
+                    controlOwner_ID Not Updated

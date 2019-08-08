@@ -41,6 +41,8 @@ router.patch('/update_ncstatus/:assessments_ID/:controlBlock_ID/:control_ID/:ncS
 
 router.patch('/response',AssessmentsController.update_response);
 
+router.patch('/update_ownerid',AssessmentsController.update_ownerID)
+
 router.delete('/:assessments_ID',AssessmentsController.delete_assessments);
 
 router.delete('/',AssessmentsController.delete_all_assessments);
