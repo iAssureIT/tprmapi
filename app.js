@@ -4,6 +4,8 @@ const morgan = require('morgan');// morgan call next function if problem occure
 const bodyParser = require('body-parser');// this package use to formate json data 
 const mongoose = require ('mongoose');
 
+const globalVariable = require("./nodemon.js");
+
 // Routes which should handle requests - Core Admin
 const userRoutes 					= require('./api/routes/coreAdmin/users');
 const rolesRoutes					= require('./api/routes/coreAdmin/roles');
@@ -29,9 +31,9 @@ const nccriticalityRoutes				= require('./api/routes/tprm/nccriticality');
 const actionpriorityRoutes				= require('./api/routes/tprm/actionpriorities');
 const assessmentRoutes 					= require('./api/routes/tprm/assessments');
 
-global.JWT_KEY = "secret";
+// global.JWT_KEY = "secret";
 
-mongoose.connect('mongodb://localhost/qatprm',{
+mongoose.connect('mongodb://localhost/'+globalVariable.dbname,{
 	useNewUrlParser: true
 })
 mongoose.promise = global.Promise;

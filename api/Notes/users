@@ -64,18 +64,18 @@ URL         : /api/users
 
 Input       : 
 				{
-					email			: String, // Mandatory Field
-					pwd				: String, // Mandatory Field
-					firstname		: String,
-					lastname		: String,
-					mobNumber		: String,
-					status			: String, // Either Active or Inactive
-					otpMobile		: String,
-					optEmail		: String,
-					spoc			: Boolean,
-					companyID		: Number,
-					company_ID		: String, //Either empty or _id of companysettings
-					role			: String, // Mandatory Field
+					"email"			: String, // Mandatory Field
+					"pwd"				: String, // Mandatory Field
+					"firstname"		: String,
+					"lastname"		: String,
+					"mobNumber"		: String,
+					"status"			: String, // Either Active or Inactive
+					"otpMobile"		: String,
+					"optEmail"		: String,
+					"spoc"			: Boolean,
+					"companyID"		: Number,
+					"company_ID"		: String, //Either empty or _id of companysettings
+					"role"			: String, // Mandatory Field
 				}
 
 Output      : 

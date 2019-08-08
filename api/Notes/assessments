@@ -94,14 +94,14 @@ URL         : /api/assessment
 
 Input       : 
 				{
-					framework_ID        : String, // Mandatory Field
-					corporate_ID        : String, // Corporate who is creating the assessment
-                    assessedParty_ID    : String, // Vendor to whom it is to be assined
-                    frequency           : String, // Instead of _id frequency value is stored
-                    startDate           : Date,
-                    endDate             : Date,
-					createdBy		    : String, // Either empty or _id of users
-                    assessor            : [
+					"framework_ID"        : String, // Mandatory Field
+					"corporate_ID"        : String, // Corporate who is creating the assessment
+                    "assessedParty_ID"    : String, // Vendor to whom it is to be assined
+                    "frequency"           : String, // Instead of _id frequency value is stored
+                    "startDate"           : Date,
+                    "endDate"             : Date,
+					"createdBy"		    : String, // Either empty or _id of users
+                    "assessor"            : [
                                             {
                                                 type    : String,
                                                 user_ID : String,

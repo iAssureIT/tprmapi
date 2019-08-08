@@ -10,9 +10,9 @@ Schema :
     company_ID          : String,
     createdBy           : String,
     ref_framework_ID    : String,
-	  state               : Boolean,
+	state               : Boolean,
     stage               : Boolean,
-	  version			      	: Number,
+	version			      	: Number,
     controlBlocks       : [
                                 {
                                    controlBlocks_ID :  String
@@ -34,6 +34,7 @@ APIs :
 10. List of framework according to draft and published 	- Done
 11. Get count of frameworks of specific company
 12. Create Customize Framework 							- Done
+13. Fetch Framework along with Control Block Details    - Done
 
 -----------------------------------------------------------------------------------------------------
 								1. Insert new framework
@@ -314,3 +315,56 @@ Output      :
 					"message": "Framework Duplicated Added",
 					"ID": String
 				}
+
+-----------------------------------------------------------------------------------------------------
+						13. Fetch Framework along with Control Block Details
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/frameworks/frameworks_cb_details/:framework_ID
+
+Input       : - NA-
+
+Output      : 
+				If successfully
+					{
+						frameworktype      : String,
+						frameworkname       : String,
+						purpose             : String,
+						domain_ID           : String,
+						company_ID          : String,
+						createdBy           : String,
+						ref_framework_ID    : String,
+						state               : Boolean,
+						stage               : Boolean,
+						version				      : Number
+						"controlBlocks"	   	: [
+												{
+													"_id"					: String,
+									                "controlBlocks_ID"		: String,
+											        "controlBlocksCode"		: "Code1",
+											        "controlBlockRef"		: 1,
+											        "controlBlockName"		: "Security Audit",
+											        "controlBlockDesc"		: "<p>DESC??</p>\n",
+											        "domain_ID"				: "5d2f23922832a0c490ddc2b7",
+											        "sequence"				: 1,
+											        "weightage"				: 100,
+											        "company_ID"			: "5d2f221a2832a0c490ddc2b3",
+											        "createdBy"				: "5d2f221a2832a0c490ddc2b3",
+											        "createdAt"				: "2019-07-22T08:40:58.994Z",
+											        "subControlBlocks": [
+											            {
+											                "_id": String,
+											                "controlBlocks_ID": String
+											            }
+											        ],
+											        "controls": [
+											            {
+											                "_id": String,
+											                "control_ID": String
+											            }
+											        ],
+												}
+											],
+					}

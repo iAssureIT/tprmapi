@@ -12,61 +12,66 @@ exports.create_control = (req,res,next)=>{
 					message: 'Control Short already exists'
 				});
 			}else{
-				const control = new Control({
-                    _id                     : new mongoose.Types.ObjectId(),
-                    controlShort            : req.body.controlShort, 
-                    controlDesc             : req.body.controlDesc,
-                    controltag_ID           : req.body.controltag_ID,
-                    ref1                    : req.body.ref1,
-                    ref2                    : req.body.ref2,
-                    ref3                    : req.body.ref3,
-                    risk                    : req.body.risk,
-                    multiplier              : req.body.multiplier,
-                    mandatory               : req.body.mandatory,
-                    scored                  : req.body.scored, 
-                    controlBlocks_ID        : req.body.controlBlocks_ID,
-                    company_ID              : req.body.company_ID,
-                    createdBy               : req.body.createdBy,
-                    createdAt               : new Date(),
-                });
-                control.save()
-                    .then(data=>{
-                        if(data){
-                            console.log('data ',data,' c')
-                            Controlblocks.update(
-                                                {_id : req.body.controlBlocks_ID},
-                                                {
-                                                    $push : {
-                                                        controls : {
-                                                            control_ID : data._id
+                if(req.body.controlBlocks_ID){
+                    const control = new Control({
+                        _id                     : new mongoose.Types.ObjectId(),
+                        controlShort            : req.body.controlShort, 
+                        controlDesc             : req.body.controlDesc,
+                        controltag_ID           : req.body.controltag_ID,
+                        ref1                    : req.body.ref1,
+                        ref2                    : req.body.ref2,
+                        ref3                    : req.body.ref3,
+                        risk                    : req.body.risk,
+                        multiplier              : req.body.multiplier,
+                        mandatory               : req.body.mandatory,
+                        scored                  : req.body.scored, 
+                        controlBlocks_ID        : req.body.controlBlocks_ID,
+                        company_ID              : req.body.company_ID,
+                        createdBy               : req.body.createdBy,
+                        createdAt               : new Date(),
+                    });
+                 control.save()
+                        .then(data=>{
+                            if(data){
+                                console.log('data ',data,' c ',req.body.controlBlocks_ID);
+                                Controlblocks.updateOne(
+                                                    {_id : req.body.controlBlocks_ID},
+                                                    {
+                                                        $push : {
+                                                            controls : {
+                                                                control_ID : data._id
+                                                            }
                                                         }
                                                     }
-                                                }
-                                            )
-                                    .exec()
-                                    .then(framework=>{
-                                        if(framework.nModified == 1){
-                                            res.status(200).json({message:"Control Added and Control Block updated",ID:data._id})
-                                        }else{
-                                            res.status(409).json({message:"Control Added and then something went wrong. "})
-                                        }
-                                    })
-                                    .catch(err =>{
-                                        console.log(err);
-                                        res.status(500).json({
-                                            error: err
+                                                )
+                                        .exec()
+                                        .then(cb=>{
+                                            if(cb.nModified == 1){
+                                                res.status(200).json({message:"Control Added and Control Block updated",ID:data._id})
+                                            }else{
+                                                res.status(409).json({message:"Control Added and then something went wrong. "})
+                                            }
+                                        })
+                                        .catch(err =>{
+                                            console.log(err);
+                                            res.status(500).json({
+                                                error: err
+                                            });
                                         });
-                                    });
-                        }else{
-                            res.status(409).json({message: "Something went wrong"});
-                        }
-                    })
-                    .catch(err =>{
-                        console.log(err);
-                        res.status(500).json({
-                            error: err
+                            }else{
+                                res.status(409).json({message: "Something went wrong"});
+                            }
+                        })
+                        .catch(err =>{
+                            console.log(err);
+                            res.status(500).json({
+                                error: err
+                            });
                         });
-                    });
+                }else{
+                    res.status(200).json({message:"Control Block Id is missing"});
+                }
+				
 			}
 		})
 		.catch(err =>{

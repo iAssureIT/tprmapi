@@ -21,6 +21,8 @@ router.get('/company_blocks_count/:company_ID', ControlBlockController.controlbl
 
 router.get('/domain_specific/:domain_ID',ControlBlockController.fetch_specific_domain);
 
+router.get('/detail_scb_control/:controlBlock_ID',ControlBlockController.fetch_subcb_control_details);
+
 router.get('/:controlBlock_ID', ControlBlockController.detail_controlblocks);
 
 router.put('/',ControlBlockController.update_basic_controlblocks);

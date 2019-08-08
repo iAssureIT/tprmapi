@@ -15,55 +15,59 @@ exports.create_controlblocks_framwork = (req,res,next)=>{
 					message: 'Control Block Name already exists'
 				});
 			}else{ 
-				const controlblocks = new Controlblocks({
-                    _id                     : new mongoose.Types.ObjectId(), 
-                    controlBlocksCode       : req.body.controlBlocksCode,
-                    controlBlockRef         : req.body.controlBlockRef,
-                    controlBlockName        : req.body.controlBlockName,
-                    controlBlockDesc        : req.body.controlBlockDesc,
-                    parentBlock             : req.body.parentBlock,
-                    domain_ID               : req.body.domain_ID,
-                    sequence                : req.body.sequence,
-                    weightage               : req.body.weightage,
-                    company_ID              : req.body.company_ID,
-                    createdBy               : req.body.createdBy,
-                    createdAt               : new Date(),
-                });
-                controlblocks.save()
-                    .then(data=>{
-                        if(data){
-                            Framwork.update(
-                                                {_id : req.body.framework_ID},
-                                                {
-                                                    $push : {
-                                                        controlBlocks : {
-                                                            controlBlocks_ID : data._id
+                if(req.body.framework_ID){
+    				const controlblocks = new Controlblocks({
+                        _id                     : new mongoose.Types.ObjectId(), 
+                        controlBlocksCode       : req.body.controlBlocksCode,
+                        controlBlockRef         : req.body.controlBlockRef,
+                        controlBlockName        : req.body.controlBlockName,
+                        controlBlockDesc        : req.body.controlBlockDesc,
+                        parentBlock             : req.body.parentBlock,
+                        domain_ID               : req.body.domain_ID,
+                        sequence                : req.body.sequence,
+                        weightage               : req.body.weightage,
+                        company_ID              : req.body.company_ID,
+                        createdBy               : req.body.createdBy,
+                        createdAt               : new Date(),
+                    });
+                    controlblocks.save()
+                        .then(data=>{
+                            if(data){
+                                Framwork.update(
+                                                    {_id : req.body.framework_ID},
+                                                    {
+                                                        $push : {
+                                                            controlBlocks : {
+                                                                controlBlocks_ID : data._id
+                                                            }
                                                         }
                                                     }
-                                                }
-                                            )
-                                    .exec()
-                                    .then(framework=>{
-                                        if(framework.nModified == 1){
-                                            res.status(200).json({message:"Control Block and Framework updated",ID:data._id})
-                                        }
-                                    })
-                                    .catch(err =>{
-                                        console.log(err);
-                                        res.status(500).json({
-                                            error: err
+                                                )
+                                        .exec()
+                                        .then(framework=>{
+                                            if(framework.nModified == 1){
+                                                res.status(200).json({message:"Control Block and Framework updated",ID:data._id})
+                                            }
+                                        })
+                                        .catch(err =>{
+                                            console.log(err);
+                                            res.status(500).json({
+                                                error: err
+                                            });
                                         });
-                                    });
-                        }else{
-                            res.status(409).json({message: "Something went wrong"});
-                        }
-                    })
-                    .catch(err =>{
-                        console.log(err);
-                        res.status(500).json({
-                            error: err
+                            }else{
+                                res.status(409).json({message: "Something went wrong"});
+                            }
+                        })
+                        .catch(err =>{
+                            console.log(err);
+                            res.status(500).json({
+                                error: err
+                            });
                         });
-                    });
+                }else{
+                    res.status(200).json({message:"Framework Id is missing"});
+                }
 			}
 		})
 		.catch(err =>{
@@ -83,54 +87,62 @@ exports.create_controlblocks_subcontrolblock = (req,res,next)=>{
 					message: 'Control Block Name already exists'
 				});
 			}else{
-				const controlblocks = new Controlblocks({
-                    _id                     : new mongoose.Types.ObjectId(),
-                    controlBlockRef         : req.body.controlBlockRef,
-                    controlBlockName        : req.body.controlBlockName,
-                    controlBlockDesc        : req.body.controlBlockDesc,
-                    parentBlock             : req.body.parentBlock,
-                    domain_ID               : req.body.domain_ID,
-                    sequence                : req.body.sequence,
-                    weightage               : req.body.weightage,
-                    company_ID              : req.body.company_ID,
-                    createdBy               : req.body.createdBy,
-                    createdAt               : new Date(),
-                });
-                controlblocks.save()
-                    .then(data=>{
-                        if(data){
-                            Controlblocks.update(
-                                                {_id : req.body.controlblock_ID},
-                                                {
-                                                    $push : {
-                                                        subControlBlocks : {
-                                                            controlBlocks_ID : data._id
+                if(req.body.controlblock_ID){
+    				const controlblocks = new Controlblocks({
+                        _id                     : new mongoose.Types.ObjectId(),
+                        controlBlockRef         : req.body.controlBlockRef,
+                        controlBlockName        : req.body.controlBlockName,
+                        controlBlockDesc        : req.body.controlBlockDesc,
+                        parentBlock             : req.body.parentBlock,
+                        domain_ID               : req.body.domain_ID,
+                        sequence                : req.body.sequence,
+                        weightage               : req.body.weightage,
+                        company_ID              : req.body.company_ID,
+                        createdBy               : req.body.createdBy,
+                        createdAt               : new Date(),
+                    });
+                    controlblocks.save()
+                        .then(data=>{
+                            if(data){
+                                console.log('data ',data._id);
+                                Controlblocks.updateOne(
+                                                    {_id : req.body.controlblock_ID},
+                                                    {
+                                                        $push : {
+                                                            subControlBlocks : {
+                                                                controlBlocks_ID : data._id
+                                                            }
                                                         }
                                                     }
-                                                }
-                                            )
-                                    .exec()
-                                    .then(framework=>{
-                                        if(framework.nModified == 1){
-                                            res.status(200).json({message:"New Control Block created and Parent Control Block updated",ID:data._id})
-                                        }
-                                    })
-                                    .catch(err =>{
-                                        console.log(err);
-                                        res.status(500).json({
-                                            error: err
+                                                )
+                                        .exec()
+                                        .then(controlblock=>{
+                                            // console.log("controlblock ",controlblock);
+                                            if(controlblock.nModified == 1){
+                                                res.status(200).json({message:"New Control Block created and Parent Control Block updated",ID:data._id})
+                                            }else{
+                                                res.status(200).json({message:"New Control Block created and Parent Control Block not updated",ID:data._id})
+                                            }
+                                        })
+                                        .catch(err =>{
+                                            console.log(err);
+                                            res.status(500).json({
+                                                error: err
+                                            });
                                         });
-                                    });
-                        }else{
-                            res.status(409).json({message: "Something went wrong"});
-                        }
-                    })
-                    .catch(err =>{
-                        console.log(err);
-                        res.status(500).json({
-                            error: err
+                            }else{
+                                res.status(409).json({message: "Something went wrong"});
+                            }
+                        })
+                        .catch(err =>{
+                            console.log(err);
+                            res.status(500).json({
+                                error: err
+                            });
                         });
-                    });
+                    }else {
+                        res.status(200).json("Controlblock ID is missing");
+                    }
 			}
 		})
 		.catch(err =>{
@@ -157,7 +169,6 @@ exports.list_controlblocks = (req,res,next)=>{
 
 exports.list_controlblocks_company = (req,res,next)=>{
     var company_ID = req.params.company_ID;
-
     Controlblocks.find({company_ID : company_ID})
         .exec()
         .then(data=>{
@@ -192,52 +203,50 @@ exports.detail_controlblocks = (req,res,next)=>{
 exports.update_basic_controlblocks = (req,res,next)=>{
     var controlBlockNameData = req.body.controlBlockName;
     Controlblocks.findOne({controlBlockName:req.body.controlBlockName})
-		.exec()
-		.then(data =>{
-			if(data && data._id !== req.body.id){
-				return res.status(200).json({
-					message: 'Control Block Name already exists'
-				});
-			}else{
-				Controlblocks.updateOne(
-                    { _id:req.body.id},  
-                    {
-                        $set:{
-                            'controlBlockRef'         : req.body.controlBlockRef,
-                            'controlBlockName'        : req.body.controlBlockName,
-                            'controlBlockDesc'        : req.body.controlBlockDesc,
-                            'parentBlock'             : req.body.parentBlock,
-                            'domain_ID'               : req.body.domain_ID,
-                            'sequence'                : req.body.sequence,
-                            'weightage'               : req.body.weightage,
-                            // 'company_ID'              : req.body.company_ID,
-                        }
-                    }
-                )
-                .exec()
-                .then(data=>{
-                    if(data.nModified == 1){
-                        res.status(200).json("Control Block Updated");
-                    }else{
-                        res.status(401).json("Something went wrong");
-                    }
-                })
-                .catch(err =>{
-                    console.log(err);
-                    res.status(500).json({
-                        error: err
+            		.exec()
+            		.then(data =>{
+            			if(data && data._id !== req.body.id){
+            				return res.status(200).json({
+            					message: 'Control Block Name already exists'
+            				});
+            			}else{
+            				Controlblocks.updateOne(
+                                { _id:req.body.id},  
+                                {
+                                    $set:{
+                                        'controlBlockRef'         : req.body.controlBlockRef,
+                                        'controlBlockName'        : req.body.controlBlockName,
+                                        'controlBlockDesc'        : req.body.controlBlockDesc,
+                                        'parentBlock'             : req.body.parentBlock,
+                                        'domain_ID'               : req.body.domain_ID,
+                                        'sequence'                : req.body.sequence,
+                                        'weightage'               : req.body.weightage,
+                                        // 'company_ID'              : req.body.company_ID,
+                                    }
+                                }
+                            )
+                            .exec()
+                            .then(data=>{
+                                if(data.nModified == 1){
+                                    res.status(200).json("Control Block Updated");
+                                }else{
+                                    res.status(401).json("Something went wrong");
+                                }
+                            })
+                            .catch(err =>{
+                                console.log(err);
+                                res.status(500).json({
+                                    error: err
+                                });
+                            });
+            			}
+            		})
+            		.catch(err =>{
+            			console.log(err);
+            			res.status(500).json({
+            				error: err
+            			});
                     });
-                });
-			}
-		})
-		.catch(err =>{
-			console.log(err);
-			res.status(500).json({
-				error: err
-			});
-        });
-        
-    
 }
 
 exports.update_controlblock = (req,res,next)=>{
@@ -432,7 +441,11 @@ exports.fetch_all_subcontrolblocks = (req,res,next)=>{
             Controlblocks   .findOne({ _id : new ObjectID(inputCB.controlBlocks_ID) })
                             .exec()
                             .then(data=>{
-                                resolve(data.subControlBlocks); 
+                                if(data){
+                                    resolve(data.subControlBlocks); 
+                                }else{
+                                    resolve([]);
+                                }
                             })
                             .catch(err =>{
                                 console.log(err);
@@ -499,6 +512,169 @@ exports.fetch_specific_domain = (req,res,next)=>{
                         error: err
                     });
                 });
+}
+
+exports.fetch_subcb_control_details = (req,res,next)=>{
+    Controlblocks   .aggregate([
+                            {
+                                $match : {_id : new ObjectID(req.params.controlBlock_ID)}
+                            },
+                            {
+                                $lookup : {
+                                        from            : "controlblocks",
+                                        localField      : "subControlBlocks.controlBlocks_ID",
+                                        foreignField    : "_id",
+                                        as              : "controlBlock"
+                                }
+                            },
+                            {
+                                $lookup : {
+                                        from            : "controls",
+                                        localField      : "controls.control_ID",
+                                        foreignField    : "_id",
+                                        as              : "control"
+                                }
+                            },
+                            {
+                                $unwind : "$subControlBlocks"
+                            },
+                            {
+                                $unwind : "$controlBlock"
+                            },
+                            {
+                                $unwind : "$controls"
+                            },
+                            {
+                                $unwind : "$control"
+                            },
+                            {
+                                $redact: {
+                                    $cond: [
+                                            {
+                                                $eq: [
+                                                       "$subControlBlocks.controlBlocks_ID",
+                                                        "$controlBlock._id"
+                                                    ]
+                                            },
+                                          "$$KEEP",
+                                          "$$PRUNE"
+                                        ]
+                                }
+                            },
+                            {
+                                $redact: {
+                                    $cond: [
+                                            {
+                                                $eq: [
+                                                       "$controls.control_ID",
+                                                        "$control._id"
+                                                    ]
+                                            },
+                                          "$$KEEP",
+                                          "$$PRUNE"
+                                        ]
+                                }
+                            },
+                            {
+                                $project : {
+                                    "_id"               : 1,
+                                    "controlBlocksCode" : 1,
+                                    "controlBlockRef"   : 1,
+                                    "controlBlockName"  : 1,
+                                    "controlBlockDesc"  : 1,
+                                    "parentBlock"       : 1,
+                                    "domain_ID"         : 1,
+                                    "sequence"          : 1,
+                                    "weightage"         : 1,
+                                    "company_ID"        : 1,
+                                    "createdBy"         : 1,
+                                    "createdAt"         : 1,
+                                    "subControlBlocks1"  : {
+                                                            "_id"               : "$subControlBlocks._id",
+                                                            "controlBlocks_ID"  : "$subControlBlocks.controlBlocks_ID",
+                                                            "controlBlockRef"   : "$controlBlock.controlBlockRef",
+                                                            "controlBlockName"  : "$controlBlock.controlBlockName",
+                                                            "controlBlockDesc"  : "$controlBlock.controlBlockDesc",
+                                                            "parentBlock"       : "$controlBlock.parentBlock",
+                                                            "domain_ID"         : "$controlBlock.domain_ID",
+                                                            "sequence"          : "$controlBlock.sequence",
+                                                            "weightage"         : "$controlBlock.weightage",
+                                                            "company_ID"        : "$controlBlock.company_ID",
+                                                            "createdBy"         : "$controlBlock.createdBy",
+                                                            "createdAt"         : "$controlBlock.createdAt",
+                                                            "subControlBlocks"  : "$controlBlock.subControlBlocks",
+                                                            "controls"          : "$controlBlock.controls",
+                                                        },
+                                    "controls1"          : {
+                                                            "_id"               : "$controls._id",
+                                                            "control_ID"        : "$controls.control_ID",
+                                                            "controlShort"      : "$control.controlShort",
+                                                            "controlDesc"       : "$control.controlDesc",
+                                                            "controltag_ID"     : "$control.controltag_ID",
+                                                            "ref1"              : "$control.ref1",
+                                                            "ref2"              : "$control.ref2",
+                                                            "ref3"              : "$control.ref3",
+                                                            "risk"              : "$control.risk",
+                                                            "multiplier"        : "$control.multiplier",
+                                                            "mandatory"         : "$control.mandatory",
+                                                            "scored"            : "$control.scored",
+                                                            "controlBlocks_ID"  : "$control.controlBlocks_ID",
+                                                            "company_ID"        : "$control.company_ID",
+                                                            "createdBy"         : "$control.createdBy",
+                                                            "createdAt"         : "$control.createdAt"
+                                                        }
+                                }
+                            },
+                            {
+                                $group : {
+                                    _id : {
+                                        "_id"               : "$_id",
+                                        "controlBlocksCode" : "$controlBlocksCode",
+                                        "controlBlockRef"   : "$controlBlockRef",
+                                        "controlBlockName"  : "$controlBlockName",
+                                        "controlBlockDesc"  : "$controlBlockDesc",
+                                        "parentBlock"       : "$parentBlock",
+                                        "domain_ID"         : "$domain_ID",
+                                        "sequence"          : "$sequence",
+                                        "weightage"         : "$weightage",
+                                        "company_ID"        : "$company_ID",
+                                        "createdBy"         : "$createdBy",
+                                        "createdAt"         : "$createdAt",
+                                    },
+                                    "subControlBlocks"      : {"$push" : "$subControlBlocks1"},
+                                    "controls"              : {"$push" : "$controls1"},
+                                }
+                            },
+                            {
+                                $project : {
+                                    "_id"               : "$_id._id",
+                                    "controlBlocksCode" : "$_id.controlBlocksCode",
+                                    "controlBlockRef"   : "$_id.controlBlockRef",
+                                    "controlBlockName"  : "$_id.controlBlockName",
+                                    "controlBlockDesc"  : "$_id.controlBlockDesc",
+                                    "parentBlock"       : "$_id.parentBlock",
+                                    "domain_ID"         : "$_id.domain_ID",
+                                    "sequence"          : "$_id.sequence",
+                                    "weightage"         : "$_id.weightage",
+                                    "company_ID"        : "$_id.company_ID",
+                                    "createdBy"         : "$_id.createdBy",
+                                    "createdAt"         : "$_id.createdAt",
+                                    "subControlBlocks"  : { "$setUnion": [ "$subControlBlocks", "$subControlBlocks" ] },
+                                    "controls"          : { "$setUnion": [ "$controls", "$controls" ] },
+
+                                }
+                            }
+                        ])
+                    .exec()
+                    .then(data=>{
+                        res.status(200).json(data)
+                    })
+                    .catch(err =>{
+                        console.log(err);
+                        res.status(500).json({
+                            error: err
+                        });
+                    });   
 }
 
 

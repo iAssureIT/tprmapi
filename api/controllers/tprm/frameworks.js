@@ -1,5 +1,5 @@
 const mongoose	= require("mongoose");
-
+var ObjectID = require('mongodb').ObjectID;
 const Framework         = require('../../models/tprm/frameworks');
 const Controlblocks     = require('../../models/tprm/controlblocks');
 const Control           = require('../../models/tprm/controls');
@@ -362,8 +362,6 @@ exports.update_framework = (req,res,next)=>{
 				error: err
 			});
         });
-        
-    
 }
 exports.update_framework_stage_state = (req,res,next)=>{
     // console.log("req.body.id",req.body.id);
@@ -415,8 +413,6 @@ exports.update_framework_stage_state = (req,res,next)=>{
                 error: err
             });
         });
-        
-    
 }
 
 exports.update_controlblock = (req,res,next)=>{
@@ -534,6 +530,119 @@ exports.frameworks_count_of_company = (req,res,next)=>{
             }
         })
         .catch(err =>{
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+}
+//----------------------------Not merged code-------------------------------------
+exports.fetch_framework_controlblockDetails = (req,res,next)=>{
+    console.log("fetch_framework_controlblockDetails");
+    Framework  .aggregate([
+                            {
+                                $match : {_id : new ObjectID(req.params.framework_ID)}
+                            },
+                            {
+                                $lookup : {
+                                        from            : "controlblocks",
+                                        localField      : "controlBlocks.controlBlocks_ID",
+                                        foreignField    : "_id",
+                                        as              : "controlBlock"
+                                }
+                            },
+                            {
+                                $unwind : "$controlBlocks"
+                            },
+                            {
+                                $unwind : "$controlBlock"
+                            },
+                            {
+                                $redact: {
+                                    $cond: [
+                                            {
+                                                $eq: [
+                                                       "$controlBlocks.controlBlocks_ID",
+                                                        "$controlBlock._id"
+                                                    ]
+                                            },
+                                          "$$KEEP",
+                                          "$$PRUNE"
+                                        ]
+                                }
+                            },
+                            {
+                                $project : {
+                                    "_id"               : 1,
+                                    "frameworktype"     : 1,
+                                    "frameworkname"     : 1,
+                                    "purpose"           : 1,
+                                    "domain_ID"         : 1,
+                                    "company_ID"        : 1,
+                                    "createdBy"         : 1,
+                                    "ref_framework_ID"  : 1,
+                                    "state"             : 1,
+                                    "stage"             : 1,
+                                    "version"           : 1,
+                                    "controlB"          :{
+                                                            "_id"               : "$controlBlocks._id",
+                                                            "controlBlocks_ID"  : "$controlBlocks.controlBlocks_ID",
+                                                            "controlBlocksCode" : "$controlBlock.controlBlocksCode",
+                                                            "controlBlockRef"   : "$controlBlock.controlBlockRef",
+                                                            "controlBlockName"  : "$controlBlock.controlBlockName",
+                                                            "controlBlockDesc"  : "$controlBlock.controlBlockDesc",
+                                                            "parentBlock"       : "$controlBlock.parentBlock",
+                                                            "domain_ID"         : "$controlBlock.domain_ID",
+                                                            "sequence"          : "$controlBlock.sequence",
+                                                            "weightage"         : "$controlBlock.weightage",
+                                                            "company_ID"        : "$controlBlock.company_ID",
+                                                            "createdBy"         : "$controlBlock.createdBy",
+                                                            "createdAt"         : "$controlBlock.createdAt",
+                                                            "subControlBlocks"  : "$controlBlock.subControlBlocks",
+                                                            "controls"          : "$controlBlock.controls",
+                                                        }
+                                }
+                            },
+                            {
+                                $group : {
+                                    _id : {
+                                        "_id"               : "$_id",
+                                        "frameworktype"     : "$frameworktype",
+                                        "frameworkname"     : "$frameworkname",
+                                        "purpose"           : "$purpose",
+                                        "domain_ID"         : "$domain_ID",
+                                        "company_ID"        : "$company_ID",
+                                        "createdBy"         : "$createdBy",
+                                        "ref_framework_ID"  : "$ref_framework_ID",
+                                        "state"             : "$state",
+                                        "stage"             : "$stage",
+                                        "version"           : "$version",
+                                    },
+                                    "controlBlocks"     : {"$push" : "$controlB"}
+                                }
+                            },
+                            {
+                                $project : {
+                                    "_id"               : "$_id._id",
+                                    "frameworktype"     : "$_id.frameworktype",
+                                    "frameworkname"     : "$_id.frameworkname",
+                                    "purpose"           : "$_id.purpose",
+                                    "domain_ID"         : "$_id.domain_ID",
+                                    "company_ID"        : "$_id.company_ID",
+                                    "createdBy"         : "$_id.createdBy",
+                                    "ref_framework_ID"  : "$_id.ref_framework_ID",
+                                    "state"             : "$_id.state",
+                                    "stage"             : "$_id.stage",
+                                    "version"           : "$_id.version",
+                                    "controlBlocks"     : 1,
+                                }
+                            },
+                ])
+                .exec()
+                .then(data=>{
+                    res.status(200).json(data[0]);
+                })
+                .catch(err =>{
             console.log(err);
             res.status(500).json({
                 error: err

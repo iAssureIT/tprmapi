@@ -84,18 +84,18 @@ URL         : /api/companysettings/createclient
 
 Input       : 
                 {
-                    companyName             : String,
-                    spocfullname            : String,
-                    spocemailId             : String,
-                    spocmobNumber           : String,
-                    spocdesignation         : String,
-                    createdBy               : String, //Logged in user's ID
-                    creatorRole             : String, //Logged in user's role
-                    creatorCompany_ID       : String, //_id of company
-                    spocrole                : String, //Madatory Field make sure it should be small case 
-                    spocstatus              : String, //Active or Inactive
-                    pwd                     : String,
-                    type                    : String, //Corporate or Vendor
+                    "companyName"             : String,
+                    "spocfullname"            : String,
+                    "spocemailId"             : String,
+                    "spocmobNumber"           : String,
+                    "spocdesignation"         : String,
+                    "createdBy"               : String, //Logged in user's ID
+                    "creatorRole"             : String, //Logged in user's role
+                    "creatorCompany_ID"       : String, //_id of company
+                    "spocrole"                : String, //Madatory Field make sure it should be small case 
+                    "spocstatus"              : String, //Active or Inactive
+                    "pwd"                     : String,
+                    "type"                    : String, //Corporate or Vendor
                 }
 
 Output      :

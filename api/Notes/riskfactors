@@ -29,9 +29,9 @@ URL         : /api/riskfactors
 
 Input       : 
 				{
-					riskfactor      : String, // Mandatory Field
-					company_ID      : String,
-					createdBy		: String, // Either empty or _id of users
+					"riskfactor"      : String, // Mandatory Field
+					"company_ID"      : String,
+					"createdBy"		: String, // Either empty or _id of users
 				}
 
 Output      : 

@@ -1,7 +1,7 @@
 const mongoose	= require("mongoose");
 const bcrypt	= require("bcrypt");
 const jwt		= require("jsonwebtoken");
-
+const globalVariable = require("../../../nodemon.js");
 const User = require('../../models/coreAdmin/users');
 
 exports.user_signup = (req,res,next)=>{
@@ -109,7 +109,7 @@ exports.user_login = (req,res,next)=>{
 							const token = jwt.sign({
 								email 	: req.body.email,
 								userId	:  user._id ,
-							},global.JWT_KEY,
+							},globalVariable.JWT_KEY,
 							{
 								expiresIn: "1h"
 							}

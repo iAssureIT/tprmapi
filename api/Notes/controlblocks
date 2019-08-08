@@ -44,7 +44,8 @@ APIs :
     - Update Parent Control Block
 11. Get count of control blocks of specific company 
 12. Duplicate Control Block                                 - Done
-13. Fetch Control blocks for specific Domain                - 
+13. Fetch Control blocks for specific Domain                - Done
+14. Fetch Details of subcontrol blocks and controls         - Done
 
 -----------------------------------------------------------------------------------------------------
 								1. Insert new control Block
@@ -56,17 +57,17 @@ URL         : /api/controlblocks
 
 Input       : 
 				{
-					controlBlocksCode       : String,
-                    controlBlockRef         : Number,
-                    controlBlockName        : String,
-                    controlBlockDesc        : String,
-                    parentBlock             : String,
-                    domain_ID               : String,
-                    sequence                : Number,
-                    weightage               : Number,
-                    framework_ID            : String, // Mandatory
-                    company_ID              : String,
-                    createdBy               : String,
+					"controlBlocksCode"       : String,
+                    "controlBlockRef"         : Number,
+                    "controlBlockName"        : String,
+                    "controlBlockDesc"        : String,
+                    "parentBlock"             : String,
+                    "domain_ID"               : String,
+                    "sequence"                : Number,
+                    "weightage"               : Number,
+                    "framework_ID"            : String, // Mandatory
+                    "company_ID"              : String,
+                    "createdBy"               : String,
 				}
 
 Output      : 
@@ -372,3 +373,81 @@ Output      :
                             "controls"          : [],
 						}
 					]
+
+-----------------------------------------------------------------------------------------------------
+                14. Fetch Details of subcontrol blocks and controls
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/controlblocks/detail_scb_control/:controlBlock_ID
+
+Input       : - NA-
+
+Output      : 
+                If successfully
+                    {
+                        "_id"               : String,
+                        "controlBlockRef"   : Number,
+                        "controlBlockName"  : Number,
+                        "controlBlockDesc"  : String,
+                        "parentBlock"       : String,
+                        "domain_ID"         : String,
+                        "sequence"          : Number,
+                        "weightage"         : Number,
+                        "company_ID"        : String,
+                        "createdBy"         : String,
+                        "createdAt"         : Date,
+                        "subControlBlocks"  : [
+                                                {
+                                                    "_id"                   : String,
+                                                    "controlBlocks_ID"      : String,
+                                                    "controlBlocksCode"     : "Code1",
+                                                    "controlBlockRef"       : 1,
+                                                    "controlBlockName"      : "Security Audit",
+                                                    "controlBlockDesc"      : "<p>DESC??</p>\n",
+                                                    "domain_ID"             : "5d2f23922832a0c490ddc2b7",
+                                                    "sequence"              : 1,
+                                                    "weightage"             : 100,
+                                                    "company_ID"            : "5d2f221a2832a0c490ddc2b3",
+                                                    "createdBy"             : "5d2f221a2832a0c490ddc2b3",
+                                                    "createdAt"             : "2019-07-22T08:40:58.994Z",
+                                                    "subControlBlocks"      : [
+                                                                                {
+                                                                                    "_id": String,
+                                                                                    "controlBlocks_ID": String
+                                                                                }
+                                                                            ],
+                                                    "controls"              : [
+                                                                                {
+                                                                                    "_id": String,
+                                                                                    "control_ID": String
+                                                                                }
+                                                                            ],
+                                                }
+                                            ],
+                        "controls"          : [
+                                                {
+                                                    "_id"           : String,
+                                                    "control_ID"    : String,
+                                                    controlShort            : String,
+                                                    controlDesc             : String,
+                                                    controltag_ID           : String,
+                                                    ref1                    : String,
+                                                    ref2                    : String,
+                                                    ref3                    : String,
+                                                    risk                    : String,
+                                                    multiplier              : Number,
+                                                    mandatory               : Boolean,
+                                                    scored                  : Boolean,
+                                                    company_ID              : String,
+                                                    createdBy               : String,
+                                                    controlBlocks_ID        : String,
+                                                    createdAt               : Date,
+                                                }
+                                            ],
+                    }
+                else
+                    {
+                        message:'Control block not found'
+                    }
