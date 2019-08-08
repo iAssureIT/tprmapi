@@ -109,93 +109,94 @@ function fetch_controlOwnerName(user_ID){
 }
 
 exports.create_assessments = (req,res,next)=>{
-        Framework   .findOne({_id : new ObjectID(req.body.framework_ID)})
-                    .exec()
-                    .then(lstcontrolblocks=>{
-                        if(lstcontrolblocks){
-                            var inputArray = lstcontrolblocks.controlBlocks;
-                            var mainCBArray = inputArray;
-                            getcb();
-                            async function getcb(){
-                                do{
-                                    var childCBArray = await fetch_cb(inputArray);
-                                    inputArray = childCBArray;
-                                    if(childCBArray.length > 0){
-                                        mainCBArray = mainCBArray.concat(childCBArray);
-                                    }
-                                }while(childCBArray.length > 0);
-                                var controlList = await fetch_controls(mainCBArray);
-                                request({
-                                        "method"    : "GET", 
-                                        "url"       : "http://localhost:"+globalVariable.port+"/api/companysettings/list/"+req.body.assessedParty_ID,
-                                        "json"      : true,
-                                        "headers"   : {
-                                                        "User-Agent": "Test Agent"
-                                                    }
-                                    })
-                                    .then(cs=>{
-                                        var p = 0;
-                                        for(p = 0 ; p < controlList.length ; p++){
-                                            controlList[p].controlOwner_ID = cs.spocDetails.user_ID;
-                                        }                 
-                                        if(p >= controlList.length){
-                                            Assessments.estimatedDocumentCount()
-                                                       .exec()
-                                                       .then(assessmentCount=>{
-                                                            const assessment = new Assessments({
-                                                                _id                : new mongoose.Types.ObjectId(),
-                                                                corporate_ID       : req.body.corporate_ID,
-                                                                assessedParty_ID   : req.body.assessedParty_ID,
-                                                                framework_ID       : req.body.framework_ID,
-                                                                assessmentID       : assessmentCount + 1,
-                                                                frequency          : req.body.frequency,
-                                                                startDate          : req.body.startDate,
-                                                                endDate            : req.body.endDate,
-                                                                purpose            : req.body.purpose,
-                                                                assessmentMode     : req.body.assessmentMode,
-                                                                assessmentStatus   : 'Pending',
-                                                                assessmentStages   : 'Open',
-                                                                assessor           : req.body.assessor,
-                                                                framework          : controlList,
-                                                            });
-                                                            assessment.save()
-                                                                    .then(assessment=>{
-                                                                        if(assessment){
-                                                                            res.status(200).json({message:"Assessment Created",ID:assessment._id})
-                                                                        }else{
-                                                                            res.status(200).json({message:"Assessment Not Created"})
-                                                                        }
-                                                                    })
-                                                                    .catch(err =>{
-                                                                        console.log(err);
-                                                                        res.status(500).json({
-                                                                            error: err
-                                                                        });
-                                                                    });
-                                                                    
-                                                        })
-                                                        .catch(err =>{
-                                                            console.log(err);
-                                                            res.status(500).json({
-                                                                error: err
-                                                            });
+    Framework   .findOne({_id : new ObjectID(req.body.framework_ID)})
+                .exec()
+                .then(lstcontrolblocks=>{
+                    if(lstcontrolblocks){
+                        var inputArray = lstcontrolblocks.controlBlocks;
+                        var mainCBArray = inputArray;
+                        getcb();
+                        async function getcb(){
+                            do{
+                                var childCBArray = await fetch_cb(inputArray);
+                                inputArray = childCBArray;
+                                if(childCBArray.length > 0){
+                                    mainCBArray = mainCBArray.concat(childCBArray);
+                                }
+                            }while(childCBArray.length > 0);
+                            var controlList = await fetch_controls(mainCBArray);
+                            request({
+                                    "method"    : "GET", 
+                                    "url"       : "http://localhost:"+globalVariable.port+"/api/companysettings/list/"+req.body.assessedParty_ID,
+                                    "json"      : true,
+                                    "headers"   : {
+                                                    "User-Agent": "Test Agent"
+                                                }
+                                })
+                                .then(cs=>{
+                                    var p = 0;
+                                    for(p = 0 ; p < controlList.length ; p++){
+                                        controlList[p].controlOwner_ID = cs.spocDetails.user_ID;
+                                    }                 
+                                    if(p >= controlList.length){
+                                        Assessments.estimatedDocumentCount()
+                                                   .exec()
+                                                   .then(assessmentCount=>{
+                                                        const assessment = new Assessments({
+                                                            _id                : new mongoose.Types.ObjectId(),
+                                                            corporate_ID       : req.body.corporate_ID,
+                                                            assessedParty_ID   : req.body.assessedParty_ID,
+                                                            framework_ID       : req.body.framework_ID,
+                                                            assessmentID       : assessmentCount + 1,
+                                                            frequency          : req.body.frequency,
+                                                            startDate          : req.body.startDate,
+                                                            endDate            : req.body.endDate,
+                                                            purpose            : req.body.purpose,
+                                                            assessmentMode     : req.body.assessmentMode,
+                                                            assessmentStatus   : 'Pending',
+                                                            assessmentStages   : 'Open',
+                                                            assessor           : req.body.assessor,
+                                                            framework          : controlList,
                                                         });
-                                        }
-                                    })
-                                    .catch(err =>{
-                                        console.log(err);
-                                        reject(err);
-                                    });
-                                
-                            }//End of async
-                        }
-                    })
-                    .catch(err =>{
-                        console.log(err);
-                        res.status(500).json({
-                            error: err
-                        });
+                                                        assessment.save()
+                                                                .then(assessment=>{
+                                                                    if(assessment){
+                                                                        res.status(200).json({message:"Assessment Created",ID:assessment._id})
+                                                                    }else{
+                                                                        res.status(200).json({message:"Assessment Not Created"})
+                                                                    }
+                                                                })
+                                                                .catch(err =>{
+                                                                    console.log(err);
+                                                                    res.status(500).json({
+                                                                        error: err
+                                                                    });
+                                                                });
+                                                                
+                                                    })
+                                                    .catch(err =>{
+                                                        console.log(err);
+                                                        res.status(500).json({
+                                                            error: err
+                                                        });
+                                                    });
+                                    }
+                                })
+                                .catch(err =>{
+                                    console.log(err);
+                                    reject(err);
+                                });
+                            
+                        }//End of async
+                    }
+                })
+                .catch(err =>{
+                    console.log(err);
+                    res.status(500).json({
+                        error: err
                     });
+                });
+
 };
 
 exports.list_assessments = (req,res,next)=>{
