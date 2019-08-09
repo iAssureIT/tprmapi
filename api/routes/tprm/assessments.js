@@ -43,6 +43,8 @@ router.patch('/response',AssessmentsController.update_response);
 
 router.patch('/update_ownerid',AssessmentsController.update_ownerID)
 
+router.delete('/delete_responsedocument',AssessmentsController.delete_responsedocument);
+
 router.delete('/:assessments_ID',AssessmentsController.delete_assessments);
 
 router.delete('/',AssessmentsController.delete_all_assessments);

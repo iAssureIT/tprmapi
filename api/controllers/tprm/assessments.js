@@ -444,6 +444,7 @@ exports.fetch_specific_framework = (req,res,next)=>{
                                 controlBlock_ID     : data[0].framework[0].controlBlock_ID,
                                 controlBlockName    : cb.controlBlockName,
                                 control_ID          : data[0].framework[0].control_ID,
+                                controlOwner_ID     : data[0].framework[0].controlOwner_ID,
                                 controlName         : c.controlShort,
                                 response            : data[0].framework[0].response,
                                 nc                  : data[0].framework[0].nc,                                
@@ -1265,4 +1266,33 @@ exports.update_ownerID = (req,res,next)=>{
                                 error: err
                             });
                         });
+}
+
+exports.delete_responsedocument = (req,res,next)=>{
+    Assessments .updateOne(
+        {
+            "_id"                       : req.body.assessments_ID,
+            "framework.controlBlock_ID" : req.body.controlBlock_ID,
+            "framework.control_ID"      : req.body.control_ID,
+        },
+        {
+            $set : {
+                "framework.$.response.document" : [],
+            }
+        }
+    )
+    .exec()
+    .then(data=>{
+        if(data.nModified == 1){
+            res.status(200).json({message:"Response Document Updated"})
+        }else{
+            res.status(200).json({message:"Response Document Not Updated"})
+        }
+    })
+    .catch(err =>{
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+    });
 }

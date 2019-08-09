@@ -30,6 +30,7 @@ const assessmentModeRoutes				= require('./api/routes/tprm/assessmentMode');
 const nccriticalityRoutes				= require('./api/routes/tprm/nccriticality');
 const actionpriorityRoutes				= require('./api/routes/tprm/actionpriorities');
 const assessmentRoutes 					= require('./api/routes/tprm/assessments');
+const projectSettingRoutes 				= require('./api/routes/tprm/projectSettings');
 
 // global.JWT_KEY = "secret";
 
@@ -79,6 +80,7 @@ app.use('/api/assessmentmodes',assessmentModeRoutes);
 app.use('/api/nccriticality',nccriticalityRoutes);
 app.use('/api/actionpriority',actionpriorityRoutes);
 app.use('/api/assessment',assessmentRoutes);
+app.use('/api/projectsetting',projectSettingRoutes);
 app.post('/send-email', (req, res)=> {
 	// console.log('send mail');
 	let transporter = nodeMailer.createTransport({
@@ -109,8 +111,6 @@ app.post('/send-email', (req, res)=> {
 			// console.log('Message %s sent: %s', info.messageId, info.response);
 			res.render('index');
 		});
- 
-
 });
 
 // handle all other request which not found 
