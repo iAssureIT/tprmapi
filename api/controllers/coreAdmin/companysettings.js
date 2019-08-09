@@ -1,7 +1,7 @@
 const mongoose	= require("mongoose");
 const bcrypt	= require("bcrypt");
 const jwt		= require("jsonwebtoken");
-
+const globalVariable = require("../../../nodemon.js");
 const Companysettings = require('../../models/coreAdmin/companysettings');
 const Users           = require('../../models/coreAdmin/users');
 exports.create_companysettings = (req,res,next)=>{
@@ -759,5 +759,70 @@ exports.update_created_client = (req,res,next)=>{
         });
     });   
 }
+exports.userEmalId_byId_fornotification = (req,res,next)=>{
+    Companysettings.findOne({'_id':req.body.assessmentPartyId})
+    .exec()
+    .then(user=>{
+        console.log('user',user);
+        if(user){
+            if (user.spocDetails) { 
+                // res.status(200).json({
+                //  message: 'User Found.',
+                //  emailId : user.profile.emailId,
+                // });
+                // console.log(user.spocDetails.emailId);
+                var subject = '';
+                var mail    = '';
+                var email   = '';
+                if (req.body.mailfor == "create assessment") {
+                    email   = user.spocDetails.emailId;
+                    subject = 'Assessment Assigned';
+                    mail    = 'Hello '+user.spocDetails.fullname+',<br><br>New assessment '+req.body.assesmentname+' due on '+req.body.endDate+' is assigned to you by '+user.companyName+'. <br><br>Regards,<br>Team Risk Pro';
+                }else if(req.body.mailfor == "respond assessment"){
+                    email   = user.spocDetails.emailId;
+                    subject = 'Assessment Completed';
+                    mail    =  'Hello,<br><br>'+ user.spocDetails.fullname+' has completed the assessment '+req.body.assessmentName+'. Which was due on '+req.body.endDate+' <br><br>Regards,<br>Team, <br> Risk Pro';
+                }else if (req.body.mailfor == "create action plan") {
+                    email   = req.body.vendoremailid;
+                    subject = 'Action plan assigned';
+                    mail    = 'Hello ,<br><br>New action plan due on '+req.body.endDate+' is assigned to you by '+user.companyName+'. <br><br>Regards,<br>Team Risk Pro';
+                }
+                res.header("Access-Control-Allow-Origin","*");
+                request({
+                    "method"    : "POST", 
+                    "url"       : "http://localhost:"+globalVariable.port+"/send-email",
+                    "body"      : {
+                                        "email"     : email,
+                                        "subject"   : subject,
+                                        "text"      : "WOW Its done",
+                                        "mail"      : mail
+                                    },
+                    "json"      : true,
+                    "headers"   : {
+                                    "User-Agent": "Test App"
+                                }
+                })
+                .then((sentemail)=>{
+                   res.status(200).json({message:"Mail Sent successfully"});
+                })
+                .catch((err) =>{
+                    console.log("call to api",err);
+                    res.status(500).json({
+                        error: err
+                    });
+                });
+                // res.status(200).json({message:"Mail Sent successfully"});
+            }
 
+        }else{
+            res.status(404).json("User Not Found");
+        }
+    })
+    .catch(err=>{
+        console.log('update user status error ',err);
+        res.status(500).json({
+            error:err
+        });
+    });
+}
 

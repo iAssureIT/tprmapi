@@ -27,4 +27,6 @@ router.patch('/updateclient', CompanySettingController.update_created_client);
 
 router.get('/users_count/:user_ID/:user_type', CompanySettingController.users_count);
 
-module.exports = router;
+router.post('/user',CompanySettingController.userEmalId_byId_fornotification);
+
+module.exports = router; 

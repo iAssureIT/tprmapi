@@ -79,7 +79,39 @@ app.use('/api/assessmentmodes',assessmentModeRoutes);
 app.use('/api/nccriticality',nccriticalityRoutes);
 app.use('/api/actionpriority',actionpriorityRoutes);
 app.use('/api/assessment',assessmentRoutes);
+app.post('/send-email', (req, res)=> {
+	// console.log('send mail');
+	let transporter = nodeMailer.createTransport({
+		host: 'smtp.gmail.com',
+		port: 587,
+		auth: { 
+			user: 'testtprm321@gmail.com',
+			pass: 'tprm1234'
+		}
+	});
+	let mailOptions = {
+			from   : '"Risk Pro" <testtprm321@gmail.com>', // sender address
+			to     : req.body.email, // list of receivers
+			subject: req.body.subject, // Subject line
+			text   : req.body.text, // plain text body
+			html   : req.body.mail // html body
+		};
+		// console.log("mailOptions",mailOptions);
 
+		transporter.sendMail(mailOptions, (error, info) => {
+			if (error) {
+				console.log("send mail error",error);
+				return "Failed";
+			}
+			if(info){
+			   return "Success";
+			}
+			// console.log('Message %s sent: %s', info.messageId, info.response);
+			res.render('index');
+		});
+ 
+
+});
 
 // handle all other request which not found 
 app.use((req, res, next) => {
