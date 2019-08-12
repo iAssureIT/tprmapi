@@ -1296,3 +1296,53 @@ exports.delete_responsedocument = (req,res,next)=>{
         });
     });
 }
+
+exports.delete_actiondocument = (req,res,next)=>{
+	console.log('req',req.params);
+	Assessments.findOne(
+        {
+            "_id"     : req.params.assessments_ID,
+        }
+    )
+    .exec()
+    .then(assessmentData=>{
+    	// console.log('assessmentData',assessmentData);
+    	if(assessmentData.framework&&assessmentData.framework.length>0){
+    		for (var i = 0; i < assessmentData.framework.length; i++) {
+    			if(assessmentData.framework[i].controlBlock_ID==req.params.controlBlock_ID&&assessmentData.framework[i].control_ID==req.params.control_ID){
+    				Assessments .updateOne(
+                        {
+            				"_id"                                   : req.params.assessments_ID,
+            				["framework."+i+".nc.actionPlan._id"]   : req.params.actionPlan_ID
+                        },
+                        {
+            				$set : {
+                				["framework."+i+".nc.actionPlan.$.document"]          : [],
+            				}
+        				}
+    				)
+					.exec()
+					.then(data=>{
+						if(data.nModified == 1){
+				            res.status(200).json({message:"Action Document Updated"})
+				        }else{
+				            res.status(200).json({message:"Action Document Not Updated"})
+				        }
+					})
+					.catch(err =>{
+						console.log(err);
+						res.status(500).json({
+		    				error: err
+						});
+					});
+    			}
+    		}
+        }
+    })
+    .catch(err =>{
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+    });
+}
