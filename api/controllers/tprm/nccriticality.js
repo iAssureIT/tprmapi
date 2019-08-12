@@ -90,7 +90,7 @@ exports.detail_nccriticality = (req,res,next)=>{
 
 exports.update_nccriticality = (req,res,next)=>{
     var nccriticalitysData = req.body.nccriticality;
-    Nccriticality.findOne({nccriticality:nccriticalitysData.toLowerCase()})
+    Nccriticality.findOne({nccriticality:nccriticalitysData.toLowerCase(),company_ID:req.body.company_ID})
 		.exec()
 		.then(data =>{
 			if(data && data._id != req.body.id){

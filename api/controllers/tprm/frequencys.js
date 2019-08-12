@@ -90,9 +90,10 @@ exports.detail_frequency = (req,res,next)=>{
 
 exports.update_frequency = (req,res,next)=>{
     var frequencyData = req.body.frequency;
-    Frequency.findOne({frequency:frequencyData.toLowerCase()})
+    Frequency.findOne({frequency:frequencyData.toLowerCase(),company_ID:req.body.company_ID})
 		.exec()
 		.then(data =>{
+            // console.log('data',data);
 			if(data && data._id != req.body.id){
 				return res.status(200).json({
 					message: 'frequency already exists'

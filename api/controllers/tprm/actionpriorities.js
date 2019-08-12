@@ -90,7 +90,7 @@ exports.detail_actionpriority = (req,res,next)=>{
 
 exports.update_actionpriority = (req,res,next)=>{
     var actionprioritysData = req.body.actionpriority;
-    Actionpriority.findOne({actionpriority:actionprioritysData.toLowerCase()})
+    Actionpriority.findOne({actionpriority:actionprioritysData.toLowerCase(),company_ID:req.body.company_ID})
 		.exec()
 		.then(data =>{
 			if(data && data._id != req.body.id){

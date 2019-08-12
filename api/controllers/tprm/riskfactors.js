@@ -90,7 +90,7 @@ exports.detail_riskfactor = (req,res,next)=>{
 
 exports.update_riskfactor = (req,res,next)=>{
     var riskfactorData = req.body.riskfactor;
-    Riskfactors.findOne({riskfactor:riskfactorData.toLowerCase()})
+    Riskfactors.findOne({riskfactor:riskfactorData.toLowerCase(),company_ID:req.body.company_ID})
 		.exec()
 		.then(data =>{
 			if(data && data._id !== req.body.id){
