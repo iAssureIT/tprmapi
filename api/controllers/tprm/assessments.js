@@ -5,6 +5,7 @@ const globalVariable = require("../../../nodemon.js");
 
 const Assessments = require('../../models/tprm/assessments');
 const Framework = require('../../models/tprm/frameworks');
+const Companysettings = require('../../models/coreAdmin/companysettings');
 
 function fetch_cb(newCBList){
     return new Promise(function(resolve,reject){
@@ -157,6 +158,7 @@ exports.create_assessments = (req,res,next)=>{
                                                             assessmentStages   : 'Open',
                                                             assessor           : req.body.assessor,
                                                             framework          : controlList,
+                                                            createdAt          : new Date(),
                                                         });
                                                         assessment.save()
                                                                 .then(assessment=>{
@@ -215,30 +217,98 @@ exports.list_assessments = (req,res,next)=>{
 
 exports.list_assessments_company_ID = (req,res,next)=>{
     Assessments.find({corporate_ID:req.params.corporate_ID})
-                .exec()
-                .then(data=>{
-                    res.status(200).json(data);
-                })
-                .catch(err =>{
-                    console.log(err);
-                    res.status(500).json({
-                        error: err
+    .exec()
+    .then(data=>{
+        if(data&&data.length>0){
+            getData();
+            async function getData(){
+                var returnData = [];
+                for(var i = 0 ;i < data.length ; i++){
+                    var assessmentName = await getAssessmentName(data[i].framework_ID)
+                    var partyName = await getAssessedPartyName(data[i].assessedParty_ID)
+                    returnData.push({
+                        _id: data[i]._id,
+                        corporate_ID: data[i].corporate_ID,
+                        assessedParty_ID: data[i].assessedParty_ID,
+                        framework_ID: data[i].framework_ID,
+                        assessmentID: data[i].assessmentID,
+                        frequency: data[i].frequency,
+                        startDate: data[i].startDate,
+                        endDate: data[i].endDate,
+                        purpose: data[i].purpose,
+                        assessmentMode: data[i].assessmentMode,
+                        assessmentStatus: data[i].assessmentStatus,
+                        assessmentStages: data[i].assessmentStages,
+                        assessor: data[i].assessor,
+                        framework: data[i].framework,
+                        createdAt: data[i].createdAt,
+                        assessmentName: assessmentName,
+                        assessedPartyName: partyName,
                     });
-                });
+                }
+                if(i >= data.length){
+                    // console.log("returnData",returnData);
+                    res.status(200).json(returnData);
+                }
+            }
+        }else{
+            res.status(404).json("Assessment Data Not Found"); 
+        }
+    })
+    .catch(err =>{
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+    });
 }
 
 exports.list_assessments_assessedParty_ID = (req,res,next)=>{
     Assessments.find({assessedParty_ID:req.params.assessedParty_ID})
-                .exec()
-                .then(data=>{
-                   res.status(200).json(data);
-                })
-                .catch(err =>{
-                    console.log(err);
-                    res.status(500).json({
-                        error: err
+    .exec()
+    .then(data=>{
+       if(data&&data.length>0){
+            getData();
+            async function getData(){
+                var returnData = [];
+                for(var i = 0 ;i < data.length ; i++){
+                    var assessmentName = await getAssessmentName(data[i].framework_ID)
+                    var customerName = await getCustomerName(data[i].corporate_ID)
+                    returnData.push({
+                        _id: data[i]._id,
+                        corporate_ID: data[i].corporate_ID,
+                        assessedParty_ID: data[i].assessedParty_ID,
+                        framework_ID: data[i].framework_ID,
+                        assessmentID: data[i].assessmentID,
+                        frequency: data[i].frequency,
+                        startDate: data[i].startDate,
+                        endDate: data[i].endDate,
+                        purpose: data[i].purpose,
+                        assessmentMode: data[i].assessmentMode,
+                        assessmentStatus: data[i].assessmentStatus,
+                        assessmentStages: data[i].assessmentStages,
+                        assessor: data[i].assessor,
+                        framework: data[i].framework,
+                        createdAt: data[i].createdAt,
+                        assessmentName: assessmentName,
+                        customerName: customerName,
                     });
-                });
+                }
+                if(i >= data.length){
+                    // console.log("returnData",returnData);
+                    res.status(200).json(returnData);
+                }
+            }
+        }else{
+            res.status(404).json("Assessment Data Not Found"); 
+        }
+    })
+    .catch(err =>{
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+    });
 }
 
 exports.detail_assessments = (req,res,next)=>{
@@ -609,75 +679,68 @@ exports.list_AllNC_true = (req,res,next) =>{
 
 exports.list_actionplan_assessedParty_ID = (req,res,next) =>{
     Assessments.aggregate([
-                            {
-                                $match : {'assessedParty_ID':new ObjectID(req.params.assessedParty_ID)}
-                            },
-                            {
-                                $project :{
-                                _id       : 1,
-                                framework : 1,
-                                corporate_ID : 1,
-                                framework_ID : 1,
-                                }
-                            },
-                            {
-                                $unwind : "$framework"
-                            },
-                            {
-                                $match : {"framework.nc.ncStatus" : true}
-                            }
-                        ])
-                .exec()
-                .then(data=>{
-                    var ncData = [];
-                    setNCDate();
-                    async function setNCDate(){
-                        for(i=0;i<data.length;i++){
-                            if(data[i].framework.control_ID){
-                                var controlDesc = await fetch_controlShort(data[i].framework.control_ID);
-                            }else{
-                            	var controlDesc = ''; 
-                            }
-                            if(data[i].framework.controlBlock_ID){
-                                var contorlBlockName = await fetch_controlBlockName(data[i].framework.controlBlock_ID);
-                            }else{
-                            	var contorlBlockName = '';
-                            }
-                            if(data[i].framework.controlOwner_ID){
-                                var controlOwnerName = await fetch_controlOwnerName(data[i].framework.controlOwner_ID);	
-                            }else{
-                            	var controlOwnerName = '';
-                            }
-                            if(data[i].framework.nc.actionPlan && data[i].framework.nc.actionPlan.length > 0){
-                            	for (var j = 0; j < data[i].framework.nc.actionPlan.length; j++) {
-                            		ncData.push({
-                                		"_id" : data[i]._id,
-                                		"control_ID" : data[i].framework.control_ID,
-                                		"controlDesc" : controlDesc,
-                                		"controlBlock_ID" : data[i].framework.controlBlock_ID,
-                                		"controlBlockName" : contorlBlockName,
-                                		"controlOwner_ID" : data[i].framework.controlOwner_ID,
-                                		"controlOwnerName" : controlOwnerName,
-                                		"response" : data[i].framework.response,
-                                		"nc" : data[i].framework.nc,
-                                		"framework_ID":data[i].framework_ID,
-                                		"corporate_ID":data[i].corporate_ID,
-                                		"actionPlan" :data[i].framework.nc.actionPlan[j]
-                            		});
-	                           }
-                            }
-                        }
-                        if(i >= data.length){
-                            res.status(200).json(ncData);
-                        }
-                    }
-                })
-                .catch(err =>{
-                    console.log(err);
-                    res.status(500).json({
-                        error: err
-                    });
-                });
+        {
+            $match : {'assessedParty_ID':new ObjectID(req.params.assessedParty_ID)}
+        },
+        {
+            $project :{
+            _id       : 1,
+            framework : 1,
+            corporate_ID : 1,
+            framework_ID : 1,
+            }
+        },
+        {
+            $unwind : "$framework"
+        },
+        {
+            $match : {"framework.nc.ncStatus" : true}
+        }
+    ])
+    .exec()
+    .then(data=>{
+        var ncData = [];
+        setNCDate();
+        async function setNCDate(){
+            for(i=0;i<data.length;i++){
+                var controlDesc = await fetch_controlShort(data[i].framework.control_ID);
+                var contorlBlockName = await fetch_controlBlockName(data[i].framework.controlBlock_ID);
+                var controlOwnerName = await fetch_controlOwnerName(data[i].framework.controlOwner_ID); 
+                var assessmentName = await getAssessmentName(data[i].framework_ID)
+                var customerName = await getCustomerName(data[i].corporate_ID)
+
+                if(data[i].framework.nc.actionPlan && data[i].framework.nc.actionPlan.length > 0){
+                	for (var j = 0; j < data[i].framework.nc.actionPlan.length; j++) {
+                		ncData.push({
+                    		"_id" : data[i]._id,
+                    		"control_ID" : data[i].framework.control_ID,
+                    		"controlDesc" : controlDesc,
+                    		"controlBlock_ID" : data[i].framework.controlBlock_ID,
+                    		"controlBlockName" : contorlBlockName,
+                    		"controlOwner_ID" : data[i].framework.controlOwner_ID,
+                    		"controlOwnerName" : controlOwnerName,
+                    		"response" : data[i].framework.response,
+                    		"nc" : data[i].framework.nc,
+                    		"framework_ID":data[i].framework_ID,
+                    		"corporate_ID":data[i].corporate_ID,
+                    		"actionPlan" :data[i].framework.nc.actionPlan[j],
+                            "assessmentName" :assessmentName,
+                            "customerName" :customerName,
+                		});
+                   }
+                }
+            }
+            if(i >= data.length){
+                res.status(200).json(ncData);
+            }
+        }
+    })
+    .catch(err =>{
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+    });
 }
 
 exports.list_actionplan_corporate_ID = (req,res,next) =>{
@@ -1345,4 +1408,43 @@ exports.delete_actiondocument = (req,res,next)=>{
             error: err
         });
     });
+}
+
+function getAssessmentName(data){
+    return new Promise(function(resolve,reject){
+        Framework.findOne({_id:data})
+        .exec()
+        .then(assessmentData=>{
+            resolve(assessmentData.frameworkname);
+        })
+        .catch(err=>{
+            reject(err);
+        });
+    })
+}
+
+function getAssessedPartyName(data){
+    return new Promise(function(resolve,reject){
+        Companysettings.findOne({_id:data})
+        .exec()
+        .then(companyData=>{
+            resolve(companyData.companyName);
+        })
+        .catch(err=>{
+            reject(err);
+        });
+    })
+}
+
+function getCustomerName(data){
+    return new Promise(function(resolve,reject){
+        Companysettings.findOne({companyUniqueID:data})
+        .exec()
+        .then(companyData=>{
+            resolve(companyData.companyName);
+        })
+        .catch(err=>{
+            reject(err);
+        });
+    })
 }
