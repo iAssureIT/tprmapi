@@ -1,4 +1,5 @@
 const mongoose	= require("mongoose");
+var ObjectID = require('mongodb').ObjectID;
 
 const  Nccriticality = require('../../models/tprm/nccriticality');
 
@@ -156,6 +157,37 @@ exports.delete_all_nccriticality = (req,res,next)=>{
         .exec()
         .then(data=>{
             res.status(200).json("All nccriticality deleted");
+        })
+        .catch(err =>{
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+}
+
+exports.list_ncpriority_company_ID_name = (req,res,next)=>{
+    Nccriticality.aggregate([
+                                {
+                                    $match : {company_ID:new ObjectID(req.params.company_ID)}
+                                },
+                                {
+                                    $group : {
+                                        "_id"               : "$company_ID",
+                                        "nccriticality"     : { $push : "$nccriticality"}
+                                    }
+                                },
+                                {
+                                    $project : {
+                                        "_id"            : 0,
+                                        "nccriticality"  : 1
+                                    }
+                                }
+                            ]
+        )
+        .exec()
+        .then(data=>{
+            res.status(200).json(data);
         })
         .catch(err =>{
             console.log(err);

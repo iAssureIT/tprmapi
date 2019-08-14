@@ -1420,3 +1420,124 @@ function getCustomerName(data){
         });
     })
 }
+
+exports.fetch_priority_actionplan = (req,res,next)=>{
+    request({
+            "method"    : "GET", 
+            "url"       : "http://localhost:"+globalVariable.port+"/api/actionpriority/list_actionpriorityname/"+req.params.company_ID,
+            "json"      : true,
+            "headers"   : {
+                            "User-Agent": "Test Agent"
+                        }
+        })
+        .then(actionpriority=>{
+            Assessments.aggregate(
+                                    [
+                                        {
+                                            $match : {corporate_ID:new ObjectID(req.params.company_ID)}
+                                        },
+                                        {
+                                            $unwind : "$framework"
+                                        },
+                                        {
+                                            $unwind : "$framework.nc.actionPlan"
+                                        },
+                                        {
+                                            $project : {
+                                                "actionpriority" : "$framework.nc.actionPlan.priority"
+                                            }
+                                        }
+                                    ]
+                        )
+                        .exec()
+                        .then(assessment=>{
+                            var returnData = [];
+                            var actionpriorities = actionpriority[0].actionpriority;
+                            for (i = 0; i < actionpriorities.length; i++) {
+                                var count = assessment.filter((assessment)=>{
+                                    return assessment.actionpriority == actionpriorities[i]
+                                 }).length;
+
+                                returnData.push({
+                                    "priority" : actionpriorities[i],
+                                    "count"    : count
+                                })
+                            }
+                                // console.log("Data ",returnData);
+                            if(i >= actionpriorities.length){
+                                res.header("Access-Control-Allow-Origin","*");
+
+                                res.status(200).json(returnData);
+                            }
+                        })
+                        .catch(err=>{
+                            res.status(200).json({err:err});
+                        });
+            // res.status(200).json(actionpriority); 
+        })
+        .catch(err =>{
+            console.log(err);
+            res.status(500).json(err);
+        });
+    // res.status(200).json("fetch_priority_actionplan");
+};
+exports.fetch_priority_NC = (req,res,next)=>{
+    request({
+            "method"    : "GET", 
+            "url"       : "http://localhost:"+globalVariable.port+"/api/nccriticality/list_ncpriorityname/"+req.params.company_ID,
+            "json"      : true,
+            "headers"   : {
+                            "User-Agent": "Test Agent"
+                        }
+        })
+        .then(ncpriority=>{
+            Assessments.aggregate(
+                                    [
+                                        {
+                                            $match : {corporate_ID:new ObjectID(req.params.company_ID)}
+                                        },
+                                        {
+                                            $unwind : "$framework"
+                                        },
+                                        {
+                                            $project : {
+                                                "ncpriority" : "$framework.nc.Criticality"
+                                            }
+                                        }
+                                        
+                                    ]
+                        )
+                        .exec()
+                        .then(assessment=>{
+                           var finalAssessment = assessment.filter((assessment)=>{
+                            return assessment.ncpriority;
+                           })
+                            var returnData = [];
+                            var ncpriorities = ncpriority[0].nccriticality;
+                            for (i = 0; i < ncpriorities.length; i++) {
+                                var count = finalAssessment.filter((assessment)=>{
+                                    return assessment.ncpriority == ncpriorities[i]
+                                 }).length;
+
+                                returnData.push({
+                                    "priority" : ncpriorities[i],
+                                    "count"    : count
+                                })
+                            }
+                                // console.log("Data ",returnData);
+                            if(i >= ncpriorities.length){
+                                res.header("Access-Control-Allow-Origin","*");
+                                res.status(200).json(returnData);
+                            }
+                        })
+                        .catch(err=>{
+                            res.status(200).json({err:err});
+                        });
+            // res.status(200).json(actionpriority); 
+        })
+        .catch(err =>{
+            console.log(err);
+            res.status(500).json(err);
+        });
+    // res.status(200).json("fetch_priority_actionplan");
+};

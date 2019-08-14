@@ -1,6 +1,7 @@
 const mongoose	= require("mongoose");
-
+var ObjectID = require('mongodb').ObjectID;
 const  Actionpriority = require('../../models/tprm/actionpriorities');
+const Assessments     = require('../../models/tprm/assessments');
 
 exports.create_actionpriority = (req,res,next)=>{
     var actionpriorityData = req.body.actionpriority;
@@ -57,6 +58,37 @@ exports.list_actionpriority = (req,res,next)=>{
 
 exports.list_actionpriority_company_ID = (req,res,next)=>{
     Actionpriority.find({company_ID:req.params.company_ID})
+        .exec()
+        .then(data=>{
+            res.status(200).json(data);
+        })
+        .catch(err =>{
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+}
+
+exports.list_actionpriority_company_ID_name = (req,res,next)=>{
+    Actionpriority.aggregate([
+                                {
+                                    $match : {company_ID:new ObjectID(req.params.company_ID)}
+                                },
+                                {
+                                    $group : {
+                                        "_id"               : "$company_ID",
+                                        "actionpriority"    : { $push : "$actionpriority"}
+                                    }
+                                },
+                                {
+                                    $project : {
+                                        "_id"            : 0,
+                                        "actionpriority" : 1
+                                    }
+                                }
+                            ]
+        )
         .exec()
         .then(data=>{
             res.status(200).json(data);
@@ -163,18 +195,4 @@ exports.delete_all_actionpriority = (req,res,next)=>{
                 error: err
             });
         });
-}
-
-exports.list_actionpriority_userID = (req,res,next)=>{
-    Actionpriority.find({createdBy:req.params.user_ID})
-    .exec()
-    .then(data=>{
-        res.status(200).json(data);
-    })
-    .catch(err =>{
-        console.log(err);
-        res.status(500).json({
-            error: err
-        });
-    });
 }

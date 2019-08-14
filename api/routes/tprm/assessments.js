@@ -17,6 +17,10 @@ router.get('/list/action_plan_corporateID/:corporate_ID',AssessmentsController.l
 
 router.get('/list/action_plan_assessmentsID/:assessments_ID',AssessmentsController.list_actionplan_assessments_ID);
 
+router.get('/priority_actionplan/:company_ID',AssessmentsController.fetch_priority_actionplan);
+
+router.get('/priority_ncplan/:company_ID',AssessmentsController.fetch_priority_NC);
+
 router.get('/getframework/:assessments_ID/:controlBlock_ID/:control_ID',AssessmentsController.fetch_specific_framework);
 
 router.get('/getresponse/:assessments_ID/:controlBlock_ID/:control_ID',AssessmentsController.fetch_specific_response);
