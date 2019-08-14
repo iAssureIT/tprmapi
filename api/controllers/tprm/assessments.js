@@ -543,138 +543,124 @@ exports.fetch_specific_framework = (req,res,next)=>{
 
 exports.list_nc_true = (req,res,next) =>{
     Assessments.aggregate([
-                            {
-                                $match : { _id       : new ObjectID(req.params.assessments_ID)}
-                            },
-                            {
-                                $project :{
-                                    _id       : 1,
-                                    framework : 1,
-                                    assessedParty_ID : 1,
-                                    framework_ID : 1,
-                                }
-                            },
-                            {
-                                $unwind : "$framework"
-                            },
-                            {
-                                $match : {"framework.nc.ncStatus" : true}
-                            }
-                        ])
-                .exec()
-                .then(data=>{
-                        var ncData = [];
-                        setNCDate();
-                        async function setNCDate(){
-                            for(i=0;i<data.length;i++){
-                                if(data[i].framework.control_ID){
-                                    var controlDesc = await fetch_controlShort(data[i].framework.control_ID);
-                                }else{
-                                	var controlDesc = ''; 
-                                }
-                                if(data[i].framework.controlBlock_ID){
-                                    var contorlBlockName = await fetch_controlBlockName(data[i].framework.controlBlock_ID);
-                                }else{
-                                	var contorlBlockName = '';
-                                }
-                                if(data[i].framework.controlOwner_ID){
-                                    var controlOwnerName = await fetch_controlOwnerName(data[i].framework.controlOwner_ID);	
-                                }else{
-                                	var controlOwnerName = '';
-                                }
-                                ncData.push({
-                                    "_id" : data[i]._id,
-                                    "control_ID" : data[i].framework.control_ID,
-                                    "controlDesc" : controlDesc,
-                                    "controlBlock_ID" : data[i].framework.controlBlock_ID,
-                                    "controlBlockName" : contorlBlockName,
-                                    "controlOwner_ID" : data[i].framework.controlOwner_ID,
-                                    "controlOwnerName" : controlOwnerName,
-                                    "response" : data[i].framework.response,
-                                    "nc" : data[i].framework.nc,
-                                    "framework_ID":data[i].framework_ID,
-                                    "assessedParty_ID":data[i].assessedParty_ID
-                                });
-                            }
-                            if(i >= data.length){
-                                res.status(200).json(ncData);
-                            }
-                        }
-                    })
-                .catch(err =>{
-                    console.log(err);
-                    res.status(500).json({
-                        error: err
+                {
+                    $match : { _id       : new ObjectID(req.params.assessments_ID)}
+                },
+                {
+                    $project :{
+                        _id       : 1,
+                        framework : 1,
+                        assessedParty_ID : 1,
+                        framework_ID : 1,
+                    }
+                },
+                {
+                    $unwind : "$framework"
+                },
+                {
+                    $match : {"framework.nc.ncStatus" : true}
+                }
+            ])
+    .exec()
+    .then(data=>{
+            var ncData = [];
+            setNCDate();
+            async function setNCDate(){
+                for(i=0;i<data.length;i++){
+                    var controlDesc = await fetch_controlShort(data[i].framework.control_ID);
+                    var contorlBlockName = await fetch_controlBlockName(data[i].framework.controlBlock_ID);
+                    var controlOwnerName = await fetch_controlOwnerName(data[i].framework.controlOwner_ID); 
+                    var assessmentName = await getAssessmentName(data[i].framework_ID)
+                    var partyName = await getAssessedPartyName(data[i].assessedParty_ID)
+                    
+                    ncData.push({
+                        "_id" : data[i]._id,
+                        "control_ID" : data[i].framework.control_ID,
+                        "controlDesc" : controlDesc,
+                        "controlBlock_ID" : data[i].framework.controlBlock_ID,
+                        "controlBlockName" : contorlBlockName,
+                        "controlOwner_ID" : data[i].framework.controlOwner_ID,
+                        "controlOwnerName" : controlOwnerName,
+                        "response" : data[i].framework.response,
+                        "nc" : data[i].framework.nc,
+                        "framework_ID":data[i].framework_ID,
+                        "assessedParty_ID":data[i].assessedParty_ID,
+                        "assessmentName" :assessmentName,
+                        "assessedPartyName" : partyName
                     });
-                });
+                }
+                if(i >= data.length){
+                    res.status(200).json(ncData);
+                }
+            }
+        })
+    .catch(err =>{
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+    });
 }
 
 exports.list_AllNC_true = (req,res,next) =>{
     Assessments.aggregate([
-                            {
-                                $match : {'corporate_ID':new ObjectID(req.params.corporate_ID)}
-                            },
-                            {
-                                $project :{
-                                    _id       : 1,
-                                    framework : 1,
-                                    assessedParty_ID : 1,
-                                    framework_ID : 1,
-                                }
-                            },
-                            {
-                                $unwind : "$framework"
-                            },
-                            {
-                                $match : {"framework.nc.ncStatus" : true}
-                            }
-                        ])
-                .exec()
-                .then(data=>{
-                    var ncData = [];
-                    setNCDate();
-                    async function setNCDate(){
-                        for(i=0;i<data.length;i++){
-                            if(data[i].framework.control_ID){
-                                var controlDesc = await fetch_controlShort(data[i].framework.control_ID);
-                            }else{
-                            	var controlDesc = ''; 
-                            }
-                            if(data[i].framework.controlBlock_ID){
-                                var contorlBlockName = await fetch_controlBlockName(data[i].framework.controlBlock_ID);
-                            }else{
-                            	var contorlBlockName = '';
-                            }
-                            if(data[i].framework.controlOwner_ID){
-                                var controlOwnerName = await fetch_controlOwnerName(data[i].framework.controlOwner_ID);	
-                            }else{
-                            	var controlOwnerName = '';
-                            }
-                            ncData.push({
-                                "_id" : data[i]._id,
-                                "control_ID" : data[i].framework.control_ID,
-                                "controlDesc" : controlDesc,
-                                "controlBlock_ID" : data[i].framework.controlBlock_ID,
-                                "controlBlockName" : contorlBlockName,
-                                "controlOwner_ID" : data[i].framework.controlOwner_ID,
-                                "controlOwnerName" : controlOwnerName,
-                                "response" : data[i].framework.response,
-                                "nc" : data[i].framework.nc,
-                                "framework_ID":data[i].framework_ID,
-                                "assessedParty_ID":data[i].assessedParty_ID,
-                            });
-                        }
-                        if(i >= data.length){
-                            res.status(200).json(ncData);
-                        }
-                    }
-                })
-                .catch(err =>{
-                    console.log(err);
-                    res.status(500).json({
-                        error: err
-                    });
-                });
+            {
+                $match : {'corporate_ID':new ObjectID(req.params.corporate_ID)}
+            },
+            {
+                $project :{
+                    _id       : 1,
+                    framework : 1,
+                    assessedParty_ID : 1,
+                    framework_ID : 1,
+                }
+            },
+            {
+                $unwind : "$framework"
+            },
+            {
+                $match : {"framework.nc.ncStatus" : true}
+            }
+        ])
+    .exec()
+    .then(data=>{
+    var ncData = [];
+    setNCDate();
+    async function setNCDate(){
+        for(i=0;i<data.length;i++){
+            var controlDesc = await fetch_controlShort(data[i].framework.control_ID);
+            var contorlBlockName = await fetch_controlBlockName(data[i].framework.controlBlock_ID);
+            var controlOwnerName = await fetch_controlOwnerName(data[i].framework.controlOwner_ID);	
+            var assessmentName = await getAssessmentName(data[i].framework_ID)
+            var partyName = await getAssessedPartyName(data[i].assessedParty_ID)
+            
+            ncData.push({
+                "_id" : data[i]._id,
+                "control_ID" : data[i].framework.control_ID,
+                "controlDesc" : controlDesc,
+                "controlBlock_ID" : data[i].framework.controlBlock_ID,
+                "controlBlockName" : contorlBlockName,
+                "controlOwner_ID" : data[i].framework.controlOwner_ID,
+                "controlOwnerName" : controlOwnerName,
+                "response" : data[i].framework.response,
+                "nc" : data[i].framework.nc,
+                "framework_ID":data[i].framework_ID,
+                "assessedParty_ID":data[i].assessedParty_ID,
+                "assessmentName" :assessmentName,
+                "assessedPartyName" : partyName
+            });
+        }
+        if(i >= data.length){
+            res.status(200).json(ncData);
+        }
+    }
+    })
+    .catch(err =>{
+    console.log(err);
+    res.status(500).json({
+        error: err
+    });
+    });
 }
 
 exports.list_actionplan_assessedParty_ID = (req,res,next) =>{
@@ -745,151 +731,134 @@ exports.list_actionplan_assessedParty_ID = (req,res,next) =>{
 
 exports.list_actionplan_corporate_ID = (req,res,next) =>{
     Assessments.aggregate([
-                            {
-                                $match : {'corporate_ID':new ObjectID(req.params.corporate_ID)}
-                            },
-                            {
-                                $project :{
-                                    _id       : 1,
-                                    framework : 1,
-                                    assessedParty_ID : 1,
-                                    framework_ID : 1,
-                                }
-                            },
-                            {
-                                $unwind : "$framework"
-                            },
-                            {
-                                $match : {"framework.nc.ncStatus" : true}
-                            }
-                        ])
-                .exec()
-                .then(data=>{
-                    console.log("data",data);
-                    var ncData = [];
-                    setNCDate();
-                    async function setNCDate(){
-                        for(i=0;i<data.length;i++){
-                            if(data[i].framework){
-                                if(data[i].framework.control_ID){
-                                    var controlDesc = await fetch_controlShort(data[i].framework.control_ID);
-                                }else{
-                                	var controlDesc = ''; 
-                                }
-                                if(data[i].framework.controlBlock_ID){
-                                    var contorlBlockName = await fetch_controlBlockName(data[i].framework.controlBlock_ID);
-                                }else{
-                                	var contorlBlockName = '';
-                                }
-                                if(data[i].framework.controlOwner_ID){
-                                    var controlOwnerName = await fetch_controlOwnerName(data[i].framework.controlOwner_ID);	
-                                }else{
-                                	var controlOwnerName = '';
-                                }
-                                if(data[i].framework.nc.actionPlan&&data[i].framework.nc.actionPlan.length>0){
-                                	for (var j = 0; j < data[i].framework.nc.actionPlan.length; j++) {
-                                		ncData.push({
-                                    		"_id" : data[i]._id,
-                                    		"control_ID" : data[i].framework.control_ID,
-                                    		"controlDesc" : controlDesc,
-                                    		"controlBlock_ID" : data[i].framework.controlBlock_ID,
-                                    		"controlBlockName" : contorlBlockName,
-                                    		"controlOwner_ID" : data[i].framework.controlOwner_ID,
-                                    		"controlOwnerName" : controlOwnerName,
-                                    		"response" : data[i].framework.response,
-                                    		"nc" : data[i].framework.nc,
-                                    		"framework_ID":data[i].framework_ID,
-                                    		"assessedParty_ID":data[i].assessedParty_ID,
-                                    		"actionPlan" :data[i].framework.nc.actionPlan[j]
-                                		});
-                                	}
-                                }
-                            }
-                        }
-                        if(i >= data.length){
-                            res.status(200).json(ncData);
-                        }
+                {
+                    $match : {'corporate_ID':new ObjectID(req.params.corporate_ID)}
+                },
+                {
+                    $project :{
+                        _id       : 1,
+                        framework : 1,
+                        assessedParty_ID : 1,
+                        framework_ID : 1,
                     }
-                })
-                .catch(err =>{
-                    console.log(err);
-                    res.status(500).json({
-                        error: err
-                    });
-                });
+                },
+                {
+                    $unwind : "$framework"
+                },
+                {
+                    $match : {"framework.nc.ncStatus" : true}
+                }
+            ])
+    .exec()
+    .then(data=>{
+        var ncData = [];
+        setNCDate();
+        async function setNCDate(){
+            for(i=0;i<data.length;i++){
+                var controlDesc = await fetch_controlShort(data[i].framework.control_ID);
+                var contorlBlockName = await fetch_controlBlockName(data[i].framework.controlBlock_ID);
+                var controlOwnerName = await fetch_controlOwnerName(data[i].framework.controlOwner_ID);	
+                var assessmentName = await getAssessmentName(data[i].framework_ID)
+                var partyName = await getAssessedPartyName(data[i].assessedParty_ID)
+    
+                if(data[i].framework.nc.actionPlan&&data[i].framework.nc.actionPlan.length>0){
+                	for (var j = 0; j < data[i].framework.nc.actionPlan.length; j++) {
+                		ncData.push({
+                    		"_id" : data[i]._id,
+                    		"control_ID" : data[i].framework.control_ID,
+                    		"controlDesc" : controlDesc,
+                    		"controlBlock_ID" : data[i].framework.controlBlock_ID,
+                    		"controlBlockName" : contorlBlockName,
+                    		"controlOwner_ID" : data[i].framework.controlOwner_ID,
+                    		"controlOwnerName" : controlOwnerName,
+                    		"response" : data[i].framework.response,
+                    		"nc" : data[i].framework.nc,
+                    		"framework_ID":data[i].framework_ID,
+                    		"assessedParty_ID":data[i].assessedParty_ID,
+                    		"actionPlan" :data[i].framework.nc.actionPlan[j],
+                            "assessmentName" :assessmentName,
+                            "assessedPartyName" : partyName
+                		});
+                	}
+                }
+            }
+            if(i >= data.length){
+                res.status(200).json(ncData);
+            }
+        }
+    })
+    .catch(err =>{
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+    });
 }
 
 exports.list_actionplan_assessments_ID = (req,res,next) =>{
     Assessments.aggregate([
-                                {
-                                    $match : {_id : new ObjectID(req.params.assessments_ID)}
-                                },
-                                {
-                                    $project :{
-                                        _id       : 1,
-                                        framework : 1,
-                                        assessedParty_ID : 1,
-                                        framework_ID : 1,
-                                    }
-                                },
-                                {
-                                    $unwind : "$framework"
-                                },
-                                {
-                                    $match : {"framework.nc.ncStatus" : true}
-                                }
-                        ])
-                .exec()
-                .then(data=>{
-                    var ncData = [];
-                    setNCDate();
-                    async function setNCDate(){
-                        for(i=0;i<data.length;i++){
-                            if(data[i].framework.control_ID){
-                                var controlDesc = await fetch_controlShort(data[i].framework.control_ID);
-                            }else{
-                            	var controlDesc = ''; 
-                            }
-                            if(data[i].framework.controlBlock_ID){
-                                var contorlBlockName = await fetch_controlBlockName(data[i].framework.controlBlock_ID);
-                            }else{
-                            	var contorlBlockName = '';
-                            }
-                            if(data[i].framework.controlOwner_ID){
-                                var controlOwnerName = await fetch_controlOwnerName(data[i].framework.controlOwner_ID);	
-                            }else{
-                            	var controlOwnerName = '';
-                            }
-                            if(data[i].framework.nc.actionPlan&&data[i].framework.nc.actionPlan.length>0){
-                            	for (var j = 0; j < data[i].framework.nc.actionPlan.length; j++) {
-                            		ncData.push({
-                                		"_id" : data[i]._id,
-                                		"control_ID" : data[i].framework.control_ID,
-                                		"controlDesc" : controlDesc,
-                                		"controlBlock_ID" : data[i].framework.controlBlock_ID,
-                                		"controlBlockName" : contorlBlockName,
-                                		"controlOwner_ID" : data[i].framework.controlOwner_ID,
-                                		"controlOwnerName" : controlOwnerName,
-                                		"response" : data[i].framework.response,
-                                		"nc" : data[i].framework.nc,
-                                		"framework_ID":data[i].framework_ID,
-                                		"assessedParty_ID":data[i].assessedParty_ID,
-                                		"actionPlan" :data[i].framework.nc.actionPlan[j]
-                            		});
-                            	}
-                            }
-                        }
-                        if(i >= data.length){
-                            res.status(200).json(ncData);
-                        }
-                    }
-                })
-                .catch(err =>{
-                    console.log(err);
-                    res.status(500).json({
-                        error: err
-                    });
-                });
+            {
+                $match : {_id : new ObjectID(req.params.assessments_ID)}
+            },
+            {
+                $project :{
+                    _id       : 1,
+                    framework : 1,
+                    assessedParty_ID : 1,
+                    framework_ID : 1,
+                }
+            },
+            {
+                $unwind : "$framework"
+            },
+            {
+                $match : {"framework.nc.ncStatus" : true}
+            }
+        ])
+    .exec()
+    .then(data=>{
+    var ncData = [];
+    setNCDate();
+    async function setNCDate(){
+        for(i=0;i<data.length;i++){
+            var controlDesc = await fetch_controlShort(data[i].framework.control_ID);
+            var contorlBlockName = await fetch_controlBlockName(data[i].framework.controlBlock_ID);
+            var controlOwnerName = await fetch_controlOwnerName(data[i].framework.controlOwner_ID);	
+            var assessmentName = await getAssessmentName(data[i].framework_ID)
+            var partyName = await getAssessedPartyName(data[i].assessedParty_ID)
+
+            if(data[i].framework.nc.actionPlan&&data[i].framework.nc.actionPlan.length>0){
+            	for (var j = 0; j < data[i].framework.nc.actionPlan.length; j++) {
+            		ncData.push({
+                		"_id" : data[i]._id,
+                		"control_ID" : data[i].framework.control_ID,
+                		"controlDesc" : controlDesc,
+                		"controlBlock_ID" : data[i].framework.controlBlock_ID,
+                		"controlBlockName" : contorlBlockName,
+                		"controlOwner_ID" : data[i].framework.controlOwner_ID,
+                		"controlOwnerName" : controlOwnerName,
+                		"response" : data[i].framework.response,
+                		"nc" : data[i].framework.nc,
+                		"framework_ID":data[i].framework_ID,
+                		"assessedParty_ID":data[i].assessedParty_ID,
+                		"actionPlan" :data[i].framework.nc.actionPlan[j],
+                        "assessmentName" :assessmentName,
+                        "assessedPartyName" : partyName
+            		});
+            	}
+            }
+        }
+        if(i >= data.length){
+            res.status(200).json(ncData);
+        }
+    }
+    })
+    .catch(err =>{
+    console.log(err);
+    res.status(500).json({
+        error: err
+    });
+    });
 }
 
 exports.fetch_specific_response = (req,res,next)=>{
