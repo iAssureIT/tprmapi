@@ -223,7 +223,7 @@ exports.create_Customize_framework = (req,res,next)=>{
                                     if(newCB == "Control Not found"){
                                         res.status(200).json({message:"Control Block Not Found"})
                                     }
-                                    newCBArray.push(newCB);
+                                    newCBArray.push({"controlBlocks_ID":newCB});
                                 }
                             }
                             if(FWDoc.controlBlocks.length == newCBArray.length){

@@ -17,4 +17,6 @@ router.delete('/:actionpriority_ID',ActionpriorityController.delete_actionpriori
 
 router.delete('/',ActionpriorityController.delete_all_actionpriority);
 
+router.get('/list/:user_ID', ActionpriorityController.list_actionpriority_userID);
+
 module.exports = router;

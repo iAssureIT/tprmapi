@@ -1,9 +1,13 @@
 const mongoose	= require("mongoose");
 const bcrypt	= require("bcrypt");
 const jwt		= require("jsonwebtoken");
-const globalVariable = require("../../../nodemon.js");
+var request     = require('request-promise');
+
+const globalVariable  = require("../../../nodemon.js");
 const Companysettings = require('../../models/coreAdmin/companysettings');
 const Users           = require('../../models/coreAdmin/users');
+const Assessments     = require('../../models/tprm/assessments');
+
 exports.create_companysettings = (req,res,next)=>{
 	Companysettings.find()
 		            .exec()
@@ -98,7 +102,7 @@ exports.details_ByUserId = (req,res,next)=>{
 
 exports.users_count = (req,res,next)=>{
     Companysettings.find({'createdBy':req.params.user_ID,'type':req.params.user_type})
-    .count()
+    .countDocuments()
     .exec()
     .then(data=>{
         console.log("data",data);
@@ -587,7 +591,7 @@ exports.create_client = (req,res,next)=>{
                             user.save()
                             .then(result =>{
                                 Companysettings.find()
-                                .count()
+                                .countDocuments()
                                 .exec()
                                 .then(companyLength =>{
                                     var companyId = companyLength + 1;
@@ -825,4 +829,59 @@ exports.userEmalId_byId_fornotification = (req,res,next)=>{
         });
     });
 }
+function getAssessmentData(companyData){
+    return new Promise(function(resolve,reject){
+        Assessments .find({assessedParty_ID:companyData})
+                    .exec()
+                    .then(assessmentData=>{
+                        var openAssessmentCount   = 0;
+                        var closedAssessmentCount = 0;
+                            openAssessmentCount = assessmentData.filter((assessmentData)=>{
+                                return assessmentData.assessmentStatus == "Pending" || assessmentData.assessmentStatus == "Completed"
+                            }).length;
+                            resolve({
+                                "openAssessmentCount"   : openAssessmentCount,
+                                "closedAssessmentCount" : assessmentData.length - openAssessmentCount
+                            });
+                    })
+                    .catch(err=>{
+                        reject(err);
+                    });
+    })
+}
 
+exports.userDataVendor_assessment_Count = (req,res,next)=>{
+    Companysettings.find({'createdBy':req.params.user_ID,"type" : "Vendor"})
+    .exec()
+    .then(company=>{
+        // console.log("company",company);
+        if (company) {
+            getData();
+            async function getData(){
+                var returnData = [];
+                for(i = 0 ;i < company.length ; i++){
+                    var assessmentD = await getAssessmentData(company[i]._id)
+                    returnData.push({
+                        _id             : company[i]._id,
+                        companyName     : company[i].companyName,
+                        assessmentData  : assessmentD
+                    });
+                }
+                if(i >= company.length){
+                    // console.log("returnData",returnData);
+                    res.status(200).json(returnData);
+                }
+            }
+        }else{
+            res.status(404).json("Customer Not Found");
+        }
+
+     })
+    .catch(err=>{
+        console.log('update user status error ',err);
+        res.status(500).json({
+            error:err
+        });
+    });
+
+}

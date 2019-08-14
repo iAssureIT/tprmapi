@@ -5,7 +5,7 @@ const AssessmentsController = require('../../controllers/tprm/assessments');
 
 router.post('/', AssessmentsController.create_assessments);
 
-router.get('/list', AssessmentsController.list_assessments);
+router.get('/list', AssessmentsController.list_assessments); 
 
 router.get('/list/nc_true/:assessments_ID',AssessmentsController.list_nc_true);
 

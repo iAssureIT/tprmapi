@@ -164,3 +164,17 @@ exports.delete_all_actionpriority = (req,res,next)=>{
             });
         });
 }
+
+exports.list_actionpriority_userID = (req,res,next)=>{
+    Actionpriority.find({createdBy:req.params.user_ID})
+    .exec()
+    .then(data=>{
+        res.status(200).json(data);
+    })
+    .catch(err =>{
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+    });
+}
