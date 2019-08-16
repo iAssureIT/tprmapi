@@ -67,6 +67,7 @@ const assessmentsSchema = mongoose.Schema({
                                 ],
     createdBy               : { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
     createdAt               : Date,
+    completionDate          : Date,
 });
 
 module.exports = mongoose.model('assessments',assessmentsSchema);

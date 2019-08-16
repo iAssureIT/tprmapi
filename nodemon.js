@@ -1,6 +1,5 @@
-
 module.exports = { 
-	"port"			: 3063,
+	"port"			: 3048,
 	"JWT_KEY" 		: "secret",
 	"dbname"		: "qatprm"
 };

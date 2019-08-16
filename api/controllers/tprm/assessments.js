@@ -60,7 +60,7 @@ function fetch_controlShort(control_ID){
                         }
         })
         .then(control=>{
-            resolve(control.controlShort); 
+            resolve(control.controlDesc); 
         })
         .catch(err =>{
             console.log(err);
@@ -216,7 +216,7 @@ exports.list_assessments = (req,res,next)=>{
 }
 
 exports.list_assessments_company_ID = (req,res,next)=>{
-    Assessments.find({corporate_ID:req.params.corporate_ID})
+    Assessments.find({$or:[{corporate_ID:req.params.corporate_ID},{"assessor.user_ID":req.params.corporate_ID}]})
     .exec()
     .then(data=>{
         if(data&&data.length>0){
@@ -264,7 +264,7 @@ exports.list_assessments_company_ID = (req,res,next)=>{
 }
 
 exports.list_assessments_assessedParty_ID = (req,res,next)=>{
-    Assessments.find({assessedParty_ID:req.params.assessedParty_ID})
+    Assessments.find({$or:[{assessedParty_ID:req.params.assessedParty_ID},{"framework.controlOwner_ID":req.params.assessedParty_ID}]})
     .exec()
     .then(data=>{
        if(data&&data.length>0){
@@ -396,28 +396,29 @@ exports.delete_all_assessments = (req,res,next)=>{
 
 exports.update_assessmentStatus = (req,res,next)=>{
     Assessments.updateOne(
-                    { _id:req.params.assessments_ID},
-                    {
-                        $set:{
-                            "assessmentStatus" : req.params.status
-                        }
-                    }
-                )
-                .exec()
-                .then(data=>{
-                    console.log('data ',data);
-                    if(data){
-                        res.status(200).json("assessmentStatus Updated");
-                    }else{
-                        res.status(401).json("assessmentStatus Not Found");
-                    }
-                })
-                .catch(err =>{
-                    console.log(err);
-                    res.status(500).json({
-                        error: err
-                    });
-                });
+        { _id:req.params.assessments_ID},
+        {
+            $set:{
+                "assessmentStatus" : req.params.status,
+                "completionDate" : req.params.status=='Published'?new Date():'',
+            }
+        }
+    )
+    .exec()
+    .then(data=>{
+        console.log('data ',data);
+        if(data){
+            res.status(200).json("assessmentStatus Updated");
+        }else{
+            res.status(401).json("assessmentStatus Not Found");
+        }
+    })
+    .catch(err =>{
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+    });
 }
 
 exports.update_assessmentStages = (req,res,next)=>{
@@ -551,6 +552,7 @@ exports.list_nc_true = (req,res,next) =>{
                         _id       : 1,
                         framework : 1,
                         assessedParty_ID : 1,
+                        corporate_ID : 1,
                         framework_ID : 1,
                     }
                 },
@@ -585,6 +587,7 @@ exports.list_nc_true = (req,res,next) =>{
                         "nc" : data[i].framework.nc,
                         "framework_ID":data[i].framework_ID,
                         "assessedParty_ID":data[i].assessedParty_ID,
+                        "corporate_ID":data[i].corporate_ID,
                         "assessmentName" :assessmentName,
                         "assessedPartyName" : partyName
                     });
@@ -605,13 +608,14 @@ exports.list_nc_true = (req,res,next) =>{
 exports.list_AllNC_true = (req,res,next) =>{
     Assessments.aggregate([
             {
-                $match : {'corporate_ID':new ObjectID(req.params.corporate_ID)}
+                $match : {$or:[{'corporate_ID':new ObjectID(req.params.corporate_ID)},{"assessor.user_ID":new ObjectID(req.params.corporate_ID)}]}
             },
             {
                 $project :{
                     _id       : 1,
                     framework : 1,
                     assessedParty_ID : 1,
+                    corporate_ID : 1,
                     framework_ID : 1,
                 }
             },
@@ -646,6 +650,7 @@ exports.list_AllNC_true = (req,res,next) =>{
                 "nc" : data[i].framework.nc,
                 "framework_ID":data[i].framework_ID,
                 "assessedParty_ID":data[i].assessedParty_ID,
+                "corporate_ID":data[i].corporate_ID,
                 "assessmentName" :assessmentName,
                 "assessedPartyName" : partyName
             });
@@ -666,7 +671,7 @@ exports.list_AllNC_true = (req,res,next) =>{
 exports.list_actionplan_assessedParty_ID = (req,res,next) =>{
     Assessments.aggregate([
         {
-            $match : {'assessedParty_ID':new ObjectID(req.params.assessedParty_ID)}
+            $match : {$or:[{'assessedParty_ID':new ObjectID(req.params.assessedParty_ID)},{"framework.controlOwner_ID":new ObjectID(req.params.assessedParty_ID)}]}
         },
         {
             $project :{
@@ -732,7 +737,7 @@ exports.list_actionplan_assessedParty_ID = (req,res,next) =>{
 exports.list_actionplan_corporate_ID = (req,res,next) =>{
     Assessments.aggregate([
                 {
-                    $match : {'corporate_ID':new ObjectID(req.params.corporate_ID)}
+                    $match : {$or:[{'corporate_ID':new ObjectID(req.params.corporate_ID)},{"assessor.user_ID":new ObjectID(req.params.corporate_ID)}]}
                 },
                 {
                     $project :{
