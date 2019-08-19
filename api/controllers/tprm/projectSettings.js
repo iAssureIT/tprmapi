@@ -78,5 +78,19 @@ exports.list_projectsettings = (req, res, next)=>{
                 res.status(500).json({
                     error: err
                 });
-            });            
+            });
+}
+
+exports.delete_projectsettings = (req, res, next)=>{
+    ProjectSettings.deleteMany({})
+    .exec()
+    .then(data=>{
+        res.status(200).json("All project settings deleted");
+    })
+    .catch(err =>{
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+    });     
 }

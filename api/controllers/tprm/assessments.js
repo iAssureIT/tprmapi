@@ -60,7 +60,7 @@ function fetch_controlShort(control_ID){
                         }
         })
         .then(control=>{
-            resolve(control.controlDesc); 
+            resolve(control.controlShort); 
         })
         .catch(err =>{
             console.log(err);
