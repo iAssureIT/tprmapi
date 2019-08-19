@@ -1412,6 +1412,18 @@ function getAssessedPartyName(data){
         });
     })
 }
+function getAssessedPartyId(data){
+    return new Promise(function(resolve,reject){
+        Companysettings.findOne({"spocDetails.user_ID" :data})
+        .exec()
+        .then(companyData=>{
+            resolve(companyData._id);
+        })
+        .catch(err=>{
+            reject(err);
+        });
+    })
+}
 
 function getCustomerName(data){
     return new Promise(function(resolve,reject){
@@ -1545,4 +1557,102 @@ exports.fetch_priority_NC = (req,res,next)=>{
             res.status(500).json(err);
         });
     // res.status(200).json("fetch_priority_actionplan");
+};
+
+exports.fetch_vendor_priority_actionplan = (req,res,next)=>{
+    request({
+            "method"    : "GET", 
+            "url"       : "http://localhost:"+globalVariable.port+"/api/actionpriority/list_actionpriorityname/"+req.body.company_ID,
+            "json"      : true,
+            "headers"   : {
+                            "User-Agent": "Test Agent"
+                        }
+        })
+        .then(actionpriority=>{
+            getcompanysettingData();
+            async function getcompanysettingData(){
+                var assessedPartyID = await getAssessedPartyId(req.body.userID);
+                Assessments.aggregate(
+                                        [
+                                            {
+                                                $match : {assessedParty_ID:new ObjectID(assessedPartyID)}
+                                            },
+                                            {
+                                                $unwind : "$framework"
+                                            },
+                                            {
+                                                $unwind : "$framework.nc.actionPlan"
+                                            },
+                                            {
+                                                $project : {
+                                                    "actionpriority" : "$framework.nc.actionPlan.priority"
+                                                }
+                                            }
+                                        ]
+                            )
+                            .exec()
+                            .then(assessment=>{
+                                var returnData = [];
+                                var actionpriorities = actionpriority[0].actionpriority;
+                                for (i = 0; i < actionpriorities.length; i++) {
+                                    var count = assessment.filter((assessment)=>{
+                                        return assessment.actionpriority == actionpriorities[i]
+                                     }).length;
+
+                                    returnData.push({
+                                        "priority" : actionpriorities[i],
+                                        "count"    : count
+                                    })
+                                }
+                                    // console.log("Data ",returnData);
+                                if(i >= actionpriorities.length){
+                                    res.header("Access-Control-Allow-Origin","*");
+
+                                    res.status(200).json(returnData);
+                                }
+                            })
+                            .catch(err=>{
+                                res.status(200).json({err:err});
+                            });
+                // res.status(200).json(actionpriority); 
+                }
+            })
+            .catch(err =>{
+                console.log(err);
+                res.status(500).json(err);
+            });
+       
+    // res.status(200).json("fetch_priority_actionplan");
+};
+
+exports.fetch_assessment_bystages = (req,res,next)=>{
+    getcompanysData();
+    async function getcompanysData(){
+    var assessedPartyID = await getAssessedPartyId(req.body.userID);
+    Assessments.find({"assessedParty_ID" : assessedPartyID})
+               .exec()
+                .then(assessment=>{
+                    var returnData = [];
+                    var assessmentStages = req.body.assessmentStages;
+                    for (i = 0; i < assessmentStages.length; i++) {
+                        var count = assessment.filter((assessment)=>{
+                            return assessment.assessmentStages == assessmentStages[i]
+                         }).length;
+
+                        returnData.push({
+                            "assessmentStage" : assessmentStages[i],
+                            "count"    : count
+                        })
+                    }
+                        // console.log("Data ",returnData);
+                    if(i >= assessmentStages.length){
+                        res.status(200).json(returnData);
+                    }
+                })
+                .catch(err=>{
+                    res.status(200).json({err:err});
+                });
+                // res.status(200).json(actionpriority); 
+    }
+                
 };
