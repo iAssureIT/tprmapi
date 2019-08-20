@@ -3,7 +3,7 @@ const app = express();
 const morgan = require('morgan');// morgan call next function if problem occure
 const bodyParser = require('body-parser');// this package use to formate json data 
 const mongoose = require ('mongoose');
-
+var nodeMailer = require('nodemailer');
 const globalVariable = require("./nodemon.js");
 
 // Routes which should handle requests - Core Admin
@@ -82,7 +82,7 @@ app.use('/api/actionpriority',actionpriorityRoutes);
 app.use('/api/assessment',assessmentRoutes);
 app.use('/api/projectsetting',projectSettingRoutes);
 app.post('/send-email', (req, res)=> {
-	// console.log('send mail');
+	// console.log('req',req.body);
 	let transporter = nodeMailer.createTransport({
 		host: 'smtp.gmail.com',
 		port: 587,
