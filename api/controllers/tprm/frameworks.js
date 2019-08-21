@@ -1,5 +1,6 @@
 const mongoose	= require("mongoose");
 var ObjectID = require('mongodb').ObjectID;
+var request = require('request-promise');
 const Framework         = require('../../models/tprm/frameworks');
 const Controlblocks     = require('../../models/tprm/controlblocks');
 const Control           = require('../../models/tprm/controls');
@@ -229,7 +230,7 @@ exports.create_Customize_framework = (req,res,next)=>{
                             if(FWDoc.controlBlocks.length == newCBArray.length){
                                 const framework = new Framework({
                                         _id                 : new mongoose.Types.ObjectId(),
-                                        frameworktype       : FWDoc.frameworktype,
+                                        frameworktype       : "Customize",
                                         frameworkname       : FWDoc.frameworkname,
                                         purpose             : FWDoc.purpose,
                                         domain_ID           : FWDoc.domain_ID,
@@ -486,7 +487,7 @@ exports.delete_framework = (req,res,next)=>{
                 error: err
             });
         });
-}
+} 
 
 exports.delete_all_framework = (req,res,next)=>{
     Framework.deleteMany({})
@@ -507,6 +508,7 @@ exports.list_framework_stage = (req,res,next)=>{
     Framework.find({company_ID:req.params.company_ID,stage:req.params.stage,frameworktype:req.params.frameworktype})
         .exec()
         .then(data=>{
+
             res.status(200).json(data);
         })
         .catch(err =>{

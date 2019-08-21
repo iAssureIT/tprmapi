@@ -3,6 +3,8 @@ const bcrypt	= require("bcrypt");
 const jwt		= require("jsonwebtoken");
 const globalVariable = require("../../../nodemon.js");
 const User = require('../../models/coreAdmin/users');
+var request = require('request-promise');
+const Framework         = require('../../models/tprm/frameworks');
 
 exports.user_signup = (req,res,next)=>{
 	User.find({emails:{$elemMatch:{address:req.body.email}}})
@@ -569,4 +571,42 @@ exports.user_byEmailId = (req,res,next)=>{
 			error:err
 		});
 	});
+}
+
+exports.list_cuser_framework_stage = (req,res,next)=>{
+		User.findOne({"_id":req.params.user_ID})
+			.exec()
+			.then(user =>{
+				// console.log("user",user);
+				if (user && user.profile) {
+					request({
+	            "method"    : "GET", 
+	            "url"       : "http://localhost:"+globalVariable.port+"/api/frameworks/stage_company/list/"+user.profile.company_ID+"/true/Standard",
+	            "json"      : true,
+	            "headers"   : {
+	                            "User-Agent": "Test Agent"
+	                        }
+	        })
+	        .then(frameworks=>{
+            res.header("Access-Control-Allow-Origin","*");
+	        	res.status(200).json(frameworks);
+	        })
+	        .catch(error =>{
+	            res.status(500).json({
+								error: error
+							});
+	        });
+				}else{
+					res.status(500).json({
+										"message" : "User Not Found"
+									});
+				}
+				
+			})
+			.catch(err =>{
+				console.log(err);
+				res.status(500).json({
+					error: err
+				});
+			});  
 }

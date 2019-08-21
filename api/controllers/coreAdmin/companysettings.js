@@ -703,6 +703,7 @@ exports.create_client = (req,res,next)=>{
 }
 
 exports.update_created_client = (req,res,next)=>{
+    console.log("req.body",req.body);
     Companysettings.findOne({_id:req.body.companyID})
     .exec()
     .then(company=>{
@@ -721,6 +722,7 @@ exports.update_created_client = (req,res,next)=>{
             )
            .exec()
            .then(createor_comp=>{
+             console.log("createor_comp",createor_comp);
                 if(createor_comp.nModified == 1){
                     Users.updateOne(
                         {_id:company.companyUniqueID},
@@ -731,11 +733,13 @@ exports.update_created_client = (req,res,next)=>{
                                 "profile.fullName"      : req.body.spocfullname,
                                 "profile.mobNumber"     : req.body.spocmobNumber,
                                 "profile.emailId"       : req.body.spocemailId,
+                                "profile.designation"   : req.body.spocdesignation, 
                             }
                         }
                     )
                     .exec()
                     .then(user=>{
+                        console.log("nModified",user);
                         if(user.nModified == 1){
                             res.status(200).json({message:"User Modified.",ID:company._id})
                         }else{
