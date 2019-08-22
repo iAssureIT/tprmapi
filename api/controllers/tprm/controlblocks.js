@@ -401,12 +401,11 @@ exports.delete_all_controlblocks = (req,res,next)=>{
             console.log(err);
             res.status(500).json({
                 error: err
-            });
+            }); 
         });
 }
 exports.controlblocks_count_of_count = (req,res,next)=>{
-    Controlblocks.find({company_ID : req.params.company_ID})
-        .count()
+    Controlblocks.countDocuments({company_ID :{$in :[req.params.company_ID,req.params.user_ID ]}})
         .exec()
         .then(data=>{
             if(data){

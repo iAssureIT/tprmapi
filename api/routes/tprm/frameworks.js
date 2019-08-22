@@ -15,7 +15,7 @@ router.get('/:framework_ID', FrameworkController.detail_framework);
 
 router.get('/stage_company/list/:company_ID/:stage/:frameworktype', FrameworkController.list_framework_stage);
 
-router.get('/company_frameworks_count/:company_ID', FrameworkController.frameworks_count_of_company);
+router.get('/company_frameworks_count/:user_ID/:company_ID', FrameworkController.frameworks_count_of_company);
 
 router.get('/frameworks_cb_details/:framework_ID',FrameworkController.fetch_framework_controlblockDetails);
 

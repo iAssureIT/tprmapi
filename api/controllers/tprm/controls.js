@@ -228,8 +228,8 @@ exports.delete_all_control = (req,res,next)=>{
         });
 }
 exports.controls_count_of_company = (req,res,next)=>{
-    Control.find({company_ID : req.params.company_ID})
-        .count()
+    Control.countDocuments({company_ID : { $in: [req.params.company_ID,req.params.user_ID ]}})
+    // Control.find({company_ID : req.params.company_ID})
         .exec()
         .then(data=>{
             console.log("data",data);

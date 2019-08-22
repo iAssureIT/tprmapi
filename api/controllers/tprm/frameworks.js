@@ -220,7 +220,7 @@ exports.create_Customize_framework = (req,res,next)=>{
                                 };
                                 if(controlBlock){
                                     var newCB = await duplicate_controlBlocks(controlBlock);
-                                    console.log("newCB ",newCB);
+                                    // console.log("newCB ",newCB);
                                     if(newCB == "Control Not found"){
                                         res.status(200).json({message:"Control Block Not Found"})
                                     }
@@ -236,11 +236,11 @@ exports.create_Customize_framework = (req,res,next)=>{
                                         domain_ID           : FWDoc.domain_ID,
                                         company_ID          : req.body.company_ID,
                                         createdBy           : req.body.createdBy, 
-                                        ref_framework_ID    : FWDoc.ref_framework_ID,
-                                        state               : FWDoc.state,
-                                        stage               : FWDoc.stage,
-                                        version             : FWDoc.version,
-                                        controlBlocks       : newCBArray,
+                                        ref_framework_ID    : req.body.ref_framework_ID,
+                                        state               : req.body.state,
+                                        stage               : req.body.stage,
+                                        version             : req.body.version,
+                                        controlBlocks       : newCBArray, 
                                         createdAt           : new Date(),
                                     });
                                     framework.save()
@@ -508,7 +508,6 @@ exports.list_framework_stage = (req,res,next)=>{
     Framework.find({company_ID:req.params.company_ID,stage:req.params.stage,frameworktype:req.params.frameworktype})
         .exec()
         .then(data=>{
-
             res.status(200).json(data);
         })
         .catch(err =>{
@@ -520,11 +519,11 @@ exports.list_framework_stage = (req,res,next)=>{
 }
 
 exports.frameworks_count_of_company = (req,res,next)=>{
-    Framework.find({company_ID : req.params.company_ID})
-        .count()
+    Framework.countDocuments({company_ID : { $in: [req.params.company_ID,req.params.user_ID ]}})
+    // Framework.countDocuments({company_ID : req.params.company_ID})
         .exec()
         .then(data=>{
-            console.log("data",data);
+            // console.log("data frameworks",data);
             if(data){
                 res.status(200).json(data);
             }else{

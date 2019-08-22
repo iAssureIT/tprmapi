@@ -17,7 +17,7 @@ router.get('/fetchcontrols',ControlBlockController.fetch_all_controls);
 
 router.get('/list/:company_ID',ControlBlockController.list_controlblocks_company);
 
-router.get('/company_blocks_count/:company_ID', ControlBlockController.controlblocks_count_of_count);
+router.get('/company_blocks_count/:user_ID/:company_ID', ControlBlockController.controlblocks_count_of_count);
 
 router.get('/domain_specific/:domain_ID',ControlBlockController.fetch_specific_domain);
 

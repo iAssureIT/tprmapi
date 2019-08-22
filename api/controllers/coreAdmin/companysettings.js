@@ -101,8 +101,7 @@ exports.details_ByUserId = (req,res,next)=>{
 }
 
 exports.users_count = (req,res,next)=>{
-    Companysettings.find({'createdBy':req.params.user_ID,'type':req.params.user_type})
-    .countDocuments()
+    Companysettings.countDocuments({'createdBy':req.params.user_ID,'type':req.params.user_type})
     .exec()
     .then(data=>{
         console.log("data",data);
