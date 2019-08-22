@@ -9,6 +9,8 @@ router.get('/list', UserController.users_list); //Working
 
 router.get('/singleuser/:user_ID',UserController.list_cuser_framework_stage);
 
+router.get('/count_framework_cuser/:company_ID',UserController.count_framework_cuser);
+
 router.get('/list/:company_ID/:role',UserController.users_list_company_role);
 
 router.post('/', UserController.user_signup); //Working

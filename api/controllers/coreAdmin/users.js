@@ -610,3 +610,40 @@ exports.list_cuser_framework_stage = (req,res,next)=>{
 				});
 			});  
 }
+exports.count_framework_cuser = (req,res,next)=>{
+		User.findOne({"_id":req.params.company_ID})
+			.exec()
+			.then(user =>{
+				// console.log("user",user);
+				if (user && user.profile) {
+					request({
+	            "method"    : "GET",  
+	            "url"       : "http://localhost:"+globalVariable.port+"/api/frameworks/company_frameworks_count/"+req.params.company_ID+'/'+user.profile.company_ID,
+	            "json"      : true,
+	            "headers"   : {
+	                            "User-Agent": "Test Agent"
+	                        }
+	        })
+	        .then(frameworks=>{
+            res.header("Access-Control-Allow-Origin","*");
+	        	res.status(200).json(frameworks);
+	        })
+	        .catch(error =>{
+	            res.status(500).json({
+								error: error
+							});
+	        });
+				}else{
+					res.status(500).json({
+										"message" : "User Not Found"
+									});
+				}
+				
+			})
+			.catch(err =>{
+				// console.log(err);
+				res.status(500).json({
+					error: err
+				});
+			});  
+}
