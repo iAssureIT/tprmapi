@@ -246,6 +246,25 @@ exports.controls_count_of_company = (req,res,next)=>{
             });
         });
 }
+exports.controls_count_of_companyUser = (req,res,next)=>{
+    Control.countDocuments({company_ID : { $in: [req.params.company_ID,req.params.user_ID,req.params.riskpro_ID]}})
+    // Control.find({company_ID : req.params.company_ID})
+        .exec()
+        .then(data=>{
+            console.log("data",data);
+            if(data){
+                res.status(200).json(data);
+            }else{
+                res.status(404).json({message:'Controls not found'});
+            }
+        })
+        .catch(err =>{
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+}
 
 exports.duplicate_control = (req,res,next) =>{
     Control.findOne({_id:req.body.control_ID})

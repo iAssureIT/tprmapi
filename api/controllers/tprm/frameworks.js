@@ -75,7 +75,7 @@ function duplicate_controlBlocks(controlBlock){
                                                             }
                                                         }//controlblock
                                                         if(SCB.controls.length == newControlLst.length){
-                                                            Controlblocks.update(
+                                                            Controlblocks.updateOne(
                                                                             {_id:subcontrolblock._id},
                                                                             {
                                                                                 $set :{
@@ -518,8 +518,42 @@ exports.list_framework_stage = (req,res,next)=>{
         });
 }
 
+exports.list_allcustUserframework_stage = (req,res,next)=>{
+    // console.log("req.params.company_ID",req.params.company_ID);
+    Framework.find({company_ID:{ $in: [req.params.company_ID,req.params.user_ID ]},stage:req.params.stage,frameworktype:req.params.frameworktype})
+        .exec()
+        .then(data=>{
+            res.status(200).json(data);
+        })
+        .catch(err =>{
+            console.log(err);
+            res.status(500).json({
+                error: err 
+            });
+        });
+}
+
 exports.frameworks_count_of_company = (req,res,next)=>{
     Framework.countDocuments({company_ID : { $in: [req.params.company_ID,req.params.user_ID ]}})
+    // Framework.countDocuments({company_ID : req.params.company_ID})
+        .exec()
+        .then(data=>{
+            // console.log("data frameworks",data);
+            if(data){
+                res.status(200).json(data);
+            }else{
+                res.status(404).json({message:'Frameworks not found'});
+            }
+        })
+        .catch(err =>{
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+}
+exports.frameworks_count_of_companyUser = (req,res,next)=>{
+    Framework.countDocuments({company_ID : { $in: [req.params.company_ID,req.params.user_ID,req.params.riskpro_ID ]}})
     // Framework.countDocuments({company_ID : req.params.company_ID})
         .exec()
         .then(data=>{

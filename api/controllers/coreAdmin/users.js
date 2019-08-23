@@ -4,6 +4,7 @@ const jwt		= require("jsonwebtoken");
 const globalVariable = require("../../../nodemon.js");
 const User = require('../../models/coreAdmin/users');
 var request = require('request-promise');
+var ObjectID = require('mongodb').ObjectID;
 const Framework         = require('../../models/tprm/frameworks');
 
 exports.user_signup = (req,res,next)=>{
@@ -615,10 +616,18 @@ exports.count_framework_cuser = (req,res,next)=>{
 			.exec()
 			.then(user =>{
 				// console.log("user",user);
+				var countfor = "";
 				if (user && user.profile) {
-					request({
+					if (req.params.countfor == "frameworks") {
+						countfor = "frameworks/frameworks_count_of_companyUser";
+					}else if (req.params.countfor == "controlblocks") {
+						countfor = "controlblocks/controlblocks_count_of_comapanyUser";
+					}else if (req.params.countfor == "controls") {
+						countfor = "controls/controls_count_of_companyUser";
+					}
+					request({ 
 	            "method"    : "GET",  
-	            "url"       : "http://localhost:"+globalVariable.port+"/api/frameworks/company_frameworks_count/"+req.params.company_ID+'/'+user.profile.company_ID,
+	            "url"       : "http://localhost:"+globalVariable.port+"/api/"+countfor+"/"+req.params.company_ID+'/'+req.params.user_ID+'/'+user.profile.company_ID,
 	            "json"      : true,
 	            "headers"   : {
 	                            "User-Agent": "Test Agent"
@@ -642,8 +651,31 @@ exports.count_framework_cuser = (req,res,next)=>{
 			})
 			.catch(err =>{
 				// console.log(err);
+				res.status(500).json({ 
+					error: err
+				});
+			});  
+}
+exports.companyadmin_users_framework_list = (req,res,next)=>{
+		User.find({"profile.company_ID" : req.params.user_ID})
+			.exec()
+			.then(user =>{ 
+				console.log("user",user);
+
+				if (user) {
+					res.status(200).json(user); 
+				}else{
+					res.status(500).json({
+										"message" : "User Not Found"
+									});
+				}
+				
+			})
+			.catch(err =>{
+				console.log(err);
 				res.status(500).json({
 					error: err
 				});
 			});  
 }
+

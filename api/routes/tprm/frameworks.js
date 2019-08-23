@@ -15,6 +15,10 @@ router.get('/:framework_ID', FrameworkController.detail_framework);
 
 router.get('/stage_company/list/:company_ID/:stage/:frameworktype', FrameworkController.list_framework_stage);
 
+router.get('/frameworks_count_of_companyUser/:company_ID/:user_ID/:riskpro_ID', FrameworkController.frameworks_count_of_companyUser);
+
+router.get('/company/list/:company_ID/:user_ID/:stage/:frameworktype', FrameworkController.list_allcustUserframework_stage);
+
 router.get('/company_frameworks_count/:user_ID/:company_ID', FrameworkController.frameworks_count_of_company);
 
 router.get('/frameworks_cb_details/:framework_ID',FrameworkController.fetch_framework_controlblockDetails);

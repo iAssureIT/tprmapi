@@ -421,6 +421,23 @@ exports.controlblocks_count_of_count = (req,res,next)=>{
             });
         });
 }
+exports.controlblocks_count_of_comapanyUser = (req,res,next)=>{
+    Controlblocks.countDocuments({company_ID :{$in :[req.params.company_ID,req.params.user_ID,req.params.riskpro_ID ]}})
+        .exec()
+        .then(data=>{
+            if(data){
+                res.status(200).json(data);
+            }else{
+                res.status(404).json({message:'Control block not found'});
+            }
+        })
+        .catch(err =>{
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+}
 
 exports.fetch_all_subcontrolblocks = (req,res,next)=>{
     processCBArray(req.body.lstcontrolblocks);
