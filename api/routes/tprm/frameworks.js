@@ -17,6 +17,8 @@ router.get('/stage_company/list/:company_ID/:stage/:frameworktype', FrameworkCon
 
 router.get('/frameworks_count_of_companyUser/:company_ID/:user_ID/:riskpro_ID', FrameworkController.frameworks_count_of_companyUser);
 
+router.get('/frameworks_count_of_admin/:user_ID',FrameworkController.frameworks_count_of_admin);
+
 router.get('/company/list/:company_ID/:user_ID/:stage/:frameworktype', FrameworkController.list_allcustUserframework_stage);
 
 router.get('/company_frameworks_count/:user_ID/:company_ID', FrameworkController.frameworks_count_of_company);

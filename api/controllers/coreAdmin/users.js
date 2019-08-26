@@ -657,7 +657,7 @@ exports.count_framework_cuser = (req,res,next)=>{
 			});  
 }
 exports.companyadmin_users_framework_list = (req,res,next)=>{
-		User.find({"profile.company_ID" : req.params.user_ID})
+		User.find({"profile.company_ID" : req.params.user_ID},{"profile.company_ID" : 1})
 			.exec()
 			.then(user =>{ 
 				console.log("user",user);

@@ -15,6 +15,7 @@ const controlsSchema = mongoose.Schema({
     company_ID              : { type: mongoose.Schema.Types.ObjectId, ref: 'companysettings' },
     createdBy               : { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
     controlBlocks_ID        : { type: mongoose.Schema.Types.ObjectId, ref: 'controlblocks' },
+    ref_control_ID          : { type: mongoose.Schema.Types.ObjectId, ref: 'controls' },
     createdAt               : Date,
 });
 

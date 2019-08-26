@@ -5,13 +5,14 @@ const controlblocksSchema = mongoose.Schema({
     controlBlocksCode       : String,
     controlBlockRef         : Number,
     controlBlockName        : String,
-    controlBlockDesc        : String,
+    controlBlockDesc        : String, 
     parentBlock             : String,
     domain_ID               : { type: mongoose.Schema.Types.ObjectId, ref: 'domains' },
     sequence                : Number,
     weightage               : Number,
     company_ID              : { type: mongoose.Schema.Types.ObjectId, ref: 'companysettings' },
     createdBy               : { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
+    ref_contolBlock_ID      : { type: mongoose.Schema.Types.ObjectId, ref: 'controlblocks' },
     createdAt               : Date,
     subControlBlocks           : [
                                 {

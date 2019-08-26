@@ -13,7 +13,7 @@ router.get('/count_framework_cuser/:countfor/:company_ID/:user_ID',UserControlle
 
 router.get('/list/:company_ID/:role',UserController.users_list_company_role);
 
-router.get('/list/companyadmin_users_framework_list/:user_ID',UserController.companyadmin_users_framework_list);
+router.get('/companyadmin_users_framework_list/:user_ID',UserController.companyadmin_users_framework_list);
 
 router.post('/', UserController.user_signup); //Working
 

@@ -46,6 +46,7 @@ function duplicate_controlBlocks(controlBlock){
                                     company_ID              : company_ID,
                                     subControlBlocks        : newSubCB,
                                     createdBy               : createdBy,
+                                    ref_contolBlock_ID      : baseControlblock._id,
                                     createdAt               : new Date(),
                                 });
                                 console.log("newSubControlblocks ",newSubControlblocks);
@@ -138,6 +139,7 @@ function duplicate_controls(Oldcontrol){
                             controlBlocks_ID        : controlBlocks_ID,
                             company_ID              : company_ID,
                             createdBy               : createdBy,
+                            ref_control_ID          : baseControl._id,
                             createdAt               : new Date(),
                         });
                         control.save()
@@ -539,6 +541,24 @@ exports.frameworks_count_of_company = (req,res,next)=>{
         .exec()
         .then(data=>{
             // console.log("data frameworks",data);
+            if(data){
+                res.status(200).json(data);
+            }else{
+                res.status(404).json({message:'Frameworks not found'});
+            }
+        })
+        .catch(err =>{
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+}
+exports.frameworks_count_of_admin = (req,res,next)=>{
+    Framework.countDocuments({company_ID : req.params.user_ID })
+        .exec()
+        .then(data=>{
+            console.log("data frameworks",data);
             if(data){
                 res.status(200).json(data);
             }else{

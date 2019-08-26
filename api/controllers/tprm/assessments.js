@@ -272,8 +272,9 @@ exports.list_assessments_assessedParty_ID = (req,res,next)=>{
             async function getData(){
                 var returnData = [];
                 for(var i = 0 ;i < data.length ; i++){
-                    var assessmentName = await getAssessmentName(data[i].framework_ID)
-                    var customerName = await getCustomerName(data[i].corporate_ID)
+                    var assessmentName = await getAssessmentName(data[i].framework_ID);
+                    var customerName = await getCustomerName(data[i].corporate_ID);
+                    var customerEmail = await getCustomerId(data[i].corporate_ID);
                     returnData.push({
                         _id: data[i]._id,
                         corporate_ID: data[i].corporate_ID,
@@ -292,6 +293,7 @@ exports.list_assessments_assessedParty_ID = (req,res,next)=>{
                         createdAt: data[i].createdAt,
                         assessmentName: assessmentName,
                         customerName: customerName,
+                        customerEmail : customerEmail,
                     });
                 }
                 if(i >= data.length){
@@ -698,7 +700,7 @@ exports.list_actionplan_assessedParty_ID = (req,res,next) =>{
                 var contorlBlockName = await fetch_controlBlockName(data[i].framework.controlBlock_ID);
                 var controlOwnerName = await fetch_controlOwnerName(data[i].framework.controlOwner_ID); 
                 var assessmentName = await getAssessmentName(data[i].framework_ID)
-                var customerName = await getCustomerName(data[i].corporate_ID)
+                var customerName = await getCustomerId(data[i].corporate_ID)
 
                 if(data[i].framework.nc.actionPlan && data[i].framework.nc.actionPlan.length > 0){
                 	for (var j = 0; j < data[i].framework.nc.actionPlan.length; j++) {
@@ -1431,6 +1433,18 @@ function getCustomerName(data){
         .exec()
         .then(companyData=>{
             resolve(companyData.companyName);
+        })
+        .catch(err=>{
+            reject(err);
+        });
+    })
+}
+function getCustomerId(data){
+    return new Promise(function(resolve,reject){
+        Companysettings.findOne({companyUniqueID:data})
+        .exec()
+        .then(companyData=>{
+            resolve(companyData.spocDetails.emailId);
         })
         .catch(err=>{
             reject(err);

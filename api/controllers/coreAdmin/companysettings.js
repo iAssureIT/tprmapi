@@ -786,7 +786,7 @@ exports.userEmalId_byId_fornotification = (req,res,next)=>{
                     subject = 'Assessment Assigned';
                     mail    = 'Hello '+user.spocDetails.fullname+',<br><br>New assessment '+req.body.assesmentname+' due on '+req.body.endDate+' is assigned to you by '+user.companyName+'. <br><br>Regards,<br>Team Risk Pro';
                 }else if(req.body.mailfor == "respond assessment"){
-                    email   = user.spocDetails.emailId;
+                    email   = req.body.companyEmailId;
                     subject = 'Assessment Completed';
                     mail    =  'Hello,<br><br>'+ user.spocDetails.fullname+' has completed the assessment '+req.body.assessmentName+'. Which was due on '+req.body.endDate+' <br><br>Regards,<br>Team, <br> Risk Pro';
                 }else if (req.body.mailfor == "create action plan") {

@@ -228,7 +228,7 @@ exports.delete_all_control = (req,res,next)=>{
         });
 }
 exports.controls_count_of_company = (req,res,next)=>{
-    Control.countDocuments({company_ID : { $in: [req.params.company_ID,req.params.user_ID ]}})
+    Control.countDocuments({company_ID : { $in: [req.params.company_ID,req.params.user_ID ]}, ref_control_ID : { $exists : false }})
     // Control.find({company_ID : req.params.company_ID})
         .exec()
         .then(data=>{
@@ -249,6 +249,24 @@ exports.controls_count_of_company = (req,res,next)=>{
 exports.controls_count_of_companyUser = (req,res,next)=>{
     Control.countDocuments({company_ID : { $in: [req.params.company_ID,req.params.user_ID,req.params.riskpro_ID]}})
     // Control.find({company_ID : req.params.company_ID})
+        .exec()
+        .then(data=>{
+            console.log("data",data);
+            if(data){
+                res.status(200).json(data);
+            }else{
+                res.status(404).json({message:'Controls not found'});
+            }
+        })
+        .catch(err =>{
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+}
+exports.controls_count_of_admin = (req,res,next)=>{
+    Control.countDocuments({company_ID : req.params.user_ID})
         .exec()
         .then(data=>{
             console.log("data",data);

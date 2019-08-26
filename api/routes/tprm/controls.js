@@ -13,6 +13,8 @@ router.post('/duplicateControl',ControlController.duplicate_control);
 
 router.get('/company_controls_count/:user_ID/:company_ID',ControlController.controls_count_of_company);
 
+router.get('/controls_count_of_admin/:user_ID',ControlController.controls_count_of_admin);
+
 router.get('/controls_count_of_companyUser/:company_ID/:user_ID/:riskpro_ID', ControlController.controls_count_of_companyUser);
 
 router.get('/:control_ID', ControlController.detail_control); 
