@@ -519,6 +519,20 @@ exports.list_framework_stage = (req,res,next)=>{
             });
         });
 }
+exports.list_framework_stage_customeradmin = (req,res,next)=>{
+    console.log("req.params.company_ID",req.body);
+    Framework.find({company_ID:{$in : req.body.ids},stage:req.body.stage,frameworktype:req.body.frameworktype})
+        .exec()
+        .then(data=>{
+            res.status(200).json(data);
+        })
+        .catch(err =>{
+            console.log(err);
+            res.status(500).json({
+                error: err 
+            });
+        });
+}
 
 exports.list_allcustUserframework_stage = (req,res,next)=>{
     // console.log("req.params.company_ID",req.params.company_ID);

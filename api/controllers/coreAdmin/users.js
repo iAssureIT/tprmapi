@@ -657,13 +657,38 @@ exports.count_framework_cuser = (req,res,next)=>{
 			});  
 }
 exports.companyadmin_users_framework_list = (req,res,next)=>{
-		User.find({"profile.company_ID" : req.params.user_ID},{"profile.company_ID" : 1})
+		User.find({"profile.company_ID" : req.params.user_ID},{"_id" : 1})
 			.exec()
 			.then(user =>{ 
-				console.log("user",user);
-
+				let allcompanyIds = [];
+				allcompanyIds.push(req.params.user_ID);
 				if (user) {
-					res.status(200).json(user); 
+				   user.map((user)=>{
+				   	allcompanyIds.push(user._id)
+				   });
+				   request({
+	            "method"    : "POST", 
+	            "url"       : "http://localhost:"+globalVariable.port+"/api/frameworks/list_framework_stage_customeradmin",
+	            "body"      : {
+	            								"ids" : allcompanyIds,
+	            								"stage" : false,
+	            								"frameworktype" : "Customize"
+                            },
+	            "json"      : true,
+	            "headers"   : {
+	                            "User-Agent": "Test Agent"
+	                        }
+	        })
+	        .then(frameworks=>{
+	        	console.log("frameworks",frameworks);
+            res.header("Access-Control-Allow-Origin","*");
+	        	res.status(200).json(frameworks);
+	        })
+	        .catch(error =>{
+	            res.status(500).json({
+								error: error
+							});
+	        });
 				}else{
 					res.status(500).json({
 										"message" : "User Not Found"

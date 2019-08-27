@@ -681,6 +681,8 @@ exports.list_actionplan_assessedParty_ID = (req,res,next) =>{
             framework : 1,
             corporate_ID : 1,
             framework_ID : 1,
+            assessedParty_ID : 1,
+            endDate : 1
             }
         },
         {
@@ -700,12 +702,14 @@ exports.list_actionplan_assessedParty_ID = (req,res,next) =>{
                 var contorlBlockName = await fetch_controlBlockName(data[i].framework.controlBlock_ID);
                 var controlOwnerName = await fetch_controlOwnerName(data[i].framework.controlOwner_ID); 
                 var assessmentName = await getAssessmentName(data[i].framework_ID)
-                var customerName = await getCustomerId(data[i].corporate_ID)
-
+                var customerName = await getCustomerName(data[i].corporate_ID)
+                var customerEmail = await getCustomerId(data[i].corporate_ID)
                 if(data[i].framework.nc.actionPlan && data[i].framework.nc.actionPlan.length > 0){
                 	for (var j = 0; j < data[i].framework.nc.actionPlan.length; j++) {
                 		ncData.push({
                     		"_id" : data[i]._id,
+                            "assessedParty_ID" : data[i].assessedParty_ID,
+                            "endDate" : data[i].endDate,
                     		"control_ID" : data[i].framework.control_ID,
                     		"controlDesc" : controlDesc,
                     		"controlBlock_ID" : data[i].framework.controlBlock_ID,
@@ -719,6 +723,7 @@ exports.list_actionplan_assessedParty_ID = (req,res,next) =>{
                     		"actionPlan" :data[i].framework.nc.actionPlan[j],
                             "assessmentName" :assessmentName,
                             "customerName" :customerName,
+                            "customerEmail" : customerEmail,
                 		});
                    }
                 }
@@ -1084,10 +1089,12 @@ exports.operation_actionPlan = (req,res,next)=>{
                                 )
                         .exec()
                         .then(assessmentData=>{
+                            console.log("assessmentData",assessmentData);
                         	if(assessmentData.framework&&assessmentData.framework.length>0){
                         		for (var i = 0; i < assessmentData.framework.length; i++) {
                         			if(assessmentData.framework[i].controlBlock_ID==req.body.controlBlock_ID&&assessmentData.framework[i].control_ID==req.body.control_ID){
-                        				var count = 0;
+                        				
+                                        var count = 0;
                         				if(assessmentData.framework[i].nc.actionPlan&&assessmentData.framework[i].nc.actionPlan.length>0){
                         	                for (var j = 0; j < assessmentData.framework[i].nc.actionPlan.length; j++) {
                         	                    if(assessmentData.framework[i].nc.actionPlan[j].status=='Accepted'){
@@ -1114,6 +1121,7 @@ exports.operation_actionPlan = (req,res,next)=>{
                                             				)
                                     				.exec()
                                     				.then(data=>{
+                                                        console.log("data",data);
                                         				if(data.nModified == 1){
                                             				res.status(200).json({message:"Action Plan Status Updated"})
                                         				}else{

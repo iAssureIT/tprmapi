@@ -793,6 +793,10 @@ exports.userEmalId_byId_fornotification = (req,res,next)=>{
                     email   = req.body.vendoremailid;
                     subject = 'Action plan assigned';
                     mail    = 'Hello ,<br><br>New action plan due on '+req.body.endDate+' is assigned to you by '+user.companyName+'. <br><br>Regards,<br>Team Risk Pro';
+                }else if (req.body.mailfor == "respond action plan") {
+                    email   = req.body.companyEmailId;
+                    subject = 'Action plan Completed';
+                    mail    =  'Hello,<br><br>'+ user.spocDetails.fullname+' has completed the action plan of assessment '+req.body.assessmentName+'. Which was due on '+req.body.endDate+' <br><br>Regards,<br>Team, <br> Risk Pro';
                 }
                 res.header("Access-Control-Allow-Origin","*");
                 request({
