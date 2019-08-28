@@ -9,6 +9,8 @@ router.post('/create_Customize_framework/:framework_ID',FrameworkController.crea
 
 router.post('/list_framework_stage_customeradmin',FrameworkController.list_framework_stage_customeradmin);
 
+router.post('/frameworks_count_for_cadmin',FrameworkController.frameworks_count_for_cadmin);
+
 router.get('/list', FrameworkController.list_framework);
 
 router.get('/list/:company_ID',FrameworkController.list_framework_company);

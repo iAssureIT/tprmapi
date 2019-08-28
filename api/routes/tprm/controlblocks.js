@@ -7,6 +7,8 @@ router.post('/', ControlBlockController.create_controlblocks_framwork);
 
 router.post('/subcontrolBlock',ControlBlockController.create_controlblocks_subcontrolblock);
 
+router.post('/controlblockscount_for_admin',ControlBlockController.controlblockscount_for_admin);
+
 // router.post('/duplicate_contorlblock',ControlBlockController.duplicate_controlBlocks);
 
 router.get('/list', ControlBlockController.list_controlblocks);
@@ -20,6 +22,8 @@ router.get('/list/:company_ID',ControlBlockController.list_controlblocks_company
 router.get('/company_blocks_count/:user_ID/:company_ID', ControlBlockController.controlblocks_count_of_count);
 
 router.get('/controlblocks_count_of_comapanyUser/:company_ID/:user_ID/:riskpro_ID', ControlBlockController.controlblocks_count_of_comapanyUser);
+
+router.post('/controlblocks_of_forall', ControlBlockController.controlblocks_of_forall);
 
 router.get('/controlblocks_count_of_admin/:user_ID', ControlBlockController.controlblocks_count_of_admin);
 

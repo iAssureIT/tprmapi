@@ -618,7 +618,7 @@ exports.count_framework_cuser = (req,res,next)=>{
 				// console.log("user",user);
 				var countfor = "";
 				if (user && user.profile) {
-					if (req.params.countfor == "frameworks") {
+					if (req.params.countfor == "frameworks") { 
 						countfor = "frameworks/frameworks_count_of_companyUser";
 					}else if (req.params.countfor == "controlblocks") {
 						countfor = "controlblocks/controlblocks_count_of_comapanyUser";
@@ -671,7 +671,7 @@ exports.companyadmin_users_framework_list = (req,res,next)=>{
 	            "url"       : "http://localhost:"+globalVariable.port+"/api/frameworks/list_framework_stage_customeradmin",
 	            "body"      : {
 	            								"ids" : allcompanyIds,
-	            								"stage" : false,
+	            								"stage" : req.params.status == "draft" ? false : true,
 	            								"frameworktype" : "Customize"
                             },
 	            "json"      : true,
@@ -703,4 +703,104 @@ exports.companyadmin_users_framework_list = (req,res,next)=>{
 				});
 			});  
 }
+exports.controlblock_cuser = (req,res,next)=>{
+		User.findOne({"_id":req.body.company_ID})
+			.exec()
+			.then(user =>{
+				// console.log("user",user);
+				let allIDs = [req.body.company_ID,req.body.user_ID];
+				if (user && user.profile) {
+					allIDs.push(user.profile.company_ID);
+					request({ 
+	            "method"    : "POST",  
+	            "url"       : "http://localhost:"+globalVariable.port+"/api/controlblocks/controlblocks_of_forall",
+	            "json"      : true,
+	            "body"      : {
+	          			  	"ids" : allIDs
+	            },
+	            "headers"   : {
+	                            "User-Agent": "Test Agent"
+	                        }
+	        })
+	        .then(data=>{
+            res.header("Access-Control-Allow-Origin","*");
+	        	res.status(200).json(data);
+	        })
+	        .catch(error =>{
+	            res.status(500).json({
+								error: error
+							});
+	        });
+				}else{
+					res.status(500).json({
+										"message" : "User Not Found"
+									});
+				}
+				
+			})
+			.catch(err =>{
+				// console.log(err);
+				res.status(500).json({ 
+					error: err
+				});
+			});  
+}
+exports.user_from_company_ID = (req,res,next)=>{
+		User.find({"profile.company_ID" : req.body.user_ID},{"_id" : 1})
+			.exec()
+			.then(user =>{ 
+				let allcompanyIds = [req.body.user_ID,req.body.company_ID];
+				if (user) {
+					 var urls = '';
+					 var body;
+				   user.map((user)=>{
+				   	allcompanyIds.push(user._id)
+				   });
+				   // console.log("allcompanyIds",allcompanyIds);
 
+				   if (req.params.urlfor == "cadminControlBlocks") {
+             urls = "controlblocks/controlblocks_of_forall";
+             body = {"ids" : allcompanyIds}
+				   }else if (req.params.urlfor == "cadminControlBlocksCount"){
+				   	 urls = "controlblocks/controlblockscount_for_admin";
+             body = {"ids" : allcompanyIds}
+				   }else if (req.params.urlfor == "cadminControlsCount") {
+				     urls = "controls/controlscount_for_admin";
+             body = {"ids" : allcompanyIds}
+				   }else if (req.params.urlfor == "cadminframeworksCount") {
+				     urls = "frameworks/frameworks_count_for_cadmin";
+             body = {"ids" : allcompanyIds}
+				   }
+				   request({
+	            "method"    : "POST", 
+	            "url"       : "http://localhost:"+globalVariable.port+"/api/"+urls,
+	            "body"      : body,
+	            "json"      : true,
+	            "headers"   : {
+	                            "User-Agent": "Test Agent"
+	                        }
+	        })
+	        .then(data=>{
+	        	// console.log("data new",data);
+            res.header("Access-Control-Allow-Origin","*");
+	        	res.status(200).json(data);
+	        })
+	        .catch(error =>{
+	            res.status(500).json({
+								error: error
+							});
+	        });
+				}else{
+					res.status(500).json({
+										"message" : "User Not Found"
+									});
+				}
+				
+			})
+			.catch(err =>{
+				console.log(err);
+				res.status(500).json({
+					error: err
+				});
+			});  
+}

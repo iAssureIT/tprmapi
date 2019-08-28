@@ -421,8 +421,42 @@ exports.controlblocks_count_of_count = (req,res,next)=>{
             });
         });
 }
+exports.controlblockscount_for_admin = (req,res,next)=>{
+    Controlblocks.countDocuments({company_ID :{$in : req.body.ids}, ref_contolBlock_ID : { $exists : false } })
+        .exec()
+        .then(data=>{
+            if(data){
+                res.status(200).json(data);
+            }else{
+                res.status(404).json({message:'Control block not found'});
+            }
+        })
+        .catch(err =>{
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+}
 exports.controlblocks_count_of_comapanyUser = (req,res,next)=>{
-    Controlblocks.countDocuments({company_ID :{$in :[req.params.company_ID,req.params.user_ID,req.params.riskpro_ID ]}})
+    Controlblocks.countDocuments({company_ID :{$in :[req.params.company_ID,req.params.user_ID,req.params.riskpro_ID ]},ref_contolBlock_ID : { $exists : false } })
+        .exec()
+        .then(data=>{
+            if(data){
+                res.status(200).json(data);
+            }else{
+                res.status(404).json({message:'Control block not found'});
+            }
+        })
+        .catch(err =>{
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+}
+exports.controlblocks_of_forall = (req,res,next)=>{
+    Controlblocks.find({company_ID :{$in : req.body.ids},ref_contolBlock_ID : { $exists : false } })
         .exec()
         .then(data=>{
             if(data){

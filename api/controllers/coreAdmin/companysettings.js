@@ -770,7 +770,7 @@ exports.userEmalId_byId_fornotification = (req,res,next)=>{
     Companysettings.findOne({'_id':req.body.assessmentPartyId})
     .exec()
     .then(user=>{
-        console.log('user',user);
+        // console.log('user',user);
         if(user){
             if (user.spocDetails) { 
                 // res.status(200).json({

@@ -232,7 +232,7 @@ exports.controls_count_of_company = (req,res,next)=>{
     // Control.find({company_ID : req.params.company_ID})
         .exec()
         .then(data=>{
-            console.log("data",data);
+            // console.log("data",data);
             if(data){
                 res.status(200).json(data);
             }else{
@@ -247,11 +247,30 @@ exports.controls_count_of_company = (req,res,next)=>{
         });
 }
 exports.controls_count_of_companyUser = (req,res,next)=>{
-    Control.countDocuments({company_ID : { $in: [req.params.company_ID,req.params.user_ID,req.params.riskpro_ID]}})
+    Control.countDocuments({company_ID : { $in: [req.params.company_ID,req.params.user_ID,req.params.riskpro_ID]},ref_control_ID : { $exists : false }})
     // Control.find({company_ID : req.params.company_ID})
         .exec()
         .then(data=>{
-            console.log("data",data);
+            // console.log("data",data);
+            if(data){
+                res.status(200).json(data);
+            }else{
+                res.status(404).json({message:'Controls not found'});
+            }
+        })
+        .catch(err =>{
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+}
+exports.controlscount_for_admin = (req,res,next)=>{
+    Control.countDocuments({company_ID : { $in: req.body.ids},ref_control_ID : { $exists : false }})
+    // Control.find({company_ID : req.params.company_ID})
+        .exec()
+        .then(data=>{
+            // console.log("data",data);
             if(data){
                 res.status(200).json(data);
             }else{
