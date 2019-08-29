@@ -31,4 +31,9 @@ router.post('/user',CompanySettingController.userEmalId_byId_fornotification);
 
 router.get('/users_assessmentCount/:user_ID', CompanySettingController.userDataVendor_assessment_Count);
 
+router.get('/list/:user_ID/:user_type/:company_ID',CompanySettingController.list_userdata);
+
+router.get('/adminData/:user_type',CompanySettingController.list_admindata);
+
+
 module.exports = router; 

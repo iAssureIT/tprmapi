@@ -892,3 +892,102 @@ exports.userDataVendor_assessment_Count = (req,res,next)=>{
     });
 
 }
+
+exports.list_userdata = (req,res,next)=>{
+    // console.log('list');
+    Companysettings.find({$and:[{$or:[{'createdBy':req.params.user_ID},{'createdBy':req.params.company_ID}]},{'type':req.params.user_type}]})
+        .exec()
+        .then(data=>{
+        if(data&&data.length>0){
+            getData();
+            async function getData(){
+                var returnData = [];
+                for(var i = 0 ;i < data.length ; i++){
+                    var userData = await getUserStatus(data[i].spocDetails.user_ID)
+                    returnData.push({
+                        _id: data[i]._id,
+                        companyName: data[i].companyName,
+                        spocDetails: data[i].spocDetails,
+                        status: userData.status,
+                        createdBy: data[i].createdBy,
+                        companyUniqueID: data[i].companyUniqueID,
+                        createdAt: data[i].createdAt,
+                        creatorRole: data[i].creatorRole,
+                        type: data[i].type,
+                        company_ID:userData.company_ID
+                    });
+                }
+                if(i >= data.length){
+                    // console.log("returnData",returnData);
+                    res.status(200).json(returnData);
+                }
+            }
+        }else{
+            res.status(404).json('Company Details not found');
+        }
+    })
+    .catch(err =>{
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+    });
+}
+
+function getUserStatus(data){
+    return new Promise(function(resolve,reject){
+        Users.findOne({_id:data})
+        .exec()
+        .then(userData=>{
+            resolve({
+                status:userData.profile.status,
+                company_ID:userData.profile.company_ID,
+            });
+        })
+        .catch(err=>{
+            reject(err);
+        });
+    })
+}
+
+exports.list_admindata = (req,res,next)=>{
+    // console.log('list');
+    Companysettings.find({'type':req.params.user_type})
+    .exec()
+    .then(data=>{
+        if(data&&data.length>0){
+            getData();
+            async function getData(){
+                var returnData = [];
+                for(var i = 0 ;i < data.length ; i++){
+                    var userData = await getUserStatus(data[i].spocDetails.user_ID)
+                    // console.log('userData',userData);
+                    returnData.push({
+                        _id: data[i]._id,
+                        companyName: data[i].companyName,
+                        spocDetails: data[i].spocDetails,
+                        status: userData.status,
+                        createdBy: data[i].createdBy,
+                        companyUniqueID: data[i].companyUniqueID,
+                        createdAt: data[i].createdAt,
+                        creatorRole: data[i].creatorRole,
+                        type: data[i].type,
+                        company_ID:userData.company_ID
+                    });
+                }
+                if(i >= data.length){
+                    // console.log("returnData",returnData);
+                    res.status(200).json(returnData);
+                }
+            }
+        }else{
+            res.status(404).json('Company Details not found');
+        }
+    })
+    .catch(err =>{
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+    });
+}
