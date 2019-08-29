@@ -657,6 +657,7 @@ exports.list_AllNC_true = (req,res,next) =>{
                 "assessedPartyName" : partyName
             });
         }
+            console.log('ncData',ncData);
         if(i >= data.length){
             res.status(200).json(ncData);
         }
