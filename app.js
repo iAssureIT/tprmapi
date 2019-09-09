@@ -39,11 +39,16 @@ mongoose.connect('mongodb://localhost/'+globalVariable.dbname,{
 })
 mongoose.promise = global.Promise;
 
+global.titleCase = function(Str){
+    return new Promise(function(resolve,reject){
+        resolve(Str.charAt(0).toUpperCase()+Str.slice(1));
+    });
+}
+
 app.use(morgan("dev"));
 app.use('/uploads', express.static('uploads'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
 app.use((req, res, next) => {
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header(

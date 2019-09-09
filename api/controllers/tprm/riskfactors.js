@@ -59,7 +59,25 @@ exports.list_riskfactor_company = (req,res,next)=>{
     Riskfactors.find({company_ID : company_ID})
         .exec()
         .then(data=>{
-            res.status(200).json(data);
+            if(data&&data.length>0){
+                getData();
+                async function getData(){
+                    var returnData=[];
+                    for(var j = 0 ; j < data.length ; j++){
+                        var str = await titleCase(data[j].riskfactor);
+                        returnData.push({
+                            _id         : data[j]._id,
+                            riskfactor  : str,
+                            createdAt   : data[j].createdAt,
+                            company_ID  : data[j].company_ID,
+                            createdBy   : data[j].createdBy
+                        });
+                    }
+                    if(j >= data.length){
+                        res.status(200).json(returnData);
+                    }
+                }
+            }
         })
         .catch(err =>{
             console.log(err);

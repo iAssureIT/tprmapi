@@ -59,7 +59,25 @@ exports.list_assessmentModes_company_ID = (req,res,next)=>{
     AssessmentModes.find({company_ID:req.params.company_ID})
         .exec()
         .then(data=>{
-            res.status(200).json(data);
+            if(data&&data.length>0){
+                getData();
+                async function getData(){
+                    var returnData=[];
+                    for(var j = 0 ; j < data.length ; j++){
+                        var str = await titleCase(data[j].assessmentMode);
+                        returnData.push({
+                            _id         : data[j]._id,
+                            assessmentMode   : str,
+                            createdAt   : data[j].createdAt,
+                            company_ID  : data[j].company_ID,
+                            createdBy   : data[j].createdBy
+                        });
+                    }
+                    if(j >= data.length){
+                        res.status(200).json(returnData);
+                    }
+                }
+            }
         })
         .catch(err =>{
             console.log(err);

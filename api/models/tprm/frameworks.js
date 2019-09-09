@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const frameworksSchema = mongoose.Schema({
 	_id			        : mongoose.Schema.Types.ObjectId,
+    frameworkID         : Number,
     frameworktype       : String,
     frameworkname       : String,
     purpose             : String,

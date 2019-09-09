@@ -150,6 +150,18 @@ function duplicate_controls(Oldcontrol){
     });
 }
 
+function return_frameworkID(){
+    return new Promise(function(resolve,reject){
+        Framework.estimatedDocumentCount()
+                 .exec()
+                 .then(count=>{
+                    resolve(count)
+                 })
+                 .catch(err=>{
+                    reject(err)
+                 });
+    });
+}
 exports.create_framework = (req,res,next)=>{
 	Framework.findOne({frameworkname:req.body.frameworkname,version:req.body.version})
 		.exec()
@@ -159,31 +171,36 @@ exports.create_framework = (req,res,next)=>{
 					message: 'Framework already exists'
 				});
 			}else{
-				const framework = new Framework({
-                    _id                 : new mongoose.Types.ObjectId(),
-                    frameworktype       : req.body.frameworktype,
-                    frameworkname       : req.body.frameworkname,
-                    purpose             : req.body.purpose,
-                    domain_ID           : req.body.domain_ID,
-                    company_ID          : req.body.company_ID,
-                    createdBy           : req.body.createdBy, 
-                    ref_framework_ID    : req.body.ref_framework_ID,
-                    state               : req.body.state,
-                    stage               : req.body.stage,
-                    version             : req.body.version,
-                    controlBlocks       : req.body.controlBlocks,
-                    createdAt           : new Date(),
-                });
-                framework.save()
-                    .then(data=>{
-                        res.status(200).json({message: "Framework Added",ID:data._id});
-                    })
-                    .catch(err =>{
-                        console.log(err);
-                        res.status(500).json({
-                            error: err
-                        });
+                getData();
+                async function getData(){
+                    var maxCount = await return_frameworkID();
+    				const framework = new Framework({
+                        _id                 : new mongoose.Types.ObjectId(),
+                        frameworkID         : maxCount+1,
+                        frameworktype       : req.body.frameworktype,
+                        frameworkname       : req.body.frameworkname,
+                        purpose             : req.body.purpose,
+                        domain_ID           : req.body.domain_ID,
+                        company_ID          : req.body.company_ID,
+                        createdBy           : req.body.createdBy, 
+                        ref_framework_ID    : req.body.ref_framework_ID,
+                        state               : req.body.state,
+                        stage               : req.body.stage,
+                        version             : req.body.version,
+                        controlBlocks       : req.body.controlBlocks,
+                        createdAt           : new Date(),
                     });
+                    framework.save()
+                        .then(data=>{
+                            res.status(200).json({message: "Framework Added",ID:data._id});
+                        })
+                        .catch(err =>{
+                            console.log(err);
+                            res.status(500).json({
+                                error: err
+                        });
+                            });
+                }
 			}
 		})
 		.catch(err =>{
@@ -217,8 +234,10 @@ exports.create_Customize_framework = (req,res,next)=>{
                                 newCBArray.push({"controlBlocks_ID":newCB});
                             }
                             if(k >= listControlBlocks.length){
+                                var maxCount = await return_frameworkID();
                                 const framework = new Framework({
                                                                     _id                 : new mongoose.Types.ObjectId(),
+                                                                    frameworkID         : maxCount+1,
                                                                     frameworktype       : "Customize",
                                                                     frameworkname       : frameworkDoc.frameworkname,
                                                                     purpose             : frameworkDoc.purpose,
