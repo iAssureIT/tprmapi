@@ -557,7 +557,7 @@ exports.fetch_all_controls = (req,res,next)=>{
                                 resolve(data); 
                             })
                             .catch(err =>{
-                                console.log(err);
+                                // console.log(err);
                                 res.status(500).json({
                                     error: err
                                 });

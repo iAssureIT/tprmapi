@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const controlblocksSchema = mongoose.Schema({
 	_id			            : mongoose.Schema.Types.ObjectId,
     controlBlocksCode       : String,
-    controlBlockRef         : Number,
+    controlBlockRef         : String,
     controlBlockName        : String,
     controlBlockDesc        : String, 
     parentBlock             : String,
