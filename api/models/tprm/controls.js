@@ -4,7 +4,13 @@ const controlsSchema = mongoose.Schema({
 	_id			            : mongoose.Schema.Types.ObjectId,
     controlShort            : String,
     controlDesc             : String,
-    controltag_ID           : { type: mongoose.Schema.Types.ObjectId, ref: 'controltag' },
+    // controltag_ID           : { type: mongoose.Schema.Types.ObjectId, ref: 'controltag' },
+    controltag_ID           : [
+                                {
+                                   controltag_ID : { type: mongoose.Schema.Types.ObjectId, ref: 'controltag' },
+                                   controltag    : String,
+                                }
+                            ],
     ref1                    : String,
     ref2                    : String,
     ref3                    : String,
