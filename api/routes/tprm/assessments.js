@@ -51,9 +51,9 @@ router.patch('/response',AssessmentsController.update_response);
 
 router.patch('/update_ownerid',AssessmentsController.update_ownerID)
 
-router.delete('/delete_actiondocument/:assessments_ID/:controlBlock_ID/:control_ID/:actionPlan_ID',AssessmentsController.delete_actiondocument);
+router.delete('/delete_actiondocument/:assessments_ID/:controlBlock_ID/:control_ID/:actionPlan_ID/:doc_ID',AssessmentsController.delete_actiondocument);
 
-router.delete('/delete_responsedocument',AssessmentsController.delete_responsedocument);
+router.delete('/delete_responsedocument/:assessments_ID/:controlBlock_ID/:control_ID/:doc_ID',AssessmentsController.delete_responsedocument);
 
 router.delete('/:assessments_ID',AssessmentsController.delete_assessments);
 

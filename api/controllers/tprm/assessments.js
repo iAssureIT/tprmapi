@@ -1320,24 +1320,42 @@ exports.update_ownerID = (req,res,next)=>{
 }
 
 exports.delete_responsedocument = (req,res,next)=>{
-    Assessments .updateOne(
+    Assessments.findOne(
         {
-            "_id"                       : req.body.assessments_ID,
-            "framework.controlBlock_ID" : req.body.controlBlock_ID,
-            "framework.control_ID"      : req.body.control_ID,
-        },
-        {
-            $set : {
-                "framework.$.response.document" : [],
-            }
+            "_id"     : req.params.assessments_ID,
         }
     )
     .exec()
-    .then(data=>{
-        if(data.nModified == 1){
-            res.status(200).json({message:"Response Document Updated"})
-        }else{
-            res.status(200).json({message:"Response Document Not Updated"})
+    .then(assessmentData=>{
+        if(assessmentData.framework&&assessmentData.framework.length>0){
+            for (var i = 0; i < assessmentData.framework.length; i++) {
+                if(assessmentData.framework[i].controlBlock_ID==req.params.controlBlock_ID&&assessmentData.framework[i].control_ID==req.params.control_ID){
+                    Assessments .updateOne(
+                        {
+                            "_id"   : req.params.assessments_ID,
+                        },
+                        {
+                            $pull : {
+                                ["framework."+i+".response.document"] : {"_id" : req.params.doc_ID},
+                            }
+                        }
+                    )
+                    .exec()
+                    .then(data=>{
+                        if(data.nModified == 1){
+                            res.status(200).json({message:"Response Document Updated"})
+                        }else{
+                            res.status(200).json({message:"Response Document Not Updated"})
+                        }
+                    })
+                    .catch(err =>{
+                        console.log(err);
+                        res.status(500).json({
+                            error: err
+                        });
+                    });
+                }
+            }
         }
     })
     .catch(err =>{
@@ -1349,7 +1367,7 @@ exports.delete_responsedocument = (req,res,next)=>{
 }
 
 exports.delete_actiondocument = (req,res,next)=>{
-	console.log('req',req.params);
+	// console.log('req',req.params);
 	Assessments.findOne(
         {
             "_id"     : req.params.assessments_ID,
@@ -1366,11 +1384,16 @@ exports.delete_actiondocument = (req,res,next)=>{
             				"_id"                                   : req.params.assessments_ID,
             				["framework."+i+".nc.actionPlan._id"]   : req.params.actionPlan_ID
                         },
+            //             {
+            // 				$set : {
+            //     				["framework."+i+".nc.actionPlan.$.document"]          : [],
+            // 				}
+        				// }
                         {
-            				$set : {
-                				["framework."+i+".nc.actionPlan.$.document"]          : [],
-            				}
-        				}
+                            $pull : {
+                                ["framework."+i+".nc.actionPlan.$.document"] : {"_id" : req.params.doc_ID},
+                            }
+                        }
     				)
 					.exec()
 					.then(data=>{
