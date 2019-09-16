@@ -147,6 +147,7 @@ exports.create_assessments = (req,res,next)=>{
                                                             _id                : new mongoose.Types.ObjectId(),
                                                             corporate_ID       : req.body.corporate_ID,
                                                             assessedParty_ID   : req.body.assessedParty_ID,
+                                                            assessmentName     : req.body.assessmentName,
                                                             framework_ID       : req.body.framework_ID,
                                                             assessmentID       : assessmentCount + 1,
                                                             frequency          : req.body.frequency,
@@ -158,6 +159,7 @@ exports.create_assessments = (req,res,next)=>{
                                                             assessmentStages   : 'Open',
                                                             assessor           : req.body.assessor,
                                                             framework          : controlList,
+                                                            createdBy          : req.body.createdBy,
                                                             createdAt          : new Date(),
                                                         });
                                                         assessment.save()
@@ -230,6 +232,7 @@ exports.list_assessments_company_ID = (req,res,next)=>{
                         _id: data[i]._id,
                         corporate_ID: data[i].corporate_ID,
                         assessedParty_ID: data[i].assessedParty_ID,
+                        assessmentName  : data[i].assessmentName,
                         framework_ID: data[i].framework_ID,
                         assessmentID: data[i].assessmentID,
                         frequency: data[i].frequency,
@@ -241,8 +244,8 @@ exports.list_assessments_company_ID = (req,res,next)=>{
                         assessmentStages: data[i].assessmentStages,
                         assessor: data[i].assessor,
                         framework: data[i].framework,
+                        createdBy: data[i].createdBy,
                         createdAt: data[i].createdAt,
-                        assessmentName: assessmentName,
                         assessedPartyName: partyName,
                     });
                 }
@@ -279,6 +282,7 @@ exports.list_assessments_assessedParty_ID = (req,res,next)=>{
                         _id: data[i]._id,
                         corporate_ID: data[i].corporate_ID,
                         assessedParty_ID: data[i].assessedParty_ID,
+                        assessmentName  : data[i].assessmentName,
                         framework_ID: data[i].framework_ID,
                         assessmentID: data[i].assessmentID,
                         frequency: data[i].frequency,
@@ -290,8 +294,8 @@ exports.list_assessments_assessedParty_ID = (req,res,next)=>{
                         assessmentStages: data[i].assessmentStages,
                         assessor: data[i].assessor,
                         framework: data[i].framework,
+                        createdBy:data[i].createdBy,
                         createdAt: data[i].createdAt,
-                        assessmentName: assessmentName,
                         customerName: customerName,
                         customerEmail : customerEmail,
                     });
@@ -556,6 +560,7 @@ exports.list_nc_true = (req,res,next) =>{
                         assessedParty_ID : 1,
                         corporate_ID : 1,
                         framework_ID : 1,
+                        assessmentName : 1,
                     }
                 },
                 {
@@ -590,8 +595,9 @@ exports.list_nc_true = (req,res,next) =>{
                         "framework_ID":data[i].framework_ID,
                         "assessedParty_ID":data[i].assessedParty_ID,
                         "corporate_ID":data[i].corporate_ID,
-                        "assessmentName" :assessmentName,
-                        "assessedPartyName" : partyName
+                        "assessmentName" :data[i].assessmentName,
+                        "assessedPartyName" : partyName,
+                        "createdBy"         : data[i].createdBy
                     });
                 }
                 if(i >= data.length){
@@ -619,6 +625,7 @@ exports.list_AllNC_true = (req,res,next) =>{
                     assessedParty_ID : 1,
                     corporate_ID : 1,
                     framework_ID : 1,
+                    assessmentName : 1,
                 }
             },
             {
@@ -652,9 +659,10 @@ exports.list_AllNC_true = (req,res,next) =>{
                 "nc" : data[i].framework.nc,
                 "framework_ID":data[i].framework_ID,
                 "assessedParty_ID":data[i].assessedParty_ID,
+                "assessmentName"  : data[i].assessmentName,
                 "corporate_ID":data[i].corporate_ID,
-                "assessmentName" :assessmentName,
-                "assessedPartyName" : partyName
+                "assessedPartyName" : partyName,
+                "createdBy"         : data[i].createdBy
             });
         }
             // console.log('ncData',ncData);
@@ -683,7 +691,8 @@ exports.list_actionplan_assessedParty_ID = (req,res,next) =>{
             corporate_ID : 1,
             framework_ID : 1,
             assessedParty_ID : 1,
-            endDate : 1
+            endDate : 1,
+            assessmentName : 1,
             }
         },
         {
@@ -710,6 +719,7 @@ exports.list_actionplan_assessedParty_ID = (req,res,next) =>{
                 		ncData.push({
                     		"_id" : data[i]._id,
                             "assessedParty_ID" : data[i].assessedParty_ID,
+                            "assessmentName"   : data[i].assessmentName,
                             "endDate" : data[i].endDate,
                     		"control_ID" : data[i].framework.control_ID,
                     		"controlDesc" : controlDesc,
@@ -722,9 +732,9 @@ exports.list_actionplan_assessedParty_ID = (req,res,next) =>{
                     		"framework_ID":data[i].framework_ID,
                     		"corporate_ID":data[i].corporate_ID,
                     		"actionPlan" :data[i].framework.nc.actionPlan[j],
-                            "assessmentName" :assessmentName,
                             "customerName" :customerName,
                             "customerEmail" : customerEmail,
+                            "createdBy"     : data[i].createdBy,
                 		});
                    }
                 }
@@ -753,6 +763,7 @@ exports.list_actionplan_corporate_ID = (req,res,next) =>{
                         framework : 1,
                         assessedParty_ID : 1,
                         framework_ID : 1,
+                        assessmentName : 1,
                     }
                 },
                 {
@@ -788,9 +799,10 @@ exports.list_actionplan_corporate_ID = (req,res,next) =>{
                     		"nc" : data[i].framework.nc,
                     		"framework_ID":data[i].framework_ID,
                     		"assessedParty_ID":data[i].assessedParty_ID,
+                            "assessmentName"  : data[i].assessmentName,
                     		"actionPlan" :data[i].framework.nc.actionPlan[j],
-                            "assessmentName" :assessmentName,
-                            "assessedPartyName" : partyName
+                            "assessedPartyName" : partyName,
+                            "createdBy"         : data[i].createdBy,
                 		});
                 	}
                 }
@@ -819,6 +831,7 @@ exports.list_actionplan_assessments_ID = (req,res,next) =>{
                     framework : 1,
                     assessedParty_ID : 1,
                     framework_ID : 1,
+                    assessmentName: 1,
                 }
             },
             {
@@ -855,8 +868,9 @@ exports.list_actionplan_assessments_ID = (req,res,next) =>{
                 		"framework_ID":data[i].framework_ID,
                 		"assessedParty_ID":data[i].assessedParty_ID,
                 		"actionPlan" :data[i].framework.nc.actionPlan[j],
-                        "assessmentName" :assessmentName,
-                        "assessedPartyName" : partyName
+                        "assessmentName" :data[i].assessmentName,
+                        "assessedPartyName" : partyName,
+                        "createdBy"          : data[i].createdBy,
             		});
             	}
             }

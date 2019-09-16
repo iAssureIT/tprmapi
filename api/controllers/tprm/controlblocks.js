@@ -159,7 +159,7 @@ exports.list_controlblocks = (req,res,next)=>{
         .then(data=>{
             res.status(200).json(data);
         })
-        .catch(err =>{
+        .catch(err =>{ 
             console.log(err);
             res.status(500).json({
                 error: err
@@ -170,6 +170,21 @@ exports.list_controlblocks = (req,res,next)=>{
 exports.list_controlblocks_company = (req,res,next)=>{
     var company_ID = req.params.company_ID;
     Controlblocks.find({company_ID : company_ID})
+        .exec()
+        .then(data=>{
+            res.status(200).json(data);
+        })
+        .catch(err =>{
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+}
+
+exports.list_controlblocks_company_except_ref = (req,res,next)=>{
+    var company_ID = req.params.company_ID;
+    Controlblocks.find({company_ID : company_ID, ref_contolBlock_ID : { $exists : false }})
         .exec()
         .then(data=>{
             res.status(200).json(data);
@@ -250,7 +265,7 @@ exports.update_basic_controlblocks = (req,res,next)=>{
 }
 
 exports.update_controlblock = (req,res,next)=>{
-    console.log('controlblock params ',req.params);
+    // console.log('controlblock params ',req.params);
     switch(req.params.action){
         case 'add'      :
             Controlblocks.updateOne(

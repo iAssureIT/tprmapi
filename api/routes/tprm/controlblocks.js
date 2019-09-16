@@ -19,6 +19,8 @@ router.get('/fetchcontrols',ControlBlockController.fetch_all_controls);
 
 router.get('/list/:company_ID',ControlBlockController.list_controlblocks_company);
 
+router.get('/list_except_ref/:company_ID',ControlBlockController.list_controlblocks_company_except_ref);
+
 router.get('/company_blocks_count/:user_ID/:company_ID', ControlBlockController.controlblocks_count_of_count);
 
 router.get('/controlblocks_count_of_comapanyUser/:company_ID/:user_ID/:riskpro_ID', ControlBlockController.controlblocks_count_of_comapanyUser);

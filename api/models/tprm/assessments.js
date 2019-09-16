@@ -4,6 +4,7 @@ const assessmentsSchema = mongoose.Schema({
     _id			            : mongoose.Schema.Types.ObjectId,
     corporate_ID            : { type: mongoose.Schema.Types.ObjectId, ref: 'companysettings' },
     assessedParty_ID        : { type: mongoose.Schema.Types.ObjectId, ref: 'companysettings' },
+    assessmentName          : String,
     framework_ID            : { type: mongoose.Schema.Types.ObjectId, ref: 'frameworks' },
     assessmentID            : Number,
     frequency               : String,
