@@ -1171,7 +1171,23 @@ exports.operation_actionPlan = (req,res,next)=>{
                         	if(assessmentData.framework&&assessmentData.framework.length>0){
                         		for (var i = 0; i < assessmentData.framework.length; i++) {
                         			if(assessmentData.framework[i].controlBlock_ID==req.body.controlBlock_ID&&assessmentData.framework[i].control_ID==req.body.control_ID){
-                    				    Assessments .updateOne(
+                                        var newDocArray = []
+                                        var actionTaken = '' 
+                                        if(assessmentData.framework[i].nc.actionPlan&&assessmentData.framework[i].nc.actionPlan.length>0){
+                                            var index = assessmentData.framework[i].nc.actionPlan.findIndex(x=>x._id == req.body.actionPlan_ID)
+                                            if(index>=0){
+                                                var actionTaken = assessmentData.framework[i].nc.actionPlan[index].actionTaken
+                                                if(assessmentData.framework[i].nc.actionPlan[index].document&&assessmentData.framework[i].nc.actionPlan[index].document.length>0
+                                                    &&req.body.document&&req.body.document.length>0){
+                                                  var newDocArray = [...assessmentData.framework[i].nc.actionPlan[index].document,...req.body.document]  
+                                                }else if(req.body.document&&req.body.document.length>0){
+                                                  var newDocArray = req.body.document  
+                                                }else if(assessmentData.framework[i].nc.actionPlan[index].document&&assessmentData.framework[i].nc.actionPlan[index].document.length>0){
+                                                  var newDocArray = assessmentData.framework[i].nc.actionPlan[index].document.length  
+                                                }
+                                            }
+                                        }
+                                        Assessments .updateOne(
                                                 				{
                                                     				"_id"                           : req.params.assessments_ID,
                                                     				["framework."+i+".nc.actionPlan._id"]   : req.body.actionPlan_ID
@@ -1179,8 +1195,8 @@ exports.operation_actionPlan = (req,res,next)=>{
                                                 				{
                                                     				$set : {
                                                                 				["framework."+i+".nc.actionPlan.$.status"]          : req.body.status, //Open
-                                                                				["framework."+i+".nc.actionPlan.$.document"]        : req.body.document,
-                                                                				["framework."+i+".nc.actionPlan.$.actionTaken"]     : req.body.actionTaken
+                                                                				["framework."+i+".nc.actionPlan.$.document"]        : newDocArray,
+                                                                				["framework."+i+".nc.actionPlan.$.actionTaken"]     : req.body.actionTaken?req.body.actionTaken:actionTaken
                                                             				}
                                                 				}
                                             				)
