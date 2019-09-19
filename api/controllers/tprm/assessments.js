@@ -143,6 +143,7 @@ exports.create_assessments = (req,res,next)=>{
                                         Assessments.estimatedDocumentCount()
                                                    .exec()
                                                    .then(assessmentCount=>{
+                                                        // console.log('assessmentCount',assessmentCount)
                                                         const assessment = new Assessments({
                                                             _id                : new mongoose.Types.ObjectId(),
                                                             corporate_ID       : req.body.corporate_ID,
@@ -165,7 +166,7 @@ exports.create_assessments = (req,res,next)=>{
                                                         assessment.save()
                                                                 .then(assessment=>{
                                                                     if(assessment){
-                                                                        res.status(200).json({message:"Assessment Created",ID:assessment._id})
+                                                                        res.status(200).json({message:"Assessment Created",ID:assessment._id,assessedParty_ID:assessment.assessedParty_ID})
                                                                     }else{
                                                                         res.status(200).json({message:"Assessment Not Created"})
                                                                     }
@@ -990,7 +991,7 @@ exports.update_ncstatus = (req,res,next)=>{
 }
           
 exports.operation_actionPlan = (req,res,next)=>{
-	console.log('req',req.params,req.body);
+	// console.log('req',req.params,req.body);
     switch(req.params.action){
         case 'add' :
             Assessments .aggregate([
@@ -1003,19 +1004,22 @@ exports.operation_actionPlan = (req,res,next)=>{
                                             $unwind : "$framework"
                                         },
                                         {
-                                            $match : {
-                                                "framework.controlBlock_ID" : new ObjectID(req.body.controlBlock_ID),
-                                                "framework.control_ID"      : new ObjectID(req.body.control_ID)
-                                            }
+                                            $project : {
+                                                            "count"         : { $size : "$framework.nc.actionPlan"},
+                                                            "assessmentID"  : 1,
+                                                        }
                                         },
                                         {
-                                            $project : {"count" : { $size : "$framework.nc.actionPlan"}}
-                                        },
-
+                                            $group  : {
+                                                        "_id"   : "$assessmentID",
+                                                        "count" : {"$sum" : "$count"}
+                                                    }
+                                        }
                                     ]
                         )
                         .exec()
                         .then(count_actionPlan=>{
+                            console.log('count_actionPlan',count_actionPlan)
                                 Assessments .updateOne(
                                                         {
                                                             "_id"                       : req.params.assessments_ID,
@@ -1026,7 +1030,7 @@ exports.operation_actionPlan = (req,res,next)=>{
                                                             $push : {
                                                                 "framework.$.nc.actionPlan" :
                                                                             {
-                                                                                actionID        : count_actionPlan[0].count + 1,
+                                                                                actionID        : (count_actionPlan[0].count + 1)+'('+count_actionPlan[0]._id+')',
                                                                                 actionPlan_type : req.body.actionPlan_type,
                                                                                 plan            : req.body.plan,
                                                                                 priority        : req.body.priority,
@@ -1056,7 +1060,7 @@ exports.operation_actionPlan = (req,res,next)=>{
                                                     error: err
                                                 });
                                             });
-                                // res.status(200).json(data)
+                                // res.status(200).json(count_actionPlan)
                         })
                         .catch(err =>{
                             console.log(err);
