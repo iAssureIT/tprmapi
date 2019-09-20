@@ -1,6 +1,6 @@
 const express 	= require("express");
 const router 	= express.Router();
-
+const checkAuth = require('../../middlerware/check-auth.js');
 const CustomertypeController = require('../../controllers/tprm/customertypes');
 
 router.post('/', CustomertypeController.create_customertype);

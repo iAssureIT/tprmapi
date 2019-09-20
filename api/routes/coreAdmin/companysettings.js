@@ -1,6 +1,6 @@
 const express 	= require("express");
 const router 	= express.Router();
-
+const checkAuth     = require('../../middlerware/check-auth');
 const CompanySettingController = require('../../controllers/coreAdmin/companysettings');
 
 router.post('/', CompanySettingController.create_companysettings);

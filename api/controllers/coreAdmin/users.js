@@ -95,7 +95,6 @@ exports.user_signup = (req,res,next)=>{
 };
 
 exports.user_login = (req,res,next)=>{
-	console.log('req',req.body);
 	User.findOne({emails:{$elemMatch:{address:req.body.email}}})
 		.exec()
 		.then(user => {

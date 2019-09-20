@@ -1,6 +1,6 @@
 const express 	= require("express");
 const router 	= express.Router();
-
+const checkAuth = require('../../middlerware/check-auth.js');
 const ActionpriorityController = require('../../controllers/tprm/actionpriorities');
 
 router.post('/', ActionpriorityController.create_actionpriority);

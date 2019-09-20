@@ -1,6 +1,6 @@
 const express 	= require("express");
 const router 	= express.Router();
-
+const checkAuth = require('../../middlerware/check-auth.js');
 const FrameworkController = require('../../controllers/tprm/frameworks');
 
 router.post('/', FrameworkController.create_framework);
