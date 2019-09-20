@@ -109,7 +109,20 @@ exports.list_actionpriority_company_ID_name = (req,res,next)=>{
         )
         .exec()
         .then(data=>{
-            res.status(200).json(data);
+            // console.log("data",data);
+            if(data&&data.length>0){
+                getData();
+                async function getData(){
+                    var returnData=[];
+                    for(var j = 0 ; j < data[0].actionpriority.length ; j++){
+                        var str = await titleCase(data[0].actionpriority[j]);
+                        returnData.push(str);
+                    }
+                    if(j >= data.length){
+                        res.status(200).json(returnData);
+                    }
+                }
+            }
         })
         .catch(err =>{
             console.log(err);

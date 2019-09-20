@@ -1549,7 +1549,7 @@ exports.fetch_priority_actionplan = (req,res,next)=>{
                         .exec()
                         .then(assessment=>{
                             var returnData = [];
-                            var actionpriorities = actionpriority[0].actionpriority;
+                            var actionpriorities = actionpriority;
                             for (i = 0; i < actionpriorities.length; i++) {
                                 var count = assessment.filter((assessment)=>{
                                     return assessment.actionpriority == actionpriorities[i]
@@ -1588,6 +1588,7 @@ exports.fetch_priority_NC = (req,res,next)=>{
                         }
         })
         .then(ncpriority=>{
+            console.log("ncpriority",ncpriority);
             Assessments.aggregate(
                                     [
                                         {
@@ -1610,7 +1611,8 @@ exports.fetch_priority_NC = (req,res,next)=>{
                             return assessment.ncpriority;
                            })
                             var returnData = [];
-                            var ncpriorities = ncpriority[0].nccriticality;
+                            var ncpriorities = ncpriority;
+                            var i = 0 ;
                             for (i = 0; i < ncpriorities.length; i++) {
                                 var count = finalAssessment.filter((assessment)=>{
                                     return assessment.ncpriority == ncpriorities[i]
@@ -1673,7 +1675,7 @@ exports.fetch_vendor_priority_actionplan = (req,res,next)=>{
                             .exec()
                             .then(assessment=>{
                                 var returnData = [];
-                                var actionpriorities = actionpriority[0].actionpriority;
+                                var actionpriorities = actionpriority;
                                 for (i = 0; i < actionpriorities.length; i++) {
                                     var count = assessment.filter((assessment)=>{
                                         return assessment.actionpriority == actionpriorities[i]

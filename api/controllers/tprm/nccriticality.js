@@ -205,7 +205,20 @@ exports.list_ncpriority_company_ID_name = (req,res,next)=>{
         )
         .exec()
         .then(data=>{
-            res.status(200).json(data);
+            if(data&&data.length>0){
+                getData();
+                async function getData(){
+                    var returnData=[];
+                    for(var j = 0 ; j < data[0].nccriticality.length ; j++){
+                        var str = await titleCase(data[0].nccriticality[j]);
+                        returnData.push(str);
+                    }
+                    if(j >= data.length){
+                        res.status(200).json(returnData);
+                    }
+                }
+            }
+
         })
         .catch(err =>{
             console.log(err);

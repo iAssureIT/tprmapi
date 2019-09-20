@@ -7,8 +7,8 @@ const controlsSchema = mongoose.Schema({
     // controltag_ID           : { type: mongoose.Schema.Types.ObjectId, ref: 'controltag' },
     controltag_ID           : [
                                 {
-                                   controltag_ID : { type: mongoose.Schema.Types.ObjectId, ref: 'controltag' },
-                                   controltag    : String,
+                                   value : { type: mongoose.Schema.Types.ObjectId, ref: 'controltag' },
+                                   label : String,
                                 }
                             ],
     ref1                    : String,
