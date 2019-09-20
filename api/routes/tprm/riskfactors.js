@@ -1,6 +1,6 @@
 const express 	= require("express");
 const router 	= express.Router();
-const checkAuth = require('../../middlerware/check-auth.js');
+// const checkAuth = require('../../middlerware/check-auth.js');
 const RiskfactorController = require('../../controllers/tprm/riskfactors');
 
 router.post('/', RiskfactorController.create_riskfactor);

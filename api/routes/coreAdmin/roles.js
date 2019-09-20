@@ -1,6 +1,6 @@
 const express 	= require("express");
 const router 	= express.Router();
-const checkAuth     = require('../../middlerware/check-auth');
+// const checkAuth     = require('../../middlerware/check-auth');
 const RoleController = require('../../controllers/coreAdmin/roles');
 
 router.post('/', RoleController.create_role);
