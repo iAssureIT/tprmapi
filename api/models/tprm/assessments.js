@@ -66,6 +66,11 @@ const assessmentsSchema = mongoose.Schema({
                                     }
 
                                 ],
+    controlBlocks       : [
+                                {
+                                   controlBlocks_ID :  { type: mongoose.Schema.Types.ObjectId, ref: 'frameworks' }
+                                }
+                          ],
     createdBy               : { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
     createdAt               : Date,
     completionDate          : Date,

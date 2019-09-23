@@ -160,6 +160,7 @@ exports.create_assessments = (req,res,next)=>{
                                                             assessmentStages   : 'Open',
                                                             assessor           : req.body.assessor,
                                                             framework          : controlList,
+                                                            controlBlocks      : lstcontrolblocks.controlBlocks, 
                                                             createdBy          : req.body.createdBy,
                                                             createdAt          : new Date(),
                                                         });
@@ -227,7 +228,6 @@ exports.list_assessments_company_ID = (req,res,next)=>{
             async function getData(){
                 var returnData = [];
                 for(var i = 0 ;i < data.length ; i++){
-                    var assessmentName = await getAssessmentName(data[i].framework_ID)
                     var partyName = await getAssessedPartyName(data[i].assessedParty_ID)
                     returnData.push({
                         _id: data[i]._id,
@@ -276,7 +276,6 @@ exports.list_assessments_assessedParty_ID = (req,res,next)=>{
             async function getData(){
                 var returnData = [];
                 for(var i = 0 ;i < data.length ; i++){
-                    var assessmentName = await getAssessmentName(data[i].framework_ID);
                     var customerName = await getCustomerName(data[i].corporate_ID);
                     var customerEmail = await getCustomerId(data[i].corporate_ID);
                     returnData.push({
@@ -439,7 +438,7 @@ exports.update_assessmentStages = (req,res,next)=>{
                 )
                 .exec()
                 .then(data=>{
-                    console.log('data ',data);
+                    // console.log('data ',data);
                     if(data){
                         res.status(200).json("assessmentStages Updated");
                     }else{
@@ -580,7 +579,6 @@ exports.list_nc_true = (req,res,next) =>{
                     var controlDesc = await fetch_controlShort(data[i].framework.control_ID);
                     var contorlBlockName = await fetch_controlBlockName(data[i].framework.controlBlock_ID);
                     var controlOwnerName = await fetch_controlOwnerName(data[i].framework.controlOwner_ID); 
-                    var assessmentName = await getAssessmentName(data[i].framework_ID)
                     var partyName = await getAssessedPartyName(data[i].assessedParty_ID)
                     
                     ncData.push({
@@ -645,7 +643,6 @@ exports.list_AllNC_true = (req,res,next) =>{
             var controlDesc = await fetch_controlShort(data[i].framework.control_ID);
             var contorlBlockName = await fetch_controlBlockName(data[i].framework.controlBlock_ID);
             var controlOwnerName = await fetch_controlOwnerName(data[i].framework.controlOwner_ID);	
-            var assessmentName = await getAssessmentName(data[i].framework_ID)
             var partyName = await getAssessedPartyName(data[i].assessedParty_ID)
             
             ncData.push({
@@ -712,7 +709,6 @@ exports.list_actionplan_assessedParty_ID = (req,res,next) =>{
                 var controlDesc = await fetch_controlShort(data[i].framework.control_ID);
                 var contorlBlockName = await fetch_controlBlockName(data[i].framework.controlBlock_ID);
                 var controlOwnerName = await fetch_controlOwnerName(data[i].framework.controlOwner_ID); 
-                var assessmentName = await getAssessmentName(data[i].framework_ID)
                 var customerName = await getCustomerName(data[i].corporate_ID)
                 var customerEmail = await getCustomerId(data[i].corporate_ID)
                 if(data[i].framework.nc.actionPlan && data[i].framework.nc.actionPlan.length > 0){
@@ -783,7 +779,6 @@ exports.list_actionplan_corporate_ID = (req,res,next) =>{
                 var controlDesc = await fetch_controlShort(data[i].framework.control_ID);
                 var contorlBlockName = await fetch_controlBlockName(data[i].framework.controlBlock_ID);
                 var controlOwnerName = await fetch_controlOwnerName(data[i].framework.controlOwner_ID);	
-                var assessmentName = await getAssessmentName(data[i].framework_ID)
                 var partyName = await getAssessedPartyName(data[i].assessedParty_ID)
     
                 if(data[i].framework.nc.actionPlan&&data[i].framework.nc.actionPlan.length>0){
@@ -851,7 +846,6 @@ exports.list_actionplan_assessments_ID = (req,res,next) =>{
             var controlDesc = await fetch_controlShort(data[i].framework.control_ID);
             var contorlBlockName = await fetch_controlBlockName(data[i].framework.controlBlock_ID);
             var controlOwnerName = await fetch_controlOwnerName(data[i].framework.controlOwner_ID);	
-            var assessmentName = await getAssessmentName(data[i].framework_ID)
             var partyName = await getAssessedPartyName(data[i].assessedParty_ID)
 
             if(data[i].framework.nc.actionPlan&&data[i].framework.nc.actionPlan.length>0){
@@ -1455,18 +1449,18 @@ exports.delete_actiondocument = (req,res,next)=>{
     });
 }
 
-function getAssessmentName(data){
-    return new Promise(function(resolve,reject){
-        Framework.findOne({_id:data})
-        .exec()
-        .then(assessmentData=>{
-            resolve(assessmentData.frameworkname);
-        })
-        .catch(err=>{
-            reject(err);
-        });
-    })
-}
+// function getAssessmentName(data){
+//     return new Promise(function(resolve,reject){
+//         Framework.findOne({_id:data})
+//         .exec()
+//         .then(assessmentData=>{
+//             resolve(assessmentData.frameworkname);
+//         })
+//         .catch(err=>{
+//             reject(err);
+//         });
+//     })
+// }
 
 function getAssessedPartyName(data){
     return new Promise(function(resolve,reject){
