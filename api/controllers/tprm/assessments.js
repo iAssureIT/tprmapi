@@ -2,7 +2,7 @@ const mongoose  = require("mongoose");
 var request = require('request-promise');
 var ObjectID = require('mongodb').ObjectID;
 const globalVariable = require("../../../nodemon.js");
-
+var moment = require('moment');
 const Assessments = require('../../models/tprm/assessments');
 const Framework = require('../../models/tprm/frameworks');
 const Companysettings = require('../../models/coreAdmin/companysettings');
@@ -1732,3 +1732,84 @@ exports.fetch_assessment_bystages = (req,res,next)=>{
     }
                 
 };
+exports.sent_Actionplan_mail = (req,res,next) =>{
+    Assessments.find()
+    .exec()
+    .then(data=>{
+        setNCDate();
+        async function setNCDate(){
+            for(i=0;i<data.length;i++){
+                if(data[i].framework&&data[i].framework.length>0){
+                    for (var k = 0; k < data[i].framework.length; k++) {
+                        if(data[i].framework[k].nc.actionPlan&&data[i].framework[k].nc.actionPlan.length>0){
+                            for (var j = 0; j < data[i].framework[k].nc.actionPlan.length; j++) {
+                                if(data[i].framework[k].nc.actionPlan[j].status&&data[i].framework[k].nc.actionPlan[j].status!='Published'&&data[i].framework[k].nc.actionPlan[j].status!='Accepted'){
+                                    const date1 = new Date();
+                                    const date2 = new Date(data[i].framework[k].nc.actionPlan[j].dueDate);
+                                    const diffTime = Math.abs(date2 - date1);
+                                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+                                    // console.log('diffDays===',diffDays)
+                                    if(diffDays==3||diffDays==-1){
+                                      var endDate = moment(data[i].framework[k].nc.actionPlan[j].dueDate).format('DD/MM/YYYY')
+                                      Companysettings.findOne({'_id':data[i].assessedParty_ID})
+                                        .exec()
+                                        .then(user=>{
+                                            // console.log('user',user);
+                                            if(user){
+                                                if (user.spocDetails) {
+                                                    var subject = 'Complete Action Plan';
+                                                    var mail    = 'Hello,<br><br>Action plan due on '+endDate+' is <b>pending</b> which was assigned to you by '+user.companyName+'. <br><br>Regards,<br>Team Risk Pro';;
+                                                    var email   = user.spocDetails.emailId;
+                                                    res.header("Access-Control-Allow-Origin","*");
+                                                    request({
+                                                        "method"    : "POST", 
+                                                        "url"       : "http://localhost:"+globalVariable.port+"/send-email",
+                                                        "body"      : {
+                                                                            "email"     : email,
+                                                                            "subject"   : subject,
+                                                                            "text"      : "WOW Its done",
+                                                                            "mail"      : mail
+                                                                        },
+                                                        "json"      : true,
+                                                        "headers"   : {
+                                                                        "User-Agent": "Test App"
+                                                                    }
+                                                    })
+                                                    .then((sentemail)=>{
+                                                        if(i >= data.length){
+                                                            res.status(200).json({message:"Mail Sent successfully"});
+                                                        }
+                                                    })
+                                                    .catch((err) =>{
+                                                        console.log("call to api",err);
+                                                        res.status(500).json({
+                                                            error: err
+                                                        });
+                                                    });
+                                                }
+
+                                            }else{
+                                                res.status(404).json("User Not Found");
+                                            }
+                                        })
+                                        .catch(err=>{
+                                            console.log('update user status error ',err);
+                                            res.status(500).json({
+                                                error:err
+                                            });
+                                        });  
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    })
+    .catch(err =>{
+        res.status(500).json({
+            error: err
+        });
+    });
+}

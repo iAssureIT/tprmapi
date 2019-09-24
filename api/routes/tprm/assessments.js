@@ -9,6 +9,8 @@ router.post('/list/vendor_priority_actionplan', AssessmentsController.fetch_vend
 
 router.post('/list/assessment_bystages', AssessmentsController.fetch_assessment_bystages);
 
+router.post('/sentactionmail', AssessmentsController.sent_Actionplan_mail);
+
 router.get('/list', AssessmentsController.list_assessments); 
 
 router.get('/list/nc_true/:assessments_ID',AssessmentsController.list_nc_true);
