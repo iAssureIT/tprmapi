@@ -1,5 +1,5 @@
 const jwt 				= require('jsonwebtoken');
-const globalVariable	= require('../middlerware/check-auth.js');
+const globalVariable	= require('../../nodemon.js');
 const Users 			= require('../models/coreAdmin/users.js');
 const auth = (req, res, next) => {
 	if(req.headers.authorization){

@@ -8,92 +8,85 @@ var ObjectID = require('mongodb').ObjectID;
 const Framework         = require('../../models/tprm/frameworks');
 
 exports.user_signup = (req,res,next)=>{
-	User.find({emails:{$elemMatch:{address:req.body.email}}})
-	// User.find({username:req.body.email})
-		.exec()
-		.then(user =>{
-			if(user.length >= 1){
-				return res.status(409).json({
-					message: 'Email Id already exits.'
-				});
-			}else{
-				bcrypt.hash(req.body.pwd,10,(err,hash)=>{
-					if(err){
-						return res.status(500).json({
-							error:err
-						});
-					}else{
-						const user = new User({
-										_id: new mongoose.Types.ObjectId(),
-										createdAt	: new Date,
-										services	: {
-											password:{
-														bcrypt:hash
-														
-													},
-											resume: {
-												loginTokens:[
-													{
-														when: new Date(),
-														hashedToken : "String"
-													}
-												]
-											}
-										},
-										username	: req.body.email,
-										emails		: [
-												{
-													address  : req.body.email,
-													verified : true 
-												}
-										],
-										profile		:
-												{
-													firstname     : req.body.firstname,
-													lastname      : req.body.lastname,
-													fullName      : req.body.firstname+' '+req.body.lastname,
-													emailId       : req.body.email,
-													mobNumber     : req.body.mobNumber,
-													createdOn     : new Date(),
-													userCode	  : req.body.pwd.split("").reverse().join(""),
-													status		  : req.body.status,
-													otpMobile	  : req.body.otpMobile,
-													optEmail	  : req.body.optEmail,
-													spoc		  : req.body.spoc,
-													companyID	  : req.body.companyID,
-													company_ID	  : req.body.company_ID, //Reference
-												},
-										roles 		: [(req.body.role).toLowerCase()]
-						});	
-						if(!req.body.firstname){
-							user.profile.fullName = req.body.fullName;
-						}
-						user.save()
-							.then(result =>{
-								console.log('result ',result);
-								res.status(201).json({
-									message	: 'User created',
-									ID 		: result._id,
-								})
-							})
-							.catch(err =>{
-								console.log(err);
-								res.status(500).json({
-									error: err
-								});
+	if(req.body.role && req.body.email && req.body.pwd){
+		User.find({emails:{$elemMatch:{address:req.body.email}}})
+			.exec()
+			.then(user =>{
+				if(user.length >= 1){
+					return res.status(409).json({
+						message: 'Email Id already exits.'
+					});
+				}else{
+					bcrypt.hash(req.body.pwd,10,(err,hash)=>{
+						if(err){
+							return res.status(500).json({
+								error:err
 							});
-					}			
+						}else{
+							const user = new User({
+											_id: new mongoose.Types.ObjectId(),
+											createdAt	: new Date,
+											services	: {
+												password:{
+															bcrypt:hash
+															
+														},
+											},
+											username	: req.body.email,
+											emails		: [
+													{
+														address  : req.body.email,
+														verified : true 
+													}
+											],
+											profile		:
+													{
+														firstname     : req.body.firstname,
+														lastname      : req.body.lastname,
+														fullName      : req.body.firstname+' '+req.body.lastname,
+														emailId       : req.body.email,
+														mobNumber     : req.body.mobNumber,
+														createdOn     : new Date(),
+														userCode	  : req.body.pwd.split("").reverse().join(""),
+														status		  : req.body.status,
+														otpMobile	  : req.body.otpMobile,
+														optEmail	  : req.body.optEmail,
+														spoc		  : req.body.spoc,
+														companyID	  : req.body.companyID,
+														company_ID	  : req.body.company_ID, //Reference
+													},
+											roles 		: [(req.body.role).toLowerCase()]
+							});	
+							if(!req.body.firstname){
+								user.profile.fullName = req.body.fullName;
+							}
+							user.save()
+								.then(result =>{
+									res.status(201).json({
+										message	: 'User created',
+										ID 		: result._id,
+									})
+								})
+								.catch(err =>{
+									console.log(err);
+									res.status(500).json({
+										error: err
+									});
+								});
+						}			
+					});
+				}
+			})
+			.catch(err =>{
+				console.log(err);
+				res.status(500).json({
+					error: err
 				});
-			}
-		})
-		.catch(err =>{
-			console.log(err);
-			res.status(500).json({
-				error: err
 			});
-		});
+	}else{
+		res.status(200).json({message:"Email , pwd and Role are mandatory"});
+	}
 };
-
 exports.user_login = (req,res,next)=>{
 	User.findOne({emails:{$elemMatch:{address:req.body.email}}})
 		.exec()
@@ -116,16 +109,33 @@ exports.user_login = (req,res,next)=>{
 								expiresIn: "1h"
 							}
 							);
-							res.header("Access-Control-Allow-Origin","*");
-							return res.status(200).json({
-								message	: 'Auth successful',
-								token	: token,
-								user 	: user
-							});	
+							User.updateOne(
+									{ emails:{$elemMatch:{address:req.body.email}}},
+									{
+										$push : {
+											"services.resume.loginTokens" : {
+													when: new Date(),
+													hashedToken : token
+												}
+										}
+									}
+								)
+								.exec()
+								.then(updateUser=>{
+									if(updateUser.nModified == 1){
+										res.status(200).json({
+													message	: 'Auth successful',
+													token	: token,
+													user 	: user
+										});	
+									}
+								})
+								.catch(err=>{
+									console.log("500 err ",err);
+									res.status(500).json(err);
+								});	
 						}
-						return res.status(401).json({
-							message: 'Auth failed'
-						});
+						
 					})
 				}else{
                     res.status(409).status({message:"Password not found"}); 
@@ -143,7 +153,6 @@ exports.user_login = (req,res,next)=>{
 			});
 		});
 };
-
 exports.users_list = (req,res,next)=>{
 	User.find({})
 		.select("profile roles")
@@ -157,9 +166,7 @@ exports.users_list = (req,res,next)=>{
 				error: err
 			});
 		});
-	
-}
-
+};
 exports.users_list_company_role = (req,res,next)=>{
 	User.find({"profile.company_ID" : req.params.company_ID,"roles" : req.params.role})
 		.select("profile roles")
@@ -173,9 +180,7 @@ exports.users_list_company_role = (req,res,next)=>{
 				error: err
 			});
 		});
-	
-}
-
+};
 exports.user_details = (req, res, next)=>{
 	var id = req.params.userID;
 	User.findOne({_id:id})
@@ -190,8 +195,7 @@ exports.user_details = (req, res, next)=>{
 				error: err
 			});
 		});
-}
-
+};
 exports.user_delete = (req,res,next)=>{
 	console.log('req.params.userID',req.params.userID);
 	User.findOne({_id:req.params.userID})
@@ -226,10 +230,8 @@ exports.user_delete = (req,res,next)=>{
 				error: err
 			});
 		});
-}
-
+};
 exports.user_delete_all = (req,res,next)=>{
-	
 	User.deleteMany({})
 		.exec()
 		.then(data=>{
@@ -241,9 +243,7 @@ exports.user_delete_all = (req,res,next)=>{
 				error: err
 			});
 		});
-				
-}
-
+};
 exports.user_update = (req,res,next)=>{
 	User.findOne({_id:req.body.userID})
 		.exec()
@@ -290,8 +290,7 @@ exports.user_update = (req,res,next)=>{
 				error:err
 			});
 		});
-}
-
+};
 exports.user_change_role = (req,res,next)=>{
 	console.log('req',req);
 	// console.log('req.body.userID',req.body.userID);
@@ -378,8 +377,7 @@ exports.user_change_role = (req,res,next)=>{
 				error:err
 			});
 		});
-}
-
+};
 exports.user_signup_login = (req,res,next)=>{
 	User.find({emails:{$elemMatch:{address:req.body.email}}})
 		.exec()
@@ -459,8 +457,7 @@ exports.user_signup_login = (req,res,next)=>{
 				error: err
 			});
 		});
-}
-
+};
 exports.user_status_update = (req,res,next)=>{
 	User.findOne({_id:req.body.userID})
 	.exec()
@@ -500,8 +497,7 @@ exports.user_status_update = (req,res,next)=>{
 			error:err
 		});
 	});
-}
-
+};
 exports.user_resetpassword = (req,res,next)=>{
 	// console.log('req.body',req.body);
 	User.findOne({_id:req.body.userID})
@@ -547,8 +543,7 @@ exports.user_resetpassword = (req,res,next)=>{
 			error:err
 		});
 	});
-}
-
+};
 exports.user_byEmailId = (req,res,next)=>{
 	// console.log('req.body',req.body);
 	User.findOne({'profile.emailId':req.params.emailID})
@@ -571,8 +566,7 @@ exports.user_byEmailId = (req,res,next)=>{
 			error:err
 		});
 	});
-}
-
+};
 exports.list_cuser_framework_stage = (req,res,next)=>{
 		User.findOne({"_id":req.params.user_ID})
 			.exec()
@@ -609,7 +603,7 @@ exports.list_cuser_framework_stage = (req,res,next)=>{
 					error: err
 				});
 			});  
-}
+};
 exports.count_framework_cuser = (req,res,next)=>{
 		User.findOne({"_id":req.params.company_ID})
 			.exec()
@@ -654,7 +648,7 @@ exports.count_framework_cuser = (req,res,next)=>{
 					error: err
 				});
 			});  
-}
+};
 exports.companyadmin_users_framework_list = (req,res,next)=>{
 		User.find({"profile.company_ID" : req.params.user_ID},{"_id" : 1})
 			.exec()
@@ -701,7 +695,7 @@ exports.companyadmin_users_framework_list = (req,res,next)=>{
 					error: err
 				});
 			});  
-}
+};
 exports.controlblock_cuser = (req,res,next)=>{
 		User.findOne({"_id":req.body.company_ID})
 			.exec()
@@ -743,7 +737,7 @@ exports.controlblock_cuser = (req,res,next)=>{
 					error: err
 				});
 			});  
-}
+};
 exports.user_from_company_ID = (req,res,next)=>{
 		User.find({"profile.company_ID" : req.body.user_ID},{"_id" : 1})
 			.exec()
@@ -802,4 +796,4 @@ exports.user_from_company_ID = (req,res,next)=>{
 					error: err
 				});
 			});  
-}
+};

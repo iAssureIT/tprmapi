@@ -5,7 +5,7 @@ const router 	= express.Router();
 
 const UserController = require('../../controllers/coreAdmin/users');
 
-router.get('/list', UserController.users_list); //Working
+router.get('/list', checkAuth,UserController.users_list); //Working
 
 router.get('/singleuser/:user_ID',UserController.list_cuser_framework_stage);
 
@@ -23,7 +23,7 @@ router.post('/', UserController.user_signup); //Working
 
 router.post('/details',UserController.user_login); //Working
 
-router.delete('/delete/:userID',UserController.user_delete);
+router.delete('/delete/:userID',checkAuth,UserController.user_delete);
 
 router.delete('/delete',UserController.user_delete_all);
 
