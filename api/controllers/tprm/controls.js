@@ -33,7 +33,7 @@ exports.create_control = (req,res,next)=>{
                  control.save()
                         .then(data=>{
                             if(data){
-                                console.log('data ',data,' c ',req.body.controlBlocks_ID);
+                                // console.log('data ',data,' c ',req.body.controlBlocks_ID);
                                 Controlblocks.updateOne(
                                                     {_id : req.body.controlBlocks_ID},
                                                     {
@@ -340,5 +340,97 @@ exports.duplicate_control = (req,res,next) =>{
                     error: err
                 });
             });
+}
+function bulkupload_controls(newcontrol,controlBlock_ID){
+    return new Promise(function(resolve,reject){
+        Control.findOne({controlShort:newcontrol.controlShort})
+                .exec()
+                .then(baseControl=>{
+                    if(!baseControl){
+                        const control = new Control({
+                            _id                     : new mongoose.Types.ObjectId(),
+                            controlShort            : newcontrol.controlShort, 
+                            controlDesc             : newcontrol.controlDesc,
+                            controltag_ID           : newcontrol.controltag_ID,
+                            ref1                    : newcontrol.ref1,
+                            ref2                    : newcontrol.ref2,
+                            ref3                    : newcontrol.ref3,
+                            // risk                    : baseControl.risk,
+                            multiplier              : newcontrol.multiplier,
+                            mandatory               : newcontrol.mandatory,
+                            scored                  : newcontrol.scored, 
+                            controlBlocks_ID        : newcontrol.controlBlocks_ID,
+                            company_ID              : newcontrol.company_ID,
+                            createdBy               : newcontrol.createdBy,
+                            createdAt               : new Date(),
+                        });
+                        control.save()
+                            .then(data=>{
+                                if (data) {
+                                    Controlblocks.updateOne(
+                                                {_id : controlBlock_ID},
+                                                {
+                                                    $push : {
+                                                        controls : {
+                                                            control_ID : data._id
+                                                        }
+                                                    }
+                                                }
+                                            )
+                                    .exec()
+                                    .then(cb=>{
+                                        if(cb.nModified == 1){
+                                            resolve(data._id);
+                                        }else{
+                                           resolve("Control not updated to control block");
+                                        }
+                                    })
+                                    .catch(error =>{
+                                        reject(error);
+                                    });
+
+                                }else{
+                                    resolve("Control not added");
+                                }
+                                   
+                            })
+                            .catch(err =>{
+                                console.log(err);
+                                reject(err);
+                            });
+                               
+                    }else{ //end of baseControl
+                        resolve("Duplicate control short")
+                    }
+                })
+                .catch(err =>{
+                    console.log(err);
+                    reject(err);
+                });
+    });
+}
+
+exports.control_Bulk_upload = (req,res,next)=>{
+    var controls = req.body.data;
+    var newControlLst = [];
+    getControlData();
+    async function getControlData(){
+        for(var k = 0 ; k < controls.length ; k++){
+            var newControl_ID = await bulkupload_controls(controls[k],req.body.controlBlock_ID);
+            if(newControl_ID == "Control Not Found"){
+                res.status(200).json({"message":"Control Not Found"});
+            }else if (newControl_ID == "Duplicate control short") {
+                res.status(200).json({"message":"Duplicate control short"});
+            }else if (newControl_ID == "Control not updated to control block"){
+                res.status(200).json({"message":"Control not updated to control block"});
+            }else{
+                newControlLst.push({"control_ID":newControl_ID});
+            }
+        }//listControls end
+        if(k >= controls.length){
+            res.status(200).json({"newControlLst": newControlLst, "controlBlock_ID" : req.body.controlBlock_ID,"message":"Controls Uploaded Successfully"})
+        }
+    }    
+
 }
 

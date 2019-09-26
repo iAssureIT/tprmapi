@@ -53,7 +53,6 @@ function duplicate_controlBlocks(controlBlock){
                                                     async function fetchNewControl(){
                                                         var newControlLst = [];
                                                         var listControls  = baseControlblock.controls;
-                                                        console.log()
                                                         for(j = 0 ; j < listControls.length ; j++){
                                                             var newControl_ID = await duplicate_controls({
                                                                                                     control_ID      : listControls[j].control_ID,

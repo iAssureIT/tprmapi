@@ -5,6 +5,8 @@ const ControlController = require('../../controllers/tprm/controls');
 
 router.post('/', ControlController.create_control);
 
+router.post('/control_Bulk_upload',ControlController.control_Bulk_upload);
+
 router.post('/controlscount_for_admin', ControlController.controlscount_for_admin);
 
 router.get('/list', ControlController.list_control);
