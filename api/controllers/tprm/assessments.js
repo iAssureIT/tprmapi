@@ -561,6 +561,8 @@ exports.list_nc_true = (req,res,next) =>{
                         corporate_ID : 1,
                         framework_ID : 1,
                         assessmentName : 1,
+                        createdBy : 1,
+                        assessor : 1
                     }
                 },
                 {
@@ -596,7 +598,8 @@ exports.list_nc_true = (req,res,next) =>{
                         "corporate_ID":data[i].corporate_ID,
                         "assessmentName" :data[i].assessmentName,
                         "assessedPartyName" : partyName,
-                        "createdBy"         : data[i].createdBy
+                        "createdBy"         : data[i].createdBy,
+                        "assessor"          : data[i].assessor
                     });
                 }
                 if(i >= data.length){
@@ -828,6 +831,7 @@ exports.list_actionplan_assessments_ID = (req,res,next) =>{
                     assessedParty_ID : 1,
                     framework_ID : 1,
                     assessmentName: 1,
+                    createdBy : 1,
                 }
             },
             {
@@ -1582,7 +1586,7 @@ exports.fetch_priority_NC = (req,res,next)=>{
                         }
         })
         .then(ncpriority=>{
-            console.log("ncpriority",ncpriority);
+            // console.log("ncpriority",ncpriority);
             Assessments.aggregate(
                                     [
                                         {

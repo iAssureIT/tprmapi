@@ -1,6 +1,6 @@
 const express 	= require("express");
 const router 	= express.Router();
-// const checkAuth     = require('../../middlerware/check-auth');
+const checkAuth     = require('../../middlerware/check-auth');
 const NotificationController = require('../../controllers/coreAdmin/notifications');
 
 router.post('/', NotificationController.create_notification);

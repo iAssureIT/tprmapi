@@ -2,6 +2,7 @@ const jwt 				= require('jsonwebtoken');
 const globalVariable	= require('../../nodemon.js');
 const Users 			= require('../models/coreAdmin/users.js');
 const auth = (req, res, next) => {
+	console.log('req, res, next',req.headers.authorization)
 	if(req.headers.authorization){
 	    const token = req.headers.authorization.split(" ")[1];
 	    const data = jwt.verify(token, globalVariable.JWT_KEY,(err,decode)=>{
@@ -12,19 +13,20 @@ const auth = (req, res, next) => {
 	    		try{
 	    			getData();
 	    			async function getData(){
+						console.log('req processed')
 			    		const user = await Users.aggregate([
-			        											{
-			        												$match : { "_id" : decode.userId}
-			        											},
-														  		{
-														    		$project: {
-														      			loginToken: {$arrayElemAt: ["$services.resume.loginTokens", 1]}
-														    		}
-														  		},
-														  		{
-														    		$match: {"loginToken.hashedToken": token}
-														  		}
-														]);
+								{
+									$match : { "_id" : decode.userId}
+								},
+						  		{
+						    		$project: {
+						      			loginToken: {$arrayElemAt: ["$services.resume.loginTokens", 1]}
+						    		}
+						  		},
+						  		{
+						    		$match: {"loginToken.hashedToken": token}
+						  		}
+						]);
 			    		req.token = token;
 			    		next();
 	    			}
