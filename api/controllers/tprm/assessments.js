@@ -1106,7 +1106,7 @@ exports.operation_actionPlan = (req,res,next)=>{
                                 )
                         .exec()
                         .then(assessmentData=>{
-                            console.log("assessmentData",assessmentData);
+                            // console.log("assessmentData",assessmentData);
                         	if(assessmentData.framework&&assessmentData.framework.length>0){
                         		for (var i = 0; i < assessmentData.framework.length; i++) {
                         			if(assessmentData.framework[i].controlBlock_ID==req.body.controlBlock_ID&&assessmentData.framework[i].control_ID==req.body.control_ID){
@@ -1185,10 +1185,11 @@ exports.operation_actionPlan = (req,res,next)=>{
                                                 }else if(req.body.document&&req.body.document.length>0){
                                                   var newDocArray = req.body.document  
                                                 }else if(assessmentData.framework[i].nc.actionPlan[index].document&&assessmentData.framework[i].nc.actionPlan[index].document.length>0){
-                                                  var newDocArray = assessmentData.framework[i].nc.actionPlan[index].document.length  
+                                                  var newDocArray = assessmentData.framework[i].nc.actionPlan[index].document  
                                                 }
                                             }
                                         }
+                                        // console.log('newDocArray',newDocArray)
                                         Assessments .updateOne(
                                                 				{
                                                     				"_id"                           : req.params.assessments_ID,
