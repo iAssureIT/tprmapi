@@ -939,10 +939,18 @@ function getUserStatus(data){
         Users.findOne({_id:data})
         .exec()
         .then(userData=>{
-            resolve({
-                status:userData.profile.status,
-                company_ID:userData.profile.company_ID,
-            });
+            // console.log('userData',userData)
+            if(userData&&userData.profile){
+                resolve({
+                    status:userData.profile.status,
+                    company_ID:userData.profile.company_ID,
+                });
+            }else{
+                resolve({
+                    status:'-',
+                    company_ID:'-',
+                });
+            }
         })
         .catch(err=>{
             reject(err);

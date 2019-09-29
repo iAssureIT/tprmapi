@@ -106,7 +106,7 @@ exports.user_login = (req,res,next)=>{
 								userId	:  user._id ,
 							},globalVariable.JWT_KEY,
 							{
-								expiresIn: "1h"
+								expiresIn: "1d"
 							}
 							);
 							User.updateOne(

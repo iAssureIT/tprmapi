@@ -190,7 +190,7 @@ exports.create_assessments = (req,res,next)=>{
                                 })
                                 .catch(err =>{
                                     console.log(err);
-                                    reject(err);
+                                    // reject(err);
                                 });
                             
                         }//End of async

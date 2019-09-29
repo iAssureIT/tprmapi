@@ -2,18 +2,18 @@ const jwt 				= require('jsonwebtoken');
 const globalVariable	= require('../../nodemon.js');
 const Users 			= require('../models/coreAdmin/users.js');
 const auth = (req, res, next) => {
-	console.log('req, res, next',req.headers.authorization)
+	// console.log('req, res, next',req.headers.authorization)
 	if(req.headers.authorization){
 	    const token = req.headers.authorization.split(" ")[1];
 	    const data = jwt.verify(token, globalVariable.JWT_KEY,(err,decode)=>{
 	    	if(err){
-	    		console.log("err verify ",err);
+	    		// console.log("err verify ",err);
 				res.status(401).json("Not authorized to access this resource");
 	    	}else{
 	    		try{
 	    			getData();
 	    			async function getData(){
-						console.log('req processed')
+						// console.log('req processed')
 			    		const user = await Users.aggregate([
 								{
 									$match : { "_id" : decode.userId}
