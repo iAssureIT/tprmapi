@@ -32,9 +32,11 @@ APIs :
 8. Add / Remove the Control Block 						- Done
 9. Update state and stage framework           			- Done 
 10. List of framework according to draft and published 	- Done
-11. Get count of frameworks of specific company
+11. Get count of frameworks of specific company 		- Done
 12. Create Customize Framework 							- Done
 13. Fetch Framework along with Control Block Details    - Done
+14. List of framework for Customer admin                - Done
+15. List of framework for Customer User                 - Done
 
 -----------------------------------------------------------------------------------------------------
 								1. Insert new framework
@@ -368,3 +370,38 @@ Output      :
 												}
 											],
 					}
+
+
+-----------------------------------------------------------------------------------------------------
+						14. List of framework for Customer admin
+-----------------------------------------------------------------------------------------------------
+					
+Method      : POST
+    
+URL         : /api/frameworks/list_framework_stage_customeradmin
+			
+Input       : 
+				{
+					"ids"             : Array,       // _id of risk-pro admin, customer-admin, and all its  								 //	user array type:["_id1","_id2","_id3"]
+					"stage"	          : Boolean,     // true or false
+					"frameworktype"	  : String       // Standard or Customize
+				}
+				
+Output      : 
+				If successfully 
+				[
+					 { 
+				 		frameworktype      : String,
+						frameworkname       : String,
+						purpose             : String,
+						domain_ID           : String,
+						company_ID          : String,
+						createdBy           : String,
+						ref_framework_ID    : String,
+						state               : Boolean,
+						stage               : Boolean,
+						version				: Number
+						"controlBlocks"	   	: []
+
+					 }
+				]

@@ -213,7 +213,7 @@ exports.create_framework = (req,res,next)=>{
 exports.create_Customize_framework = (req,res,next)=>{
     Framework   .findOne({_id:req.params.framework_ID})
                 .exec()
-                .then(frameworkDoc=>{
+                .then(frameworkDoc=>{ 
                     if(frameworkDoc){
                         getData();
                         async function getData(){
@@ -530,7 +530,7 @@ exports.list_framework_stage_customeradmin = (req,res,next)=>{
         .exec()
         .then(data=>{
             res.status(200).json(data);
-        })
+        }) 
         .catch(err =>{
             console.log(err);
             res.status(500).json({
@@ -611,27 +611,39 @@ exports.frameworks_count_of_companyUser = (req,res,next)=>{
         });
 }
 exports.frameworks_count_for_cadmin = (req,res,next)=>{
-    Framework.countDocuments({company_ID : { $in: req.body.ids}})
+    var totalCount  = 0;
+    getFramweorkData();
+    async function getFramweorkData(){
+        var standardCount  = await frameworkCount(req.body.ids,"Standard",[true]);
+        var customizeCount = await frameworkCount(req.body.ids,"Customize",[true,false]);
+        totalCount   = standardCount + customizeCount;
+        res.status(200).json(totalCount);
+    }   
+    
+}
+function frameworkCount(ids,type,stage) {
+    return new Promise((resolve,reject)=>{
+       Framework.countDocuments({company_ID : { $in: ids}, stage : stage,frameworktype :{$in: type}})
         .exec()
         .then(data=>{
             // console.log("data frameworks",data);
             if(data){
-                res.status(200).json(data);
+                resolve(data);
             }else{
-                res.status(404).json({message:'Frameworks not found'});
+                resolve(0);
             }
         })
         .catch(err =>{
-            console.log(err);
-            res.status(500).json({
-                error: err
-            });
+            // console.log(err);
+            reject(err);
         });
+    });
 }
+
 //----------------------------Not merged code-------------------------------------
 exports.fetch_framework_controlblockDetails = (req,res,next)=>{
-    console.log("fetch_framework_controlblockDetails");
-    Framework  .aggregate([
+    // console.log("fetch_framework_controlblockDetails",req.params.framework_ID);
+    Framework  .aggregate([ 
                             {
                                 $match : {_id : new ObjectID(req.params.framework_ID)}
                             },
@@ -732,6 +744,7 @@ exports.fetch_framework_controlblockDetails = (req,res,next)=>{
                 ])
                 .exec()
                 .then(data=>{
+                    console.log("data",data);
                     res.status(200).json(data[0]);
                 })
                 .catch(err =>{

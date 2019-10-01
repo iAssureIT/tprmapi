@@ -35,6 +35,7 @@ const projectSettingRoutes 				= require('./api/routes/tprm/projectSettings');
 // global.JWT_KEY = "secret";
 
 mongoose.connect('mongodb://localhost/'+globalVariable.dbname,{
+	useUnifiedTopology: true,
 	useNewUrlParser: true
 })
 mongoose.promise = global.Promise;

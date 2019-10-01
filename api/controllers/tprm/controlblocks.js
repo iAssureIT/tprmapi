@@ -748,6 +748,7 @@ exports.fetch_subcb_control_details = (req,res,next)=>{
                         ])
                     .exec()
                     .then(data=>{
+                        console.log("data",data);
                         res.status(200).json(data)
                     })
                     .catch(err =>{
