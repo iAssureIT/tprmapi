@@ -577,7 +577,7 @@ exports.frameworks_count_of_admin = (req,res,next)=>{
     Framework.countDocuments({company_ID : req.params.user_ID })
         .exec()
         .then(data=>{
-            console.log("data frameworks",data);
+            // console.log("data frameworks",data);
             if(data){
                 res.status(200).json(data);
             }else{

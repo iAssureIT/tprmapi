@@ -37,6 +37,9 @@ APIs :
 13. Fetch Framework along with Control Block Details    - Done
 14. List of framework for Customer admin                - Done
 15. List of framework for Customer User                 - Done
+16. Count of framework for Riskpro admin                - Done   
+17. Count of framework for Customer User 				- Done  
+18. Count of framework for Customer Admin  				- Done
 
 -----------------------------------------------------------------------------------------------------
 								1. Insert new framework
@@ -373,7 +376,7 @@ Output      :
 
 
 -----------------------------------------------------------------------------------------------------
-						14. List of framework for Customer admin
+						14. List of framework for Customer User   
 -----------------------------------------------------------------------------------------------------
 					
 Method      : POST
@@ -405,3 +408,74 @@ Output      :
 
 					 }
 				]
+
+-----------------------------------------------------------------------------------------------------
+						15. List of framework for Customer User
+-----------------------------------------------------------------------------------------------------
+					
+Method      : GET
+    
+URL         : /api/frameworks/company/list/:company_ID/:user_ID/:stage/:frameworktype
+			
+Input       : NA
+Output      : 
+				If successfully 
+				[
+					 { 
+				 		frameworktype      : String,
+						frameworkname       : String,
+						purpose             : String,
+						domain_ID           : String,
+						company_ID          : String,
+						createdBy           : String,
+						ref_framework_ID    : String,
+						state               : Boolean,
+						stage               : Boolean,
+						version				: Number
+						"controlBlocks"	   	: []
+
+					 }
+				]		
+-----------------------------------------------------------------------------------------------------
+					 16. Count of framework for Riskpro admin 
+-----------------------------------------------------------------------------------------------------
+					
+Method      : GET
+    
+URL         : /api/frameworks/frameworks_count_of_admin/:user_ID
+			
+Input       : NA
+Output      : 
+				If successfully 
+				 1 or 2 or 3 // framework count
+
+-----------------------------------------------------------------------------------------------------
+					 17. Count of framework for Customer User 
+-----------------------------------------------------------------------------------------------------
+					
+Method      : GET
+    
+URL         : /api/frameworks/frameworks_count_of_companyUser/:company_ID/:user_ID/:riskpro_ID
+			
+Input       : NA
+Output      : 
+				If successfully 
+				 1 or 2 or 3 // framework count
+
+-----------------------------------------------------------------------------------------------------
+					 18. Count of framework for Customer Admin 
+-----------------------------------------------------------------------------------------------------
+					
+Method      : POST
+    
+URL         : /api/frameworks/frameworks_count_for_cadmin 
+			
+Input       : {
+				"ids" : Array, // _id of risk-pro admin, customer-admin, and all its  						        		 //	user array type:["_id1","_id2","_id3"]
+				}
+Output      : 
+				If successfully 
+				 1 or 2 or 3 // framework count
+
+
+											

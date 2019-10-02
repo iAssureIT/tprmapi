@@ -13,7 +13,7 @@ router.post('/controlblockscount_for_admin',ControlBlockController.controlblocks
 
 router.get('/list',ControlBlockController.list_controlblocks);
 
-router.get('/fetchcb',ControlBlockController.fetch_all_subcontrolblocks);
+router.get('/fetchcb',ControlBlockController.fetch_all_subcontrolblocks); 
 
 router.get('/fetchcontrols',ControlBlockController.fetch_all_controls);
 

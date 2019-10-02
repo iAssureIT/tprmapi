@@ -197,7 +197,7 @@ exports.user_details = (req, res, next)=>{
 		});
 };
 exports.user_delete = (req,res,next)=>{
-	console.log('req.params.userID',req.params.userID);
+	// console.log('req.params.userID',req.params.userID);
 	User.findOne({_id:req.params.userID})
 		.exec()
 		.then(data=>{

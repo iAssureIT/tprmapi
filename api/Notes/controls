@@ -31,7 +31,12 @@ APIs :
 6. Delete all the controls							    - Done
 7. List all control  for specify company			    - Done
 8. Get count of controls of specific company
-9. Make a copy of Control                               - 
+9. Make a copy of Control                               - Done
+10. Count of controls for riskpro admin                 - Done
+11. Count of controls for Customer Admin                - Done
+12. Count of controls for Customer User                 - Done
+13. Bulk Upload of Controls                             - Done
+
 -----------------------------------------------------------------------------------------------------
 								1. Insert new framework
 -----------------------------------------------------------------------------------------------------
@@ -262,3 +267,106 @@ Output      :
                        message : "Control Duplicated",
                        ID      : String //ID of new Control
                     }                    
+
+-----------------------------------------------------------------------------------------------------
+                        10. Count of controls for riskpro admin
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/controls/controls_count_of_admin/:user_ID
+
+Input       : -NA-
+                
+
+Output      : 
+                If successfully
+                    1 or 2 or 3 // count of controls
+
+-----------------------------------------------------------------------------------------------------
+                        11. Count of controls for Customer Admin
+-----------------------------------------------------------------------------------------------------
+
+Method      : POST
+    
+URL         : /api/controls/controlscount_for_admin
+
+Input       :  {
+                    ids   :  Array    // array of _id of Self customer- admin, riskpro-admin, and all its   
+                                        customer-user. e.g. ids:["_id1","_id2","_id3"]
+                }
+
+                
+
+Output      : 
+                If successfully
+                    1 or 2 or 3 // count of controls
+
+-----------------------------------------------------------------------------------------------------
+                        12. Count of controls for Customer User
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/controls/:company_ID/:user_ID/:riskpro_ID
+
+Input       :  -NA-
+
+                
+
+Output      : 
+                If successfully
+                    1 or 2 or 3 // count of controls
+
+-----------------------------------------------------------------------------------------------------
+                        13. Bulk Upload of Controls
+-----------------------------------------------------------------------------------------------------
+
+Method      : POST
+    
+URL         : /api/controls/control_Bulk_upload
+
+Input       :  {
+                  "controlBlock_ID"  : String    // _id of parent control block
+                  "data"             : [
+                     {
+                        controlShort         : String,
+                        controlDesc          : String,
+                        controltag_ID        : Array,
+                        ref1                 : String,
+                        ref2                 : String,
+                        ref3                 : String,
+                        risk                 : String,
+                        multiplier           : Number,
+                        mandatory            : Boolean,
+                        scored               : Boolean,
+                        controlBlocks_ID     : String, // mandatory
+                        company_ID           : String,
+                        createdBy            : String,
+                     }
+                  ]             
+                }
+
+                
+
+Output      : 
+                If successfully
+                    {
+                        "newControlLst"   : [
+                                                {
+                                                    "control_ID":   String   //Uploaded control _id  
+                                                }
+                                            ], 
+                        "controlBlock_ID" : String,         // Uploaded controls parent control blocks
+                        "message":"Controls Uploaded Successfully"
+                   }
+                else If "Duplicate control Short"
+                  {
+                    "message":"Duplicate control short"
+                  }
+                else If "Control not updated to control block"
+                 {
+                    "message":"Control not updated to control block"
+                  }
+
+                   

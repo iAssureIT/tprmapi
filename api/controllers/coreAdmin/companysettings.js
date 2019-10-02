@@ -104,7 +104,7 @@ exports.users_count = (req,res,next)=>{
     Companysettings.countDocuments({'createdBy':req.params.user_ID,'type':req.params.user_type})
     .exec()
     .then(data=>{
-        console.log("data",data);
+        // console.log("data",data);
         if(data){
             res.status(200).json(data);
         }else{
@@ -447,7 +447,7 @@ exports.update_companysettings = (req,res,next)=>{
 }
 
 exports.update_basicinfo_companysettings = (req,res,next)=>{
-    console.log('update basic infor');
+    // console.log('update basic infor');
     Companysettings.updateOne(
                             {_id:req.params.companysettings_ID},
                             {
@@ -702,7 +702,7 @@ exports.create_client = (req,res,next)=>{
 }
 
 exports.update_created_client = (req,res,next)=>{
-    console.log("req.body",req.body);
+    // console.log("req.body",req.body);
     Companysettings.findOne({_id:req.body.companyID})
     .exec()
     .then(company=>{
@@ -771,7 +771,7 @@ exports.userEmalId_byId_fornotification = (req,res,next)=>{
     .exec()
     .then(user=>{
         // console.log('user',user);
-        if(user){
+        if(user){ 
             if (user.spocDetails) { 
                 // res.status(200).json({
                 //  message: 'User Found.',
@@ -817,7 +817,7 @@ exports.userEmalId_byId_fornotification = (req,res,next)=>{
                    res.status(200).json({message:"Mail Sent successfully"});
                 })
                 .catch((err) =>{
-                    console.log("call to api",err);
+                    // console.log("call to api",err);
                     res.status(500).json({
                         error: err
                     });

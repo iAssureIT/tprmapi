@@ -197,7 +197,7 @@ exports.list_ncpriority_company_ID_name = (req,res,next)=>{
                                 },
                                 {
                                     $project : {
-                                        "_id"            : 0,
+                                        "_id"            : 0, 
                                         "nccriticality"  : 1
                                     }
                                 }

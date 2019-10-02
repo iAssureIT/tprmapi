@@ -49,7 +49,7 @@ const companysettingsSchema = mongoose.Schema({
                                 {
                                     companyID       : String,
                                     company_ID      : String,
-                                }
+                                } 
                              ],
     preferences            : [
                                 {

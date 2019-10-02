@@ -18,7 +18,7 @@ APIs :
 5. Delete particular nccriticality						- Done
 6. Delete all the nccriticality						    - Done
 7. List all nccriticality for specify company			- Done
-
+8. List all NC's in different format for specific company -Done
 
 -----------------------------------------------------------------------------------------------------
 								1. Insert new nccriticality
@@ -150,3 +150,16 @@ Output      :
 							corporate_ID    : String,
 						}
 					]
+-----------------------------------------------------------------------------------------------------
+					8. List all NC's in different format for specific company
+-----------------------------------------------------------------------------------------------------
+Method      : GET
+    
+URL         : /api/nccriticality/list_ncpriorityname/:company_ID
+
+Input       : - NA-
+
+Output      : 
+				If successfully
+				 e.g
+					["High","Medium","Low"]

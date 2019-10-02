@@ -4,7 +4,7 @@ const checkAuth = require('../../middlerware/check-auth.js');
 const NccriticalityController = require('../../controllers/tprm/nccriticality');
 
 router.post('/',checkAuth,NccriticalityController.create_nccriticality);
-
+ 
 router.get('/list',checkAuth,NccriticalityController.list_nccriticality);
 
 router.get('/list_ncpriorityname/:company_ID',NccriticalityController.list_ncpriority_company_ID_name)

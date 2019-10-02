@@ -58,7 +58,7 @@ Schema :
     createdAt               : Date,
 }
 
-APIs :    16 /17
+APIs :   
 -----------------------------------------------------------------------------------------------------
 1. Insert new assessments							                    - Done
 2. Details of assessments							                    - Done
@@ -84,7 +84,12 @@ APIs :    16 /17
 16. Update assessor (Add / remove / Edit)                               - Done
 17. Update assessmentStages                                             - Done
 18. Update controlOwnerID                                               - 
-
+19. Fetch action priority wise count of action plan for customer admin  - Done
+20. Fetch NC plan wise count of NC for customer admin                   - Done
+21. Fetch action prority wise plan of action plan for vendor admin      - Done
+22. Fetch assessment count by its Stages                                - Done
+23. Send Action plan mail                                               - Done
+24. Delete action plan document                                         - Done
 
 -----------------------------------------------------------------------------------------------------
 								1. Insert new Assessment
@@ -855,3 +860,132 @@ Output      :
                     controlOwner_ID Updated
                 else
                     controlOwner_ID Not Updated
+
+-----------------------------------------------------------------------------------------------------
+                 19. Fetch action priority wise count of action plan for customer admin
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/assessment/priority_actionplan/:company_ID
+
+Input       : -NA-
+
+Output      : 
+                If successfully
+                    [
+                        {
+                            "priority" :  String,    // Priority name from master data
+                            "count"    :  Number,
+                        }
+                    ]
+
+-----------------------------------------------------------------------------------------------------
+                 20. Fetch NC plan wise count of NC for customer admin
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/assessment/priority_ncplan/:company_ID
+
+Input       : -NA-
+
+Output      : 
+                If successfully
+                    [
+                        {
+                            "priority" :  String,    // Priority name from master data
+                            "count"    :  Number,
+                        }
+                    ]
+
+-----------------------------------------------------------------------------------------------------
+                 21. Fetch action prority wise plan of action plan for vendor admin
+-----------------------------------------------------------------------------------------------------
+
+Method      : POST
+    
+URL         : /api/assessment/list/vendor_priority_actionplan
+
+Input       :    {
+                      "userID"     : String,  // loggin user _id from users table
+                      "company_ID" : String   // loggin user company_ID from users table
+                }
+
+Output      : 
+                If successfully
+                    [
+                        {
+                            "priority" :  String,    // Priority name from master data
+                            "count"    :  Number,
+                        }
+                    ]
+                    
+-----------------------------------------------------------------------------------------------------
+                 22. Fetch assessment count by its Stages
+-----------------------------------------------------------------------------------------------------
+
+Method      : POST
+    
+URL         : /api/assessment/list/vendor_priority_actionplan
+
+Input       :    {
+                      "userID"           : String,  // loggin user _id from users table
+                      "assessmentStages" : Array,   // array = ["Open","Inprogress","Review","Completed"]
+                }
+
+Output      : 
+                If successfully
+                    [
+                        {
+                            "assessmentStage" :  String,    // Stages
+                            "count"    :  Number,
+                        }
+                    ]
+
+-----------------------------------------------------------------------------------------------------
+                 23. Send Action plan mail 
+-----------------------------------------------------------------------------------------------------
+
+Method      : POST
+    
+URL         : /api/assessment/sentactionmail
+
+Input       :  -NA-
+
+Output      : 
+                If successfully
+                        {message:"Mail Sent successfully"}
+
+-----------------------------------------------------------------------------------------------------
+                24. Delete action plan document
+-----------------------------------------------------------------------------------------------------
+
+Method      : DELETE
+    
+URL         : /api/assessment/delete_actiondocument/
+                :assessments_ID/:controlBlock_ID/:control_ID/:actionPlan_ID/:doc_ID
+
+Input       :  -NA-
+
+Output      : 
+                If successfully
+                   {message:"Action Document Updated"}
+                else
+                   {message:"Action Document Not Updated"}
+
+-----------------------------------------------------------------------------------------------------
+                25. Delete response document
+-----------------------------------------------------------------------------------------------------
+
+Method      : DELETE
+    
+URL         : /api/assessment/delete_responsedocument/:assessments_ID/:controlBlock_ID/:control_ID/:doc_ID
+
+Input       :  -NA-
+
+Output      : 
+                If successfully
+                   {message:"Response Document Updated"}
+                else
+                   {message:"Response Document Not Updated"}

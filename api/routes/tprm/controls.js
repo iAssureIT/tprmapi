@@ -22,7 +22,7 @@ router.get('/controls_count_of_admin/:user_ID',checkAuth,ControlController.contr
 router.get('/controls_count_of_companyUser/:company_ID/:user_ID/:riskpro_ID',ControlController.controls_count_of_companyUser);
 
 router.get('/:control_ID',ControlController.detail_control); 
-
+ 
 router.put('/',ControlController.update_basic_control);
 
 router.delete('/:control_ID',checkAuth,ControlController.delete_control);

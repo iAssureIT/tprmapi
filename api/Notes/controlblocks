@@ -2,14 +2,14 @@ Schema :
 -----------------------------------------------------------------------------------------------------
 
 {
-	_id			        : String,
+	_id			            : String,
 	controlBlocksCode       : String,
     controlBlockRef         : Number,
     controlBlockName        : String,
     controlBlockDesc        : String,
     parentBlock             : String,
     domain_ID               : String,
-    sequence                : Number,
+    sequence                : Number, 
     weightage               : Number,
     company_ID              : String,
     createdBy               : String,
@@ -46,6 +46,11 @@ APIs :
 12. Duplicate Control Block                                 - Done
 13. Fetch Control blocks for specific Domain                - Done
 14. Fetch Details of subcontrol blocks and controls         - Done
+15. List of non duplicated control Blocks                   - Done   
+   (e.g After Customomize framework copied control blocks)
+16. Count of control blocks of Riskpro admin                - Done
+17. Count of control blocks of Customer User                - Done
+18. Count of control blocks of Customer Admin               - Done
 
 -----------------------------------------------------------------------------------------------------
 								1. Insert new control Block
@@ -451,3 +456,81 @@ Output      :
                     {
                         message:'Control block not found'
                     }
+
+
+-----------------------------------------------------------------------------------------------------
+                 15. List of non duplicated control Blocks                  
+              (e.g After Customomize framework copied control blocks)
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/controlblocks/list_except_ref/:company_ID
+
+Input       : - NA- 
+
+Output      : 
+                If successfully
+                    [
+                        {
+                            "_id"               : String,
+                            "controlBlockRef"   : Number,
+                            "controlBlockName"  : Number,
+                            "controlBlockDesc"  : String,
+                            "parentBlock"       : String,
+                            "domain_ID"         : String,
+                            "sequence"          : Number,
+                            "weightage"         : Number,
+                            "company_ID"        : String,
+                            "createdBy"         : String,
+                            "createdAt"         : Date,
+                            "subControlBlocks"     : [],
+                            "controls"          : [],
+                        }
+                    ]
+
+-----------------------------------------------------------------------------------------------------
+                16. Count of control blocks of Riskpro admin
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/controlblocks/controlblocks_count_of_admin/:user_ID
+
+Input       : - NA- 
+
+Output      : 
+                If successfully
+                    1 or 2 or 3 // count of control blocks.
+
+-----------------------------------------------------------------------------------------------------
+                17. Count of control blocks of Customer User
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/controlblocks/controlblocks_count_of_comapanyUser/:company_ID/:user_ID/:riskpro_ID
+
+Input       : - NA- 
+
+Output      : 
+                If successfully
+                    1 or 2 or 3 // count of control blocks.
+
+-----------------------------------------------------------------------------------------------------
+                18. Count of control blocks of Customer Admin
+-----------------------------------------------------------------------------------------------------
+
+Method      : POST
+    
+URL         : /api/controlblocks/controlblockscount_for_admin
+
+Input       : 
+                {
+                    ids   :  Array    // array of _id of Self customer- admin, riskpro-admin, and all its   
+                                        customer-user. e.g. ids:["_id1","_id2","_id3"]
+                }
+
+Output      : 
+                If successfully
+                    1 or 2 or 3 // count of control blocks.

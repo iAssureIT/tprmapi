@@ -18,6 +18,7 @@ APIs :
 5. Delete particular actionpriority						- Done
 6. Delete all the actionpriority						- Done
 7. List all actionpriority for specify company			- Done
+8. List all action priorities in different format for specific company - Done
 
 
 -----------------------------------------------------------------------------------------------------
@@ -150,3 +151,18 @@ Output      :
 							corporate_ID    : String,
 						}
 					]
+
+-----------------------------------------------------------------------------------------------------
+					8. List all action priorities in different format for specific company
+-----------------------------------------------------------------------------------------------------
+Method      : GET
+    
+URL         : /api/actionpriority/list_actionpriorityname/:company_ID
+
+Input       : - NA-
+
+Output      : 
+				If successfully
+				 e.g
+					["High","Medium","Low"]
+

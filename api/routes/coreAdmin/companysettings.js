@@ -23,11 +23,11 @@ router.patch('/:info/:action',CompanySettingController.update_companysettings);
 
 router.delete('/:companysettings_ID',CompanySettingController.delete_companysettings);
 
-router.patch('/updateclient',checkAuth,CompanySettingController.update_created_client);
+router.patch('/updateclient',checkAuth,CompanySettingController.update_created_client); 
 
 router.get('/users_count/:user_ID/:user_type',checkAuth,CompanySettingController.users_count);
 
-router.post('/user',checkAuth,CompanySettingController.userEmalId_byId_fornotification);
+router.post('/user',checkAuth,CompanySettingController.userEmalId_byId_fornotification); 
 
 router.get('/users_assessmentCount/:user_ID',checkAuth,CompanySettingController.userDataVendor_assessment_Count);
 

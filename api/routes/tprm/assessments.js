@@ -10,7 +10,7 @@ router.post('/list/vendor_priority_actionplan',checkAuth,AssessmentsController.f
 router.post('/list/assessment_bystages',checkAuth,AssessmentsController.fetch_assessment_bystages);
 
 router.post('/sentactionmail',AssessmentsController.sent_Actionplan_mail);
-
+ 
 router.get('/list',checkAuth,AssessmentsController.list_assessments); 
 
 router.get('/list/nc_true/:assessments_ID',checkAuth,AssessmentsController.list_nc_true);

@@ -19,4 +19,4 @@ router.delete('/:actionpriority_ID',checkAuth,ActionpriorityController.delete_ac
 
 router.delete('/',ActionpriorityController.delete_all_actionpriority);
 
-module.exports = router;
+module.exports = router; 

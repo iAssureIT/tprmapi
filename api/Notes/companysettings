@@ -73,7 +73,14 @@ APIs :
     - Create user
     - Update SPOC User_ID into companyseetings
     - update Corporate details into companysettings
-
+10. Update created client                              - Done
+11. User Count                                         - Done
+12. Send email notification to any corporate and vendor - Done
+        - Create assessment
+        - Respond assessment
+        - Create action plan
+        - Respond action plan
+13. List of company user Data                           -  Done
 -----------------------------------------------------------------------------------------------------
 								9. Insert Corporate / Vendor
 -----------------------------------------------------------------------------------------------------
@@ -183,6 +190,153 @@ Output      :
                     {
                         message : "Something went wrong"
                     }
+
+-----------------------------------------------------------------------------------------------------
+          10.  Update created client 
+-----------------------------------------------------------------------------------------------------
+
+Method      : PATCH
+    
+URL         :  /api/companysettings/updateclient
+
+Input       : 
+              {
+                  companyName             : String,
+                  spocfullname            : String,
+                  spocemailId             : String,
+                  spocmobNumber           : String,
+                  spocdesignation         : String,
+                  companyID               : String, //_id of company mandatory
+                }
+
+Output      :
+                if successfully
+                    {
+                        message:"User Modified.",
+                        ID: String //_id of company
+                    }
+                else
+                    {
+                        message : "Something went wrong"
+                    }
+
+
+-----------------------------------------------------------------------------------------------------                    11.  User Count
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/companysettings/users_count/:user_ID/:user_type
+
+Input       : -NA-
+
+Output      :
+                if successfully
+                    count e.g. 1 or 2 or 3 etc
+                else
+                    {
+                        message : "User not found"
+                    }
+-----------------------------------------------------------------------------------------------------
+            12. Send email notification to any corporate and vendor 
+-----------------------------------------------------------------------------------------------------
+
+Method      : POST
+    
+URL         :   /api/companysettings/user
+
+Input       :   - Create assessment
+                    {
+                       "assessmentPartyId" : String,            //mandatory
+                       "assesmentname"     : String,
+                       "endDate"           : String,              //date format DD/MM/YYYY
+                       "mailfor"           : "create assessment",//mandatory
+                    }
+                - Respond assessment
+                    {
+                       "assessmentPartyId" : String,              //mandatory
+                       "assesmentName"     : String,
+                       "endDate"           : String,                //date format DD/MM/YYYY
+                       "companyEmailId"    : String,
+                       "mailfor"           : "respond assessment", //mandatory
+                    }
+                - Create action plan
+                     {
+                       "assessmentPartyId" : String,                //mandatory
+                       "vendoremailid"     : String,
+                       "endDate"           : String,                //date format DD/MM/YYYY
+                       "mailfor"           : "create action plan",  //mandatory
+                    }
+                - Respond action plan
+                    {
+                       "assessmentPartyId" : String,                //mandatory
+                       "assessmentName"    : String,
+                       "endDate"           : String,                 //date format DD/MM/YYYY
+                       "mailfor"           : "respond action plan",  //mandatory
+                    }
+
+Output      :
+                if successfully
+                    {message:"Mail Sent successfully"}
+                
+
+-----------------------------------------------------------------------------------------------------
+            13. List of admin Data       
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/companysettings/adminData/:user_type
+
+Input       : -NA-
+
+Output      :
+                if successfully
+                    [
+                        {
+                            _id            : String,
+                            companyName    : String,
+                            spocDetails    : Object,
+                            status         : String,
+                            createdBy      : String,
+                            companyUniqueID: String,
+                            createdAt      : String,
+                            creatorRole    : String,
+                            type           : String,
+                            company_ID     : String
+                        }
+                    ]
+                else
+                    "Company Details not found"
+
+-----------------------------------------------------------------------------------------------------
+            13. List of company user Data       
+-----------------------------------------------------------------------------------------------------
+
+Method      : GET
+    
+URL         : /api/companysettings/list/:user_ID/:user_type/:company_ID
+
+Input       : -NA-
+
+Output      :
+                if successfully
+                    [
+                        {
+                            _id            : String,
+                            companyName    : String,
+                            spocDetails    : Object,
+                            status         : String,
+                            createdBy      : String,
+                            companyUniqueID: String,
+                            createdAt      : String,
+                            creatorRole    : String,
+                            type           : String,
+                            company_ID     : String
+                        }
+                    ]
+                else
+                    "Company Details not found"
 
 -----------------------------------------------------------------------------------------------------
 		3. Insert / Update / Remove taxSettings, companyLocationsInfo, bankDetails

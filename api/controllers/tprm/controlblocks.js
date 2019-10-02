@@ -84,7 +84,7 @@ exports.create_controlblocks_subcontrolblock = (req,res,next)=>{
 		.then(data =>{
 			if(data){
 				return res.status(200).json({
-					message: 'Control Block Name already exists'
+					message: 'Control Block Name already exists' 
 				});
 			}else{
                 if(req.body.controlblock_ID){
