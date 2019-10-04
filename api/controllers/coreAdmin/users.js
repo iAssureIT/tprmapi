@@ -747,7 +747,7 @@ exports.user_from_company_ID = (req,res,next)=>{
 					 var urls = '';
 					 var body;
 				   user.map((user)=>{
-				   	allcompanyIds.push(user._id)
+				   	allcompanyIds.push(user._id) 
 				   });
 				   // console.log("allcompanyIds",allcompanyIds);
 

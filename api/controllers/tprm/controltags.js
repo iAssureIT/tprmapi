@@ -2,6 +2,8 @@ const mongoose	= require("mongoose");
 
 const Controltags = require('../../models/tprm/controltags');
 
+const User = require('../../models/coreAdmin/users');
+
 exports.create_controltag = (req,res,next)=>{
     var controltagData = req.body.controltag;
 	Controltags.findOne({controltag:controltagData.toLowerCase(),company_ID:req.body.company_ID})
@@ -195,4 +197,70 @@ exports.delete_all_controltag = (req,res,next)=>{
                 error: err
             });
         });
+}
+function getIdFromUser(ids){
+    var user_IDs = ids;
+    return new Promise(function(resolve,reject){
+        User.findOne({"_id" : user_IDs[1]})
+        .exec()
+        .then(data=>{
+            if(data){
+                console.log("data",data);
+                 if (data.profile) {
+                    user_IDs.push(data.profile.company_ID);
+                    resolve(user_IDs); 
+                 }else{
+                    resolve(user_IDs); 
+                 }
+            }else{
+                resolve(user_IDs);
+            }
+        })
+        .catch(err =>{
+            // console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+    });
+}
+
+exports.fetch_controltag_for_cadmin_cuser = (req,res,next)=>{
+    getUserData();
+    async function getUserData(){
+        if(req.body.role === "customer-admin"){
+            var ids = req.body.ids;
+        }else{
+            var ids = await getIdFromUser(req.body.ids);
+        }
+        Controltags.find({company_ID:{$in: ids }})
+        .exec()
+        .then(data=>{
+            if(data&&data.length>0){
+                getData();
+                async function getData(){
+                    var returnData=[];
+                    for(var j = 0 ; j < data.length ; j++){
+                        var str = await titleCase(data[j].controltag);
+                        returnData.push({
+                            _id         : data[j]._id,
+                            controltag  : str,
+                            createdAt   : data[j].createdAt,
+                            company_ID  : data[j].company_ID,
+                            createdBy   : data[j].createdBy
+                        });
+                    }
+                    if(j >= data.length){
+                        res.status(200).json(returnData);
+                    }
+                }
+            }
+        })
+        .catch(err =>{
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+    }
 }

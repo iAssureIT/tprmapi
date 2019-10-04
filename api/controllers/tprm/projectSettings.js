@@ -14,7 +14,7 @@ exports.create_projectSettings = (req, res, next) => {
 				});
 			}else{
             const projectsetting = new ProjectSettings({
-                _id             : mongoose.Types.ObjectId(),      
+                _id             : mongoose.Types.ObjectId(),       
                 key             : req.body.key,
                 secret          : req.body.secret,
                 bucket          : req.body.bucket,
@@ -65,8 +65,6 @@ exports.fetch_projectsettings = (req, res, next)=>{
             });            
 }
 exports.list_projectsettings = (req, res, next)=>{
-    const type = req.params.type;
-    console.log("type = |"+type+"|");
         ProjectSettings.find({})
             .exec()
             .then(data=>{

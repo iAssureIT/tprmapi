@@ -1739,7 +1739,7 @@ exports.fetch_assessment_bystages = (req,res,next)=>{
 };
 exports.sent_Actionplan_mail = (req,res,next) =>{
     Assessments.find()
-    .exec()
+    .exec() 
     .then(data=>{
         setNCDate();
         async function setNCDate(){
@@ -1750,10 +1750,12 @@ exports.sent_Actionplan_mail = (req,res,next) =>{
                             for (var j = 0; j < data[i].framework[k].nc.actionPlan.length; j++) {
                                 if(data[i].framework[k].nc.actionPlan[j].status&&data[i].framework[k].nc.actionPlan[j].status!='Published'&&data[i].framework[k].nc.actionPlan[j].status!='Accepted'){
                                     const date1 = new Date();
+                                    console.log("date1",date1);
+                                    console.log("data[i].framework[k].nc.actionPlan[j].dueDate",data[i].framework[k].nc.actionPlan[j].dueDate);
                                     const date2 = new Date(data[i].framework[k].nc.actionPlan[j].dueDate);
                                     const diffTime = Math.abs(date2 - date1);
                                     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-                                    // console.log('diffDays===',diffDays)
+                                    console.log('diffDays===',diffDays)
                                     if(diffDays==3||diffDays==-1){
                                       var endDate = moment(data[i].framework[k].nc.actionPlan[j].dueDate).format('DD/MM/YYYY')
                                       Companysettings.findOne({'_id':data[i].assessedParty_ID})

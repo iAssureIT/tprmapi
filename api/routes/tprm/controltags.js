@@ -5,6 +5,8 @@ const ControltagController = require('../../controllers/tprm/controltags');
 
 router.post('/',checkAuth,ControltagController.create_controltag);
 
+router.post('/fetch_controltag_for_cadmin_cuser',checkAuth,ControltagController.fetch_controltag_for_cadmin_cuser);
+;
 router.get('/list',ControltagController.list_controltag);
 
 router.get('/list/:company_ID',checkAuth,ControltagController.list_controltag_company);

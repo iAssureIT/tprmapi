@@ -11,4 +11,4 @@ router.get('/list',checkAuth,projectsettingController.list_projectsettings);
 
 router.delete('/',checkAuth,projectsettingController.delete_projectsettings);
 
-module.exports = router;
+module.exports = router; 
