@@ -60,7 +60,7 @@ exports.list_actionpriority_company_ID = (req,res,next)=>{
     Actionpriority.find({company_ID:req.params.company_ID})
         .exec()
         .then(data=>{
-            if(data&&data.length>0){
+            if(data){
                 getData();
                 async function getData(){
                     var returnData=[];

@@ -59,7 +59,7 @@ exports.list_riskfactor_company = (req,res,next)=>{
     Riskfactors.find({company_ID : company_ID})
         .exec()
         .then(data=>{
-            if(data&&data.length>0){
+            if(data){
                 getData();
                 async function getData(){
                     var returnData=[];

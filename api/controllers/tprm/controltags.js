@@ -60,7 +60,7 @@ exports.list_controltag_company = (req,res,next)=>{
     Controltags.find({company_ID:req.params.company_ID})
         .exec()
         .then(data=>{
-            if(data&&data.length>0){
+            if(data){
                 getData();
                 async function getData(){
                     var returnData=[];
