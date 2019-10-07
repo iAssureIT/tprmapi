@@ -90,15 +90,15 @@ app.use('/api/projectsetting',projectSettingRoutes);
 app.post('/send-email', (req, res)=> {
 	// console.log('req',req.body);
 	let transporter = nodeMailer.createTransport({
-		host: 'smtp.gmail.com',
+		host: 'smtp.office365.com',
 		port: 587,
 		auth: { 
-			user: 'testtprm321@gmail.com',
-			pass: 'tprm1234'
+			user: 'risk365.tprm@riskpro.in',
+			pass: 'Riskpro$11'
 		}
 	});
 	let mailOptions = {
-			from   : '"Risk Pro" <testtprm321@gmail.com>', // sender address
+			from   : '"Risk Pro" <risk365.tprm@riskpro.in>', // sender address
 			to     : req.body.email, // list of receivers
 			subject: req.body.subject, // Subject line
 			text   : req.body.text, // plain text body
