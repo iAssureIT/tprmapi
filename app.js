@@ -31,6 +31,7 @@ const nccriticalityRoutes				= require('./api/routes/tprm/nccriticality');
 const actionpriorityRoutes				= require('./api/routes/tprm/actionpriorities');
 const assessmentRoutes 					= require('./api/routes/tprm/assessments');
 const projectSettingRoutes 				= require('./api/routes/tprm/projectSettings');
+const s3upload                          = require('./api/routes/tprm/S3ImageUpload');
 
 // global.JWT_KEY = "secret";
 
@@ -87,6 +88,7 @@ app.use('/api/nccriticality',nccriticalityRoutes);
 app.use('/api/actionpriority',actionpriorityRoutes);
 app.use('/api/assessment',assessmentRoutes);
 app.use('/api/projectsetting',projectSettingRoutes);
+app.use('/api/s3fileupload', s3upload);
 app.post('/send-email', (req, res)=> {
 	// console.log('req',req.body);
 	let transporter = nodeMailer.createTransport({
