@@ -18,7 +18,7 @@ function duplicate_controlBlocks(controlBlock){
                         async function fetchNewSCB(){
                             var newSubCB = [];
                             var listSubControlBlocks = baseControlblock.subControlBlocks;
-                            for(i = 0;i < listSubControlBlocks.length; i++){
+                            for(var i = 0;i < listSubControlBlocks.length; i++){
                                     var newCB = await duplicate_controlBlocks({
                                                             controlBlocks_ID : listSubControlBlocks[i].controlBlocks_ID,
                                                             sequence         : sequence,
@@ -53,7 +53,7 @@ function duplicate_controlBlocks(controlBlock){
                                                     async function fetchNewControl(){
                                                         var newControlLst = [];
                                                         var listControls  = baseControlblock.controls;
-                                                        for(j = 0 ; j < listControls.length ; j++){
+                                                        for(var j = 0 ; j < listControls.length ; j++){
                                                             var newControl_ID = await duplicate_controls({
                                                                                                     control_ID      : listControls[j].control_ID,
                                                                                                     company_ID      : company_ID,
@@ -325,13 +325,12 @@ exports.update_framework = (req,res,next)=>{
     Framework.findOne({frameworkname:frameworknameData.toLowerCase(),version:req.body.version})
 		.exec()
 		.then(data =>{
-            console.log('data ',data);
+            // console.log('data ',data);
 			if(data && data._id !== req.body.id){
 				return res.status(200).json({
 					message: 'Framework already exists'
 				});
 			}else{
-
 				Framework.updateOne(
                     { _id:req.body.id},  
                     {

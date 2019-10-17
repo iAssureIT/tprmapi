@@ -507,13 +507,14 @@ exports.controlblocks_count_of_admin = (req,res,next)=>{
 exports.fetch_all_subcontrolblocks = (req,res,next)=>{
     processCBArray(req.body.lstcontrolblocks);
     async function processCBArray(cbs){
-        var outputArray = [];
+        console.log("cbs",cbs);
+        var outputArray = []; 
         for ( i = cbs.length-1; i >= 0; i--) {
             var newArray = await findCB(cbs[i]);
             if(newArray.length > 0){
                 outputArray = outputArray.concat(newArray);
             }
-        }
+        } 
         res.header("Access-Control-Allow-Origin","*");
         res.status(200).json(outputArray);
     }
@@ -524,6 +525,40 @@ exports.fetch_all_subcontrolblocks = (req,res,next)=>{
                             .then(data=>{
                                 if(data){
                                     resolve(data.subControlBlocks); 
+                                }else{
+                                    resolve([]);
+                                }
+                            })
+                            .catch(err =>{
+                                console.log(err);
+                                res.status(500).json({
+                                    error: err
+                                });
+                            });
+        });
+    }
+}
+exports.fetch_all_controlblocks = (req,res,next)=>{
+    processCBArray(req.body.lstcontrolblocks);
+    async function processCBArray(cbs){
+        var outputArray = []; 
+        for ( i = cbs.length-1; i >= 0; i--) {
+            var newArray = await findCB(cbs[i].controlBlocks_ID);
+            if(newArray){
+                outputArray = outputArray.concat(newArray);
+            }
+        } 
+        res.header("Access-Control-Allow-Origin","*");
+        res.status(200).json(outputArray);
+    }
+    function findCB(controlBlocks_ID){
+        return new Promise(function(resolve,reject){
+            Controlblocks   .findOne({ _id : controlBlocks_ID })
+                            .exec()
+                            .then(data=>{
+                                if(data){
+                                    console.log("data",data);
+                                    resolve(data); 
                                 }else{
                                     resolve([]);
                                 }

@@ -46,7 +46,6 @@ global.titleCase = function(Str){
         resolve(Str.charAt(0).toUpperCase()+Str.slice(1));
     });
 }
-
 app.use(morgan("dev"));
 app.use('/uploads', express.static('uploads'));
 app.use(bodyParser.urlencoded({ extended: false }));
