@@ -556,7 +556,7 @@ exports.fetch_all_controlblocks = (req,res,next)=>{
     }
     function findCB(controlBlocks_ID){
         return new Promise(function(resolve,reject){
-            Controlblocks   .findOne({ _id : new ObjectID(controlBlocks_ID) })
+            Controlblocks   .findOne({ _id :  ObjectID(controlBlocks_ID) })
                             .exec()
                             .then(data=>{
                                 if(data){
