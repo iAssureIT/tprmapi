@@ -542,14 +542,17 @@ exports.fetch_all_controlblocks = (req,res,next)=>{
     processCBArray(req.body.lstcontrolblocks);
     async function processCBArray(cbs){
         var outputArray = []; 
-        for ( i = cbs.length-1; i >= 0; i--) {
+        let i = 0;
+        for ( i = 0; i < cbs.length; i++) {
             var newArray = await findCB(cbs[i].controlBlocks_ID);
             if(newArray){
                 outputArray = outputArray.concat(newArray);
             }
         } 
-        res.header("Access-Control-Allow-Origin","*");
-        res.status(200).json(outputArray);
+        // res.header("Access-Control-Allow-Origin","*");
+        if(i >= cbs.length){
+            res.status(200).json(outputArray);
+        }
     }
     function findCB(controlBlocks_ID){
         return new Promise(function(resolve,reject){
@@ -560,14 +563,12 @@ exports.fetch_all_controlblocks = (req,res,next)=>{
                                     console.log("data",data);
                                     resolve(data); 
                                 }else{
-                                    resolve([]);
+                                    resolve({});
                                 }
                             })
                             .catch(err =>{
                                 console.log(err);
-                                res.status(500).json({
-                                    error: err
-                                });
+                                reject(err);
                             });
         });
     }
