@@ -20,7 +20,7 @@
     "morgan": "^1.9.1",
     "multer": "^1.4.2",
     "multer-s3": "^2.9.0",
-    "nodemailer": "^6.3.0",
+    "nodemailer": "^6.4.16",
     "osenv": "^0.1.5",
     "path": "^0.12.7",
     "react-router": "^3.2.1",
